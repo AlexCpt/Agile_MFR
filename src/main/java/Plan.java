@@ -31,4 +31,12 @@ public class Plan {
             mGraph.get(t.getOrigine()).add(t);
         }
     }
+
+    public Point[] getPoints() {
+        return mPoints;
+    }
+
+    public Troncon[] getTroncons() {
+        return mTroncons;
+    }
 }

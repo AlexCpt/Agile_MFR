@@ -1,10 +1,12 @@
 public class Troncon {
     private Point mOrigine;
     private Point mDestination;
+    private int mLongueur;
 
-    public Troncon(Point origine, Point destination) {
+    public Troncon(Point origine, Point destination, int longueur) {
         mOrigine = origine;
         mDestination = destination;
+        mLongueur = longueur;
     }
 
     public Point getOrigine() {
@@ -14,4 +16,7 @@ public class Troncon {
     public Point getDestination() {
         return mDestination;
     }
+
+    public int getLongueur() { return mLongueur; }
+
 }

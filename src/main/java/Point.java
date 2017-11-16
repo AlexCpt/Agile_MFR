@@ -1,6 +1,6 @@
 public class Point {
-    public int mX;
-    public int mY;
+    private int mX;
+    private int mY;
 
     public String mAdresse;
 
@@ -12,5 +12,14 @@ public class Point {
         mX = x;
         mY = y;
     }
+
+    public int getX() {
+        return mX;
+    }
+
+    public int getY() {
+        return mY;
+    }
+
 
 }
