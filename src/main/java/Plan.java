@@ -1,4 +1,6 @@
-import java.util.ArrayList;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -6,6 +8,11 @@ import java.util.List;
 public class Plan {
     private Point[] mPoints;
     private Troncon[] mTroncons;
+    private int mPointXmin;
+    private int mPointYmin;
+    private int mPointXmax;
+    private int mPointYmax;
+
 
     public HashMap<Point, List<Troncon>> getGraph() {
         return mGraph;
@@ -30,6 +37,9 @@ public class Plan {
 
             mGraph.get(t.getOrigine()).add(t);
         }
+
+        calculEchelle();
+
     }
 
     public Point[] getPoints() {
@@ -38,5 +48,38 @@ public class Plan {
 
     public Troncon[] getTroncons() {
         return mTroncons;
+    }
+
+    public void print(Pane mapPane) {
+
+        for (Troncon troncon: mTroncons) {
+            Line line = new Line();
+            line.setStartX((troncon.getOrigine().getX()-mPointXmin)/(mPointXmax-mPointXmin)*mapPane.getPrefWidth());
+            line.setStartY((troncon.getOrigine().getY()-mPointYmin)/(mPointYmax-mPointYmin)*mapPane.getPrefHeight());
+            line.setEndX((troncon.getDestination().getX()-mPointXmin)/(mPointXmax-mPointXmin)*mapPane.getPrefWidth());
+            line.setEndY((troncon.getDestination().getY()-mPointYmin)/(mPointYmax-mPointYmin)*mapPane.getPrefHeight());
+            mapPane.getChildren().add(line);
+        }
+    }
+
+    public void calculEchelle()
+    {
+        for(Point point : mPoints)
+        {
+            if(point.getX() > mPointXmax){
+                mPointXmax = point.getX();
+            }
+            if(point.getX() < mPointXmin){
+                mPointXmin = point.getX();
+            }
+            if(point.getY() > mPointYmax){
+                mPointYmax = point.getY();
+            }
+            if(point.getY() < mPointYmin){
+                mPointYmin = point.getY();
+            }
+        }
+
+        System.out.println(mPointXmin + " " + mPointXmax + " " + mPointYmin + " " + mPointYmax );
     }
 }
