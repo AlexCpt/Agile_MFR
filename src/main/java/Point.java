@@ -1,3 +1,8 @@
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+
+
 public class Point {
     private String mId;
     private int mX;
@@ -72,5 +77,24 @@ public class Point {
         if (mType != point.mType) return false;
         if (mLivraison != null ? !mLivraison.equals(point.mLivraison) : point.mLivraison != null) return false;
         return mEntrepot != null ? mEntrepot.equals(point.mEntrepot) : point.mEntrepot == null;
+    }
+
+    public void print(Pane mapPane){
+
+        Circle circle;
+        //Color
+        if(mType == Type.ENTREPOT){
+            circle = new Circle(3, Color.RED);
+        } else if (mType == Type.LIVRAISON) {
+            circle = new Circle(3, Color.BLUE);
+        }
+        else {
+            circle = new Circle(3, Color.GREEN);
+        }
+
+        //Position
+        circle.relocate((mX-Plan.mPointXmin)/(Plan.mPointXmax-Plan.mPointXmin)*mapPane.getPrefWidth(),(mY-Plan.mPointYmin)/(Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefWidth());
+
+        mapPane.getChildren().add(circle);
     }
 }

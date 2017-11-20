@@ -45,7 +45,6 @@ public class Troncon {
         if (mOrigine != null ? !mOrigine.equals(troncon.mOrigine) : troncon.mOrigine != null) return false;
         return mDestination != null ? mDestination.equals(troncon.mDestination) : troncon.mDestination == null;
     }
-}
 
     public void print(Pane mapPane){
         Line line = new Line();

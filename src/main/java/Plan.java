@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+import javafx.scene.layout.Pane;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -6,6 +7,10 @@ import java.util.List;
 public class Plan {
     private List<Point> mPoints;
     private  List<Troncon> mTroncons;
+    public static int mPointXmin;
+    public static int mPointYmin;
+    public static int mPointXmax;
+    public static int mPointYmax;
 
     public HashMap<Point, List<Troncon>> getGraph() {
         return mGraph;
@@ -39,4 +44,37 @@ public class Plan {
     public List<Troncon> getTroncons() {
         return mTroncons;
     }
+
+    public void calculEchelle()
+    {
+        for(Point point : mPoints)
+        {
+            if(point.getX() > mPointXmax){
+                mPointXmax = point.getX();
+            }
+            if(point.getX() < mPointXmin){
+                mPointXmin = point.getX();
+            }
+            if(point.getY() > mPointYmax){
+                mPointYmax = point.getY();
+            }
+            if(point.getY() < mPointYmin){
+                mPointYmin = point.getY();
+            }
+        }
+
+        System.out.println(mPointXmin + " " + mPointXmax + " " + mPointYmin + " " + mPointYmax );
+    }
+
+    public void print(Pane mapPane) {
+
+        for (Troncon troncon: mTroncons) {
+            troncon.print((mapPane));
+        }
+
+        for (Point point: mPoints) {
+            point.print(mapPane);
+        }
+    }
 }
+
