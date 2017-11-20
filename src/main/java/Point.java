@@ -41,6 +41,7 @@ public class Point {
     }
 
     public Point(String id, int x, int y) {
+        mType = Type.POINT;
         mId = id;
         mX = x;
         mY = y;
@@ -63,6 +64,21 @@ public class Point {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Point point = (Point) o;
+
+        if (mX != point.mX) return false;
+        if (mY != point.mY) return false;
+        if (mAdresse != null ? !mAdresse.equals(point.mAdresse) : point.mAdresse != null) return false;
+        if (mType != point.mType) return false;
+        if (mLivraison != null ? !mLivraison.equals(point.mLivraison) : point.mLivraison != null) return false;
+        return mEntrepot != null ? mEntrepot.equals(point.mEntrepot) : point.mEntrepot == null;
+    }
+
     public void print(Pane mapPane){
 
         Circle circle;
@@ -77,7 +93,7 @@ public class Point {
         }
 
         //Position
-        circle.relocate((mX-Plan.mPointXmin)/(Plan.mPointXmax-Plan.mPointXmin)*mapPane.getPrefWidth(),(mY-Plan.mPointYmin)/(Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefWidth());
+        circle.relocate(((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth(),(mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefWidth());
 
         mapPane.getChildren().add(circle);
     }

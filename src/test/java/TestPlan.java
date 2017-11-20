@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -7,16 +8,16 @@ import static org.junit.Assert.assertEquals;
 public class TestPlan {
     @Test
     public final void TestPlan() {
-        Point[] points = {
-                new Point(1, 2),
-                new Point(2, 3),
-                new Point(3, 4)
-        };
+        List<Point> points = Arrays.asList(
+                new Point("0", 1, 2),
+                new Point("1", 2, 3),
+                new Point("2", 3, 4)
+        );
 
-        Troncon[] troncons = {
-                new Troncon(points[0], points[1], 1),
-                new Troncon(points[0], points[2], 1)
-        };
+        List<Troncon> troncons = Arrays.asList(
+                new Troncon(points.get(0), points.get(1), 1, "a"),
+                new Troncon(points.get(0), points.get(2), 1, "a")
+        );
 
         Plan plan = new Plan(points, troncons);
 
@@ -24,9 +25,9 @@ public class TestPlan {
 
         HashMap<Point, List<Troncon>> ourGraph = new HashMap<>();
 
-        LinkedList<Troncon> arretes = new LinkedList<>(Arrays.asList(troncons[0], troncons[1]));
+        LinkedList<Troncon> arretes = new LinkedList<>(Arrays.asList(troncons.get(0), troncons.get(1)));
 
-        ourGraph.put(points[0], arretes);
+        ourGraph.put(points.get(0), arretes);
 
         assertEquals(graph, ourGraph);
     }

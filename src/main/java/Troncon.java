@@ -34,8 +34,20 @@ public class Troncon {
                 '}';
     }
 
-    public void print(Pane mapPane, javafx.scene.paint.Color color){
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Troncon troncon = (Troncon) o;
+
+        if (mLongueur != troncon.mLongueur) return false;
+        if (mOrigine != null ? !mOrigine.equals(troncon.mOrigine) : troncon.mOrigine != null) return false;
+        return mDestination != null ? mDestination.equals(troncon.mDestination) : troncon.mDestination == null;
+    }
+
+    public void print(Pane mapPane, javafx.scene.paint.Color color){
         Line line = new Line();
         line.setStroke(color);
         line.setStartX(((this.getOrigine().getX() - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
@@ -44,4 +56,4 @@ public class Troncon {
         line.setEndY(((this.getDestination().getY() - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin)) * mapPane.getPrefHeight());
         mapPane.getChildren().add(line);
     }
-} //to merge
+}
