@@ -1,5 +1,5 @@
-public class Entrepot extends Point{
+public class Entrepot {
     public Entrepot(int x, int y) {
-        super(x, y);
+
     }
 }

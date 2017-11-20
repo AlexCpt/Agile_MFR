@@ -1,4 +1,5 @@
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,6 +36,8 @@ public class Plan {
 
             mGraph.get(t.getOrigine()).add(t);
         }
+
+        calculEchelle();
     }
 
     public List<Point> getPoints() {
@@ -69,7 +72,7 @@ public class Plan {
     public void print(Pane mapPane) {
 
         for (Troncon troncon: mTroncons) {
-            troncon.print((mapPane));
+            troncon.print(mapPane, Color.BLACK);
         }
 
         for (Point point: mPoints) {

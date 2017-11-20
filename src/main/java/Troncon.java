@@ -34,12 +34,14 @@ public class Troncon {
                 '}';
     }
 
-    public void print(Pane mapPane){
+    public void print(Pane mapPane, javafx.scene.paint.Color color){
+
         Line line = new Line();
-        line.setStartX((this.getOrigine().getX()-Plan.mPointXmin)/(Plan.mPointXmax-Plan.mPointXmin)*mapPane.getPrefWidth());
-        line.setStartY((this.getOrigine().getY()-Plan.mPointYmin)/(Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
-        line.setEndX((this.getDestination().getX()-Plan.mPointXmin)/(Plan.mPointXmax-Plan.mPointXmin)*mapPane.getPrefWidth());
-        line.setEndY((this.getDestination().getY()-Plan.mPointYmin)/(Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
+        line.setStroke(color);
+        line.setStartX(((this.getOrigine().getX() - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
+        line.setStartY(((this.getOrigine().getY() - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin)) * mapPane.getPrefHeight());
+        line.setEndX(((this.getDestination().getX() - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
+        line.setEndY(((this.getDestination().getY() - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin)) * mapPane.getPrefHeight());
         mapPane.getChildren().add(line);
     }
 } //to merge

@@ -7,7 +7,7 @@ import static java.lang.Math.min;
 
 public class Dijkstra {
 
-    //Possibilité d'utiliser un heap pour améliorer la recherche de la distance minimale
+    /*//Possibilité d'utiliser un heap pour améliorer la recherche de la distance minimale
     private static Point getMinKey(Map<Point, Integer> map) {
         Point minKey = null;
         int minValue = Integer.MAX_VALUE;
@@ -100,5 +100,5 @@ public class Dijkstra {
 
         Plan plan = new Plan(points, troncons);
         System.out.println(dijkstra(plan, points[0], points[3]));
-    }
+    }*/
 }
