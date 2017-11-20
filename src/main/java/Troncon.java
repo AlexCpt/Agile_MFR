@@ -5,12 +5,14 @@ public class Troncon {
 
     private Point mOrigine;
     private Point mDestination;
-    private int mLongueur;
+    private double mLongueur;
+    private String mNomRue;
 
-    public Troncon(Point origine, Point destination, int longueur) {
+    public Troncon(Point origine, Point destination, double longueur, String nomRue) {
         mOrigine = origine;
         mDestination = destination;
         mLongueur = longueur;
+        mNomRue = nomRue;
     }
 
     public Point getOrigine() {
@@ -21,7 +23,7 @@ public class Troncon {
         return mDestination;
     }
 
-    public int getLongueur() { return mLongueur; }
+    public double getLongueur() { return mLongueur; }
 
     @Override
     public String toString() {

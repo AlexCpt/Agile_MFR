@@ -4,15 +4,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-
 public class Plan {
-    private Point[] mPoints;
-    private Troncon[] mTroncons;
+    private List<Point> mPoints;
+    private  List<Troncon> mTroncons;
     public static int mPointXmin;
     public static int mPointYmin;
     public static int mPointXmax;
     public static int mPointYmax;
-
 
     public HashMap<Point, List<Troncon>> getGraph() {
         return mGraph;
@@ -20,7 +18,7 @@ public class Plan {
 
     private HashMap<Point, List<Troncon>> mGraph;
 
-    public Plan(Point[] points, Troncon[] troncons) {
+    public Plan(List<Point> points, List<Troncon> troncons) {
         mPoints = points;
         mTroncons = troncons;
 
@@ -37,16 +35,13 @@ public class Plan {
 
             mGraph.get(t.getOrigine()).add(t);
         }
-
-        calculEchelle();
-
     }
 
-    public Point[] getPoints() {
+    public List<Point> getPoints() {
         return mPoints;
     }
 
-    public Troncon[] getTroncons() {
+    public List<Troncon> getTroncons() {
         return mTroncons;
     }
 
@@ -83,4 +78,3 @@ public class Plan {
     }
 }
 
-//to merge
