@@ -40,4 +40,3 @@ public class Plan {
         return mTroncons;
     }
 }
->>>>>>> 1c08312e2fc00b5ee71033fd1350114fbcc2f58d
