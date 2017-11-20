@@ -21,7 +21,7 @@ public class Dijkstra {
         return minKey;
     }
 
-    private static Itineraire dijkstra(Plan plan, Point depart, Point arrive) {
+    public static Itineraire dijkstra(Plan plan, Point depart, Point arrive) {
         Map<Point, Integer> parcourus = new HashMap<>();
         HashMap<Point, List<Troncon>> graph = plan.getGraph();
         Map<Point, Integer> distances = new HashMap<>();
@@ -101,6 +101,4 @@ public class Dijkstra {
         Plan plan = new Plan(points, troncons);
         System.out.println(dijkstra(plan, points[0], points[3]));
     }
-
-
 }
