@@ -64,7 +64,6 @@ public class Point {
     public void print(Pane mapPane){
 
         Circle circle;
-
         //Color
         if(mType == Type.ENTREPOT){
             circle = new Circle(3, Color.RED);

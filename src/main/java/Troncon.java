@@ -40,4 +40,4 @@ public class Troncon {
         line.setEndY((this.getDestination().getY()-Plan.mPointYmin)/(Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
         mapPane.getChildren().add(line);
     }
-}
+} //to merge
