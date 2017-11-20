@@ -1,17 +1,17 @@
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class Plan {
     private Point[] mPoints;
     private Troncon[] mTroncons;
-    private int mPointXmin;
-    private int mPointYmin;
-    private int mPointXmax;
-    private int mPointYmax;
+    public static int mPointXmin;
+    public static int mPointYmin;
+    public static int mPointXmax;
+    public static int mPointYmax;
 
 
     public HashMap<Point, List<Troncon>> getGraph() {
@@ -50,18 +50,6 @@ public class Plan {
         return mTroncons;
     }
 
-    public void print(Pane mapPane) {
-
-        for (Troncon troncon: mTroncons) {
-            Line line = new Line();
-            line.setStartX((troncon.getOrigine().getX()-mPointXmin)/(mPointXmax-mPointXmin)*mapPane.getPrefWidth());
-            line.setStartY((troncon.getOrigine().getY()-mPointYmin)/(mPointYmax-mPointYmin)*mapPane.getPrefHeight());
-            line.setEndX((troncon.getDestination().getX()-mPointXmin)/(mPointXmax-mPointXmin)*mapPane.getPrefWidth());
-            line.setEndY((troncon.getDestination().getY()-mPointYmin)/(mPointYmax-mPointYmin)*mapPane.getPrefHeight());
-            mapPane.getChildren().add(line);
-        }
-    }
-
     public void calculEchelle()
     {
         for(Point point : mPoints)
@@ -81,5 +69,16 @@ public class Plan {
         }
 
         System.out.println(mPointXmin + " " + mPointXmax + " " + mPointYmin + " " + mPointYmax );
+    }
+
+    public void print(Pane mapPane) {
+
+        for (Troncon troncon: mTroncons) {
+            troncon.print((mapPane));
+        }
+
+        for (Point point: mPoints) {
+            point.print(mapPane);
+        }
     }
 }
