@@ -21,5 +21,12 @@ public class Point {
         return mY;
     }
 
-
+    @Override
+    public String toString() {
+        return "P{" +
+                " " + mX +
+                ", " + mY +
+                ", '" + mAdresse + '\'' +
+                '}';
+    }
 }

@@ -14,8 +14,8 @@ public class TestPlan {
         };
 
         Troncon[] troncons = {
-                new Troncon(points[0], points[1]),
-                new Troncon(points[0], points[2])
+                new Troncon(points[0], points[1], 1),
+                new Troncon(points[0], points[2], 1)
         };
 
         Plan plan = new Plan(points, troncons);
