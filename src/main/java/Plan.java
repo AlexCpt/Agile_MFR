@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Plan {
-    private Point[] mPoints;
-    private Troncon[] mTroncons;
+    private List<Point> mPoints;
+    private  List<Troncon> mTroncons;
 
     public HashMap<Point, List<Troncon>> getGraph() {
         return mGraph;
@@ -13,7 +13,7 @@ public class Plan {
 
     private HashMap<Point, List<Troncon>> mGraph;
 
-    public Plan(Point[] points, Troncon[] troncons) {
+    public Plan(List<Point> points, List<Troncon> troncons) {
         mPoints = points;
         mTroncons = troncons;
 
@@ -32,11 +32,11 @@ public class Plan {
         }
     }
 
-    public Point[] getPoints() {
+    public List<Point> getPoints() {
         return mPoints;
     }
 
-    public Troncon[] getTroncons() {
+    public List<Troncon> getTroncons() {
         return mTroncons;
     }
 }

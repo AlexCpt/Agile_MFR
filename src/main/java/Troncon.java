@@ -1,13 +1,18 @@
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
+
 public class Troncon {
 
     private Point mOrigine;
     private Point mDestination;
-    private int mLongueur;
+    private double mLongueur;
+    private String mNomRue;
 
-    public Troncon(Point origine, Point destination, int longueur) {
+    public Troncon(Point origine, Point destination, double longueur, String nomRue) {
         mOrigine = origine;
         mDestination = destination;
         mLongueur = longueur;
+        mNomRue = nomRue;
     }
 
     public Point getOrigine() {
@@ -18,7 +23,7 @@ public class Troncon {
         return mDestination;
     }
 
-    public int getLongueur() { return mLongueur; }
+    public double getLongueur() { return mLongueur; }
 
     @Override
     public String toString() {
@@ -39,5 +44,15 @@ public class Troncon {
         if (mLongueur != troncon.mLongueur) return false;
         if (mOrigine != null ? !mOrigine.equals(troncon.mOrigine) : troncon.mOrigine != null) return false;
         return mDestination != null ? mDestination.equals(troncon.mDestination) : troncon.mDestination == null;
+    }
+}
+
+    public void print(Pane mapPane){
+        Line line = new Line();
+        line.setStartX((this.getOrigine().getX()-Plan.mPointXmin)/(Plan.mPointXmax-Plan.mPointXmin)*mapPane.getPrefWidth());
+        line.setStartY((this.getOrigine().getY()-Plan.mPointYmin)/(Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
+        line.setEndX((this.getDestination().getX()-Plan.mPointXmin)/(Plan.mPointXmax-Plan.mPointXmin)*mapPane.getPrefWidth());
+        line.setEndY((this.getDestination().getY()-Plan.mPointYmin)/(Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
+        mapPane.getChildren().add(line);
     }
 }
