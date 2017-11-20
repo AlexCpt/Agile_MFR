@@ -22,4 +22,15 @@ public class Itineraire {
                 " " + mTroncons +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Itineraire that = (Itineraire) o;
+
+        return mTroncons != null ? mTroncons.equals(that.mTroncons) : that.mTroncons == null;
+    }
+
 }

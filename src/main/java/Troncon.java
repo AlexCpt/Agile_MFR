@@ -29,4 +29,15 @@ public class Troncon {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Troncon troncon = (Troncon) o;
+
+        if (mLongueur != troncon.mLongueur) return false;
+        if (mOrigine != null ? !mOrigine.equals(troncon.mOrigine) : troncon.mOrigine != null) return false;
+        return mDestination != null ? mDestination.equals(troncon.mDestination) : troncon.mDestination == null;
+    }
 }
