@@ -1,4 +1,5 @@
 public class Troncon {
+
     private Point mOrigine;
     private Point mDestination;
     private int mLongueur;
@@ -18,5 +19,14 @@ public class Troncon {
     }
 
     public int getLongueur() { return mLongueur; }
+
+    @Override
+    public String toString() {
+        return "T{" +
+                " " + mOrigine +
+                ", " + mDestination +
+                ", " + mLongueur +
+                '}';
+    }
 
 }

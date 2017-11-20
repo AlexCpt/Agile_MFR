@@ -21,7 +21,7 @@ public class Dijkstra {
         return minKey;
     }
 
-    private static void dijkstra(Plan plan, Point depart, Point arrive) {
+    public static Itineraire dijkstra(Plan plan, Point depart, Point arrive) {
         Map<Point, Integer> parcourus = new HashMap<>();
         HashMap<Point, List<Troncon>> graph = plan.getGraph();
         Map<Point, Integer> distances = new HashMap<>();
@@ -57,11 +57,23 @@ public class Dijkstra {
             distances.remove(minDistances);
 
         }
-        for(Point p : parcourus.keySet()){
+        List<Troncon> itineraire = new ArrayList<>();
+        Point current = arrive;
+        Point predecesseurCurrent;
+        while(!current.equals(depart))
+        {
+            predecesseurCurrent = predecesseurs.get(current);
+            for(Troncon t : plan.getGraph().get(predecesseurCurrent)){
+                if(t.getDestination().equals(current)){
 
+                    itineraire.add(0, t);
+                }
+            }
+            current = predecesseurCurrent;
 
         }
 
+        return new Itineraire(itineraire);
     }
 
     public static void main (String[] args){
@@ -87,8 +99,6 @@ public class Dijkstra {
         };
 
         Plan plan = new Plan(points, troncons);
-        dijkstra(plan, points[0], points[3]);
+        System.out.println(dijkstra(plan, points[0], points[3]));
     }
-
-
 }
