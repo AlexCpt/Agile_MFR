@@ -6,8 +6,9 @@ public class Main  {
         ParserXML parse = new ParserXML();
         parse.parse("fichiersXML/planLyonPetit.xml");
 
-        MainWindow window = new MainWindow();
-        window.main(args);
+
+       // MainWindow window = new MainWindow(plan);
+       // window.main(args);
 
     }
 }
