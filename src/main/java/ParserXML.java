@@ -1,9 +1,10 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,6 +18,10 @@ import org.xml.sax.SAXException;
 
 
 public class ParserXML {
+
+    private Map<String,Point> idMapToPoint;
+
+
     public Plan parse(String fichier) {
 
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -28,11 +33,8 @@ public class ParserXML {
 
             List<Point> listePoints = new ArrayList<>();
             List<Troncon> listeTroncons = new ArrayList<>();
-            Map<String,Point> idMapToPoint = new HashMap<>();
+            idMapToPoint = new HashMap<>();
 
-            //Affichage de l'élément racine
-            System.out.println("\n*************RACINE************");
-            System.out.println(racine.getNodeName());
 
             final NodeList racineNoeuds = racine.getChildNodes();
             final int nbRacineNoeuds = racineNoeuds.getLength();
@@ -52,9 +54,9 @@ public class ParserXML {
                         id = noeud.getAttribute("id");
                         x = Integer.valueOf(noeud.getAttribute("x"));
                         y = Integer.valueOf(noeud.getAttribute("y"));
-                        System.out.println(id);
+                        /*System.out.println(id);
                         System.out.println(x);
-                        System.out.println(y);
+                        System.out.println(y);*/
                         Point unPoint = new Point(id,x,y);
                         listePoints.add(unPoint);
                         idMapToPoint.put(id,unPoint);
@@ -66,10 +68,10 @@ public class ParserXML {
                         nomRue =  noeud.getAttribute("nomRue");
                         origine = noeud.getAttribute("origine");
 
-                        System.out.println("destination: " + noeud.getAttribute("destination") +
+                       /* System.out.println("destination: " + noeud.getAttribute("destination") +
                                 "\nlongueur : " + noeud.getAttribute("longueur") +
                                 "\nnom Rue: " + noeud.getAttribute("nomRue") +
-                                "\norigine: " + noeud.getAttribute("origine"));
+                                "\norigine: " + noeud.getAttribute("origine"));*/
 
                         Point destinationPoint = idMapToPoint.get(destination);
                         Point originePoint = idMapToPoint.get(origine);
@@ -78,7 +80,7 @@ public class ParserXML {
                     }
                 }
             }
-            System.out.println("longueur liste finale:"+listeTroncons.get(0).getOrigine().getX());
+            //System.out.println("longueur liste finale:"+listeTroncons.get(0).getOrigine().getX());
             Plan plan = new Plan(listePoints,listeTroncons);
             return plan;
         }
@@ -97,4 +99,62 @@ public class ParserXML {
         }
 
     }
-}
+
+    public void chargerLivraison(String fichier) {
+
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        try {
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+            final Document document = builder.parse(new File(fichier));
+            final Element racine = document.getDocumentElement();
+
+            final NodeList racineNoeuds = racine.getChildNodes();
+            final int nbRacineNoeuds = racineNoeuds.getLength();
+
+            List<Point> livraisons=new ArrayList<>();
+            Date depart=new Date();
+            String idEntrepot;
+            Point entrepot=new Point();
+
+
+            for (int i = 0; i < nbRacineNoeuds; i++) {
+                if (racineNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    final Element noeud = (Element) racineNoeuds.item(i);
+                    if (noeud.getTagName() == "entrepot") {
+                        idEntrepot=noeud.getAttribute("adresse");
+
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                        String departString = noeud.getAttribute("heureDepart");
+                        SimpleDateFormat departDate=new SimpleDateFormat("HH:mm:ss");
+                        depart= departDate.parse(departString);
+
+
+                        entrepot=idMapToPoint.get(idEntrepot);
+                      //  System.out.println("point : "+entrepot.getX());
+
+                    }
+                    if (noeud.getTagName() == "livraison") {
+                        String idLivraison=noeud.getAttribute("adresse");
+                        Point livraison=idMapToPoint.get(idLivraison);
+                        livraisons.add(livraison);
+
+                    }
+
+                }
+            }
+            DemandeDeLivraison demandeDeLivraison=new DemandeDeLivraison(livraisons,entrepot,depart);
+
+
+
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }}

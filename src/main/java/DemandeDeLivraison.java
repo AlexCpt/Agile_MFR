@@ -7,9 +7,9 @@ public class DemandeDeLivraison {
 
     List<Point> mLivraisons;
     Point mEntrepot;
-    LocalDateTime mDepart;
+    Date mDepart;
 
-    public DemandeDeLivraison(List<Point> livraisons, Point entrepot, LocalDateTime depart) {
+    public DemandeDeLivraison(List<Point> livraisons, Point entrepot, Date depart) {
         this.mLivraisons = livraisons;
         this.mEntrepot = entrepot;
         this.mDepart = depart;

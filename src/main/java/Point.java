@@ -40,6 +40,7 @@ public class Point {
         mAdresse = adresse;
     }
 
+    public Point(){};
     public Point(String id, int x, int y) {
         mType = Type.POINT;
         mId = id;

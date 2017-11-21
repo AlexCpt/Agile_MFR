@@ -43,7 +43,7 @@ public class TestDemandeDeLivraison {
 
         HashMap<Point, List<Troncon>> graph = plan.getGraph();
 
-        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(livraisons, points.get(0), LocalDateTime.now());
+        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(livraisons, points.get(0), new Date());
 
         Tournee tournee = demandeDeLivraison.calculerTournee(plan);
 
