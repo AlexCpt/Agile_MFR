@@ -16,8 +16,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
-public class ParserXML {
-    public Plan parse(String fichier) {
+public class ParserXML implements Parser {
+    @Override
+    public Plan parsePlan(String fichier) {
 
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 

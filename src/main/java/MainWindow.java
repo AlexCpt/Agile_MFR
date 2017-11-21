@@ -25,7 +25,7 @@ public class MainWindow extends Application
     public MainWindow(){
         System.out.println("Hello");
         ParserXML parser = new ParserXML();
-        plan = parser.parse("fichiersXML/planLyonPetit.xml");
+        plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
 
         /*List<Point> points = new ArrayList<>();
         points.add(new Point("70",70,70));
