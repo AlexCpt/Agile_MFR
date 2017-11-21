@@ -37,14 +37,14 @@ public class MainWindow extends Application
         mapPane.setStyle("-fx-background-color: #cccbc1;");
         mapPane.setPrefSize(mapWidth,mapHeight);
 
-        Button btn = new Button();
+        /*Button btn = new Button();
         btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Charger Livraison");
             }
-        });
+        });*/
 
         plan.print(mapPane);
         //tournee.print(mapPane);
