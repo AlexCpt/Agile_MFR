@@ -47,9 +47,10 @@ public class Troncon {
         return mDestination != null ? mDestination.equals(troncon.mDestination) : troncon.mDestination == null;
     }
 
-    public void print(Pane mapPane, javafx.scene.paint.Color color){
+    public void print(Pane mapPane, javafx.scene.paint.Color color, int epaisseur){
         Line line = new Line();
         line.setStroke(color);
+        line.setStrokeWidth(epaisseur);
         line.setStartX(((this.getOrigine().getX() - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
         line.setStartY(((this.getOrigine().getY() - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin)) * mapPane.getPrefHeight());
         line.setEndX(((this.getDestination().getX() - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
