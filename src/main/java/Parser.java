@@ -1,2 +1,3 @@
-public class Parser {
+public interface Parser {
+    Plan parsePlan(String fichier);
 }
