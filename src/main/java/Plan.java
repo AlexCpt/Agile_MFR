@@ -8,8 +8,8 @@ import java.util.List;
 public class Plan {
     private List<Point> mPoints;
     private  List<Troncon> mTroncons;
-    public static int mPointXmin;
-    public static int mPointYmin;
+    public static int mPointXmin = Integer.MAX_VALUE;
+    public static int mPointYmin = Integer.MAX_VALUE;
     public static int mPointXmax;
     public static int mPointYmax;
 
@@ -66,13 +66,13 @@ public class Plan {
             }
         }
 
-        System.out.println(mPointXmin + " " + mPointXmax + " " + mPointYmin + " " + mPointYmax );
+        System.out.println("x min : " + mPointXmin + " xmax : " + mPointXmax + " ymin : " + mPointYmin + " ymax : " + mPointYmax);
     }
 
     public void print(Pane mapPane) {
 
         for (Troncon troncon: mTroncons) {
-            troncon.print(mapPane, Color.BLACK);
+            troncon.print(mapPane, Color.WHITE, 1);
         }
 
         for (Point point: mPoints) {

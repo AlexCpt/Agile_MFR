@@ -11,30 +11,25 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
 public class MainWindow extends Application
 {
     final int mapWidth = 800;
-    final int mapHeight = 600;
+    final int mapHeight = 800;
     Plan plan;
+    Tournee tournee;
 
 
     public MainWindow(){
-        System.out.println("Hello");
         ParserXML parser = new ParserXML();
-        plan = parser.parse("fichiersXML/planLyonPetit.xml");
-
-        /*List<Point> points = new ArrayList<>();
-        points.add(new Point("70",70,70));
-        points.add(new Point("71",200,200));
-
-        List<Troncon> troncons = new ArrayList<>();
-        troncons.add(new Troncon(new Point("70",70,70), new Point("71",200,200), 56,"Lala"));
-
-        plan = new Plan(points, troncons);*/
+        plan = parser.parse("fichiersXML/planLyonGrand.xml");
     }
 
     public static void main(String[] args) {
@@ -48,25 +43,26 @@ public class MainWindow extends Application
         primaryStage.setTitle("LE NOM DE NOTRE APPLI QUOI");
 
         Pane mapPane = new Pane();
-        mapPane.setStyle("-fx-background-color: #fffadd;");
+        mapPane.setStyle("-fx-background-color: #cccbc1;");
         mapPane.setPrefSize(mapWidth,mapHeight);
-        Circle circle = new Circle(50, Color.RED);
-        circle.relocate(20,20);
-        mapPane.getChildren().add(circle);
+
+        Button btn = new Button();
+        btn.setText("Say 'Hello World'");
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Charger Livraison");
+            }
+        });
 
         plan.print(mapPane);
+        //tournee.print(mapPane);
 
-        Scene scene = new Scene(mapPane);
+        StackPane root = new StackPane();
+        root.getChildren().add(mapPane);
+        root.getChildren().add(btn);
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
-    public void loadMap(Plan _plan){
-        plan = _plan;
-    }
-
-
 }
-
-//to merge
-

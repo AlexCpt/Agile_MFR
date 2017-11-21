@@ -7,6 +7,7 @@ public class Point {
     private String mId;
     private int mX;
     private int mY;
+    final double radiusAffichage = 3;
 
     public String mAdresse;
 
@@ -84,16 +85,22 @@ public class Point {
         Circle circle;
         //Color
         if(mType == Type.ENTREPOT){
-            circle = new Circle(3, Color.RED);
+            circle = new Circle(radiusAffichage, Color.RED);
         } else if (mType == Type.LIVRAISON) {
-            circle = new Circle(3, Color.BLUE);
+            circle = new Circle(radiusAffichage, Color.BLUE);
         }
         else {
-            circle = new Circle(3, Color.GREEN);
+            circle = new Circle(0, Color.BLACK);
         }
 
         //Position
-        circle.relocate(((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth(),(mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefWidth());
+        System.out.println("prefw : " +mapPane.getPrefWidth());
+        System.out.println("prefH : " +mapPane.getPrefHeight());
+
+
+        circle.relocate((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - radiusAffichage,((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - radiusAffichage);
+        System.out.println("x du point : " + ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
+        System.out.println("y du point : " + (mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
 
         mapPane.getChildren().add(circle);
     }
