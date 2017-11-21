@@ -1,3 +1,7 @@
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+
 import java.util.List;
 
 public class Tournee {
@@ -16,5 +20,11 @@ public class Tournee {
         Tournee tournee = (Tournee) o;
 
         return mItineraires != null ? mItineraires.equals(tournee.mItineraires) : tournee.mItineraires == null;
+    }
+
+    public void print(Pane mapPane){
+        for (Itineraire itineraire: mItineraires) {
+            itineraire.print(mapPane);
+        }
     }
 }

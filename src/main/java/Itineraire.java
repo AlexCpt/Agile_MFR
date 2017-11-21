@@ -1,3 +1,6 @@
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+
 import java.util.List;
 
 public class Itineraire {
@@ -40,4 +43,11 @@ public class Itineraire {
 
         return mTroncons != null ? mTroncons.equals(that.mTroncons) : that.mTroncons == null;
     }
+
+    public void print(Pane mapPane){
+        for (Troncon troncon: mTroncons) {
+            troncon.print(mapPane, Color.YELLOW,2);
+        }
+    }
 }
+
