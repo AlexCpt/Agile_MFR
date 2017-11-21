@@ -3,9 +3,13 @@ import java.util.List;
 public class Itineraire {
 
     private List<Troncon> mTroncons;
+    private int mLongueur = 0;
 
     public Itineraire(List<Troncon> troncons) {
         mTroncons =  troncons;
+        for (Troncon t : mTroncons) {
+            mLongueur += t.getLongueur();
+        }
     }
 
     public List<Troncon> getTroncons() {
@@ -14,6 +18,10 @@ public class Itineraire {
 
     public void setTroncons(List<Troncon> mTroncons) {
         this.mTroncons = mTroncons;
+    }
+
+    public int getLongueur() {
+        return mLongueur;
     }
 
     @Override
@@ -32,5 +40,4 @@ public class Itineraire {
 
         return mTroncons != null ? mTroncons.equals(that.mTroncons) : that.mTroncons == null;
     }
-
 }

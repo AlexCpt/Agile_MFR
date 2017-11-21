@@ -1,6 +1,5 @@
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -8,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestDemandeDeLivraison {
     @Test
-    public final void TestPlan() {
+    public final void TestDemandeDeLivraison() {
         List<Point> points = Arrays.asList(
                 new Point("0",1, 2),
                 new Point("1", 2, 3),

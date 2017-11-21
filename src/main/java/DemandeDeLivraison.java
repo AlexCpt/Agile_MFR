@@ -1,6 +1,9 @@
+import javafx.util.Pair;
+import tsp.TSP1;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class DemandeDeLivraison {
@@ -16,21 +19,49 @@ public class DemandeDeLivraison {
     }
 
     public Tournee calculerTournee(Plan plan){
-        List<Itineraire> itineraires = new ArrayList<>();
-        List<Point> points = new ArrayList<>(mLivraisons);
-        points.add(mEntrepot);
-        Point current = mEntrepot;
-        Point successeur = mLivraisons.get(0);
-        for(int i=1; i<mLivraisons.size(); i++)
-        {
-            itineraires.add(Dijkstra.dijkstra(plan, current, successeur));
-            current = successeur;
-            successeur = mLivraisons.get(i);
-        }
-        itineraires.add(Dijkstra.dijkstra(plan, current, successeur));
-        itineraires.add(Dijkstra.dijkstra(plan, successeur, mEntrepot));
+        HashMap<Pair<Point, Point>, Itineraire> itineraireHashMap = new HashMap<>();
 
-        return new Tournee(itineraires);
+        int nombreSommets = mLivraisons.size() + 1;
+
+        int[][] couts = new int[nombreSommets][nombreSommets];
+        int[] duree = new int[nombreSommets];
+
+        Point[] sommets = new Point[nombreSommets];
+        sommets[0] = mEntrepot;
+        for (int i = 0; i < mLivraisons.size(); i++) {
+            sommets[i+1] = mLivraisons.get(i);
+        }
+
+        Itineraire currentItineraire;
+        for (int i = 0; i < sommets.length; i++) {
+            for (int j = 0; j < sommets.length; j++) {
+                if (i != j) {
+                    currentItineraire = Dijkstra.dijkstra(plan, sommets[i], sommets[j]);
+                    itineraireHashMap.put(new Pair<>(sommets[i], sommets[j]), currentItineraire);
+                    couts[i][j] = currentItineraire.getLongueur();
+                }
+            }
+        }
+
+        TSP1 tsp1 = new TSP1();
+        tsp1.chercheSolution(1000, nombreSommets, couts, duree);
+
+        if (tsp1.getTempsLimiteAtteint()) {
+            System.out.println("TSP : Temps limite atteint");
+            return null;
+        }
+
+        List<Itineraire> listeItineraires = new ArrayList<>();
+        for (int i = 0; i < nombreSommets - 1; i++) {
+            int indexPoint1 = tsp1.getMeilleureSolution(i);
+            int indexPoint2 = tsp1.getMeilleureSolution(i+1);
+            listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[indexPoint1], sommets[indexPoint2])));
+        }
+
+        listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[tsp1.getMeilleureSolution(nombreSommets - 1)], sommets[tsp1.getMeilleureSolution(0)])));
+
+        return new Tournee(listeItineraires);
     }
+
 
 }
