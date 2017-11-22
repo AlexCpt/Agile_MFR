@@ -63,7 +63,6 @@ public class MainWindow extends Application
 
         //Label Title
         Label lblTitle = new Label("Lyon - Livraison");
-        lblTitle.setLayoutY(100);
 
         //Button
         Button btn = new Button();
@@ -83,18 +82,18 @@ public class MainWindow extends Application
             tournee.print(mapPane);
         });
 
-        //LeftHighVbox
-        VBox highVbox = new VBox();
-        highVbox.getChildren().add(lblTitle);
-        highVbox.getChildren().add(btn);
-        highVbox.getChildren().add(btn2);
-        highVbox.setPrefSize(bandeauWidth, bandeauHeigth);
-        highVbox.setAlignment(Pos.CENTER);
-
+        // LeftHighVBox
+        VBox Vbox = new VBox();
+        Vbox.getChildren().add(lblTitle);
+        Vbox.getChildren().add(btn);
+        Vbox.getChildren().add(btn2);
+        Vbox.setPrefSize(bandeauWidth, bandeauHeigth);
+        Vbox.setLayoutY(150);
+        Vbox.setAlignment(Pos.TOP_CENTER);
 
         //Left Pane
-        BorderPane leftPane = new BorderPane();
-        leftPane.setLeft(highVbox);
+        Pane leftPane = new Pane();
+        leftPane.getChildren().add(Vbox);
 
         plan.print(mapPane);
 
