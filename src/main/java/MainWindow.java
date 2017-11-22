@@ -13,11 +13,12 @@ public class MainWindow extends Application
     final int mapWidth = 800;
     final int mapHeight = 800;
     Plan plan;
+    ParserXML parser;
     Tournee tournee;
 
 
     public MainWindow(){
-        ParserXML parser = new ParserXML();
+        parser = new ParserXML();
 
         plan = parser.parsePlan("fichiersXML/planLyonGrand.xml");
 
@@ -39,11 +40,9 @@ public class MainWindow extends Application
 
         Button btn = new Button();
         btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Charger Livraison");
-            }
+        btn.setOnAction(event -> {
+            DemandeDeLivraison ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand20.xml");
+            plan.print(mapPane);
         });
 
         plan.print(mapPane);

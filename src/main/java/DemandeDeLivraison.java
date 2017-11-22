@@ -1,7 +1,7 @@
 import javafx.util.Pair;
 import tsp.TSP1;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +10,9 @@ public class DemandeDeLivraison {
 
     List<Point> mLivraisons;
     Point mEntrepot;
-    LocalDateTime mDepart;
+    LocalTime mDepart;
 
-    public DemandeDeLivraison(List<Point> livraisons, Point entrepot, LocalDateTime depart) {
+    public DemandeDeLivraison(List<Point> livraisons, Point entrepot, LocalTime depart) {
         this.mLivraisons = livraisons;
         this.mEntrepot = entrepot;
         this.mDepart = depart;
