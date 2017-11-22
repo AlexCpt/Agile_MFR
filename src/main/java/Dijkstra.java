@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Dijkstra {
 
-    public static Itineraire dijkstra(Plan plan, Point depart, Point arrive) {
+    public static List<Itineraire> dijkstra(Plan plan, Point depart, Point[] arrives) {
         Map<Point, Double> parcourus = new HashMap<>();
         HashMap<Point, List<Troncon>> graph = plan.getGraph();
         Map<Point, Double> distances = new HashMap<>();
@@ -48,24 +48,28 @@ public class Dijkstra {
             distances.remove(minPair.getKey());
         }
 
-        List<Troncon> itineraire = new ArrayList<>();
-        Point current = arrive;
-        Point predecesseurCurrent;
-        while(!current.equals(depart))
-        {
-            predecesseurCurrent = predecesseurs.get(current);
-            for(Troncon t : plan.getGraph().get(predecesseurCurrent)){
-                if(t.getDestination().equals(current)){
+        List<Itineraire> itineraires = new ArrayList<>(arrives.length);
+        for (Point arrive : arrives) {
+            List<Troncon> itineraire = new ArrayList<>();
+            Point current = arrive;
+            Point predecesseurCurrent;
+            while (!current.equals(depart)) {
+                predecesseurCurrent = predecesseurs.get(current);
+                for (Troncon t : plan.getGraph().get(predecesseurCurrent)) {
+                    if (t.getDestination().equals(current)) {
 
-                    itineraire.add(0, t);
-                    break;
+                        itineraire.add(0, t);
+                        break;
+                    }
                 }
-            }
-            current = predecesseurCurrent;
+                current = predecesseurCurrent;
 
+            }
+
+            itineraires.add(new Itineraire(itineraire));
         }
 
-        return new Itineraire(itineraire);
+        return itineraires;
     }
 
     public static void main (String[] args){

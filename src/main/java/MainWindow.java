@@ -68,7 +68,7 @@ public class MainWindow extends Application
         Button btn = new Button();
         btn.setText("Charger demande de livraison");
         btn.setOnAction(event -> {
-            ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand10.xml");
+            ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand20.xml");
             plan.print(mapPane);
         });
 
@@ -88,8 +88,7 @@ public class MainWindow extends Application
         Vbox.getChildren().add(btn);
         Vbox.getChildren().add(btn2);
         Vbox.setPrefSize(bandeauWidth, bandeauHeigth);
-        Vbox.setLayoutY(150);
-        Vbox.setAlignment(Pos.TOP_CENTER);
+        Vbox.setAlignment(Pos.CENTER);
 
         //Left Pane
         Pane leftPane = new Pane();

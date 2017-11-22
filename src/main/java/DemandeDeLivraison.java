@@ -32,13 +32,13 @@ public class DemandeDeLivraison {
             sommets[i+1] = mLivraisons.get(i);
         }
 
-        Itineraire currentItineraire;
+        List<Itineraire> currentItineraires;
         for (int i = 0; i < sommets.length; i++) {
+            currentItineraires = Dijkstra.dijkstra(plan, sommets[i], sommets);
             for (int j = 0; j < sommets.length; j++) {
                 if (i != j) {
-                    currentItineraire = Dijkstra.dijkstra(plan, sommets[i], sommets[j]);
-                    itineraireHashMap.put(new Pair<>(sommets[i], sommets[j]), currentItineraire);
-                    couts[i][j] = currentItineraire.getLongueur();
+                    itineraireHashMap.put(new Pair<>(sommets[i], sommets[j]), currentItineraires.get(j));
+                    couts[i][j] = currentItineraires.get(j).getLongueur();
                 }
             }
         }
