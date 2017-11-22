@@ -1,8 +1,6 @@
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -98,7 +96,7 @@ public class ParserXML implements Parser {
 
     }
 
-    public void chargerLivraison(String fichier) {
+    public DemandeDeLivraison parseDemandeDeLivraison(String fichier) {
 
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -111,7 +109,7 @@ public class ParserXML implements Parser {
             final int nbRacineNoeuds = racineNoeuds.getLength();
 
             List<Point> livraisons=new ArrayList<>();
-            LocalDateTime depart = null;
+            LocalTime depart = null;
             String idEntrepot;
             Point entrepot=new Point();
 
@@ -122,35 +120,37 @@ public class ParserXML implements Parser {
                     if (noeud.getTagName() == "entrepot") {
                         idEntrepot=noeud.getAttribute("adresse");
 
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m:s");
                         String departString = noeud.getAttribute("heureDepart");
-                        depart= LocalDateTime.parse(departString, formatter);
+                        depart= LocalTime.parse(departString, formatter);
 
 
                         entrepot=idMapToPoint.get(idEntrepot);
                       //  System.out.println("point : "+entrepot.getX());
+                        entrepot.setEntrepot(new Entrepot());
 
                     }
                     if (noeud.getTagName() == "livraison") {
                         String idLivraison=noeud.getAttribute("adresse");
                         Point livraison=idMapToPoint.get(idLivraison);
                         livraisons.add(livraison);
-
+                        livraison.setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), 0));
                     }
 
                 }
             }
-            DemandeDeLivraison demandeDeLivraison=new DemandeDeLivraison(livraisons,entrepot,depart);
 
-
-
+            return new DemandeDeLivraison(livraisons,entrepot,depart);
 
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         } catch (SAXException e) {
             e.printStackTrace();
+            return null;
         }
     }
 }

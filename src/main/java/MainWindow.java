@@ -23,11 +23,12 @@ public class MainWindow extends Application
     final int sceneHeight = mapHeight+bandeauHeigth;
 
     Plan plan;
+    ParserXML parser;
     Tournee tournee;
 
 
     public MainWindow(){
-        ParserXML parser = new ParserXML();
+        parser = new ParserXML();
 
         plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
 
@@ -69,6 +70,8 @@ public class MainWindow extends Application
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Charger Livraison");
+                DemandeDeLivraison ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand20.xml");
+                plan.print(mapPane);
             }
         });
 

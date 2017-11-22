@@ -1,6 +1,6 @@
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -30,8 +30,8 @@ public class TestDemandeDeLivraison {
                 new Troncon(points.get(5), points.get(0),2, "a")
         );
         List<Point> livraisons = new ArrayList<>();
-        points.get(2).setLivraison(new Livraison(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), 3));
-        points.get(5).setLivraison(new Livraison(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), 3));
+        points.get(2).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), 3));
+        points.get(5).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), 3));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         Entrepot entrepot = new Entrepot();
@@ -42,7 +42,7 @@ public class TestDemandeDeLivraison {
 
         HashMap<Point, List<Troncon>> graph = plan.getGraph();
 
-        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(livraisons, points.get(0), LocalDateTime.now());
+        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(livraisons, points.get(0), LocalTime.now());
 
         Tournee tournee = demandeDeLivraison.calculerTournee(plan);
 

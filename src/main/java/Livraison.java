@@ -1,14 +1,14 @@
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Livraison {
 
-    private LocalDateTime mDebutPlage;
-    private LocalDateTime mFinPlage;
-    private LocalDateTime mDateLivraison;
-    private LocalDateTime mDateArrivee;
+    private LocalTime mDebutPlage;
+    private LocalTime mFinPlage;
+    private LocalTime mDateLivraison;
+    private LocalTime mDateArrivee;
     private int mDureeLivraison;
 
-    public Livraison(LocalDateTime mDebutPlage, LocalDateTime mFinPlage, LocalDateTime mDateLivraison, LocalDateTime mDateArrivee, int mDureeLivraison) {
+    public Livraison(LocalTime mDebutPlage, LocalTime mFinPlage, LocalTime mDateLivraison, LocalTime mDateArrivee, int mDureeLivraison) {
         this.mDebutPlage = mDebutPlage;
         this.mFinPlage = mFinPlage;
         this.mDateLivraison = mDateLivraison;
