@@ -66,7 +66,7 @@ public class Plan {
             }
         }
 
-        System.out.println("x min : " + mPointXmin + " xmax : " + mPointXmax + " ymin : " + mPointYmin + " ymax : " + mPointYmax);
+        //System.out.println("x min : " + mPointXmin + " xmax : " + mPointXmax + " ymin : " + mPointYmin + " ymax : " + mPointYmax);
     }
 
     public void print(Pane mapPane) {

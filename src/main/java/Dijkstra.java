@@ -1,59 +1,53 @@
+import javafx.util.Pair;
+
 import java.util.*;
 
-import static java.lang.Math.min;
-
 public class Dijkstra {
-
-    //Possibilité d'utiliser un heap pour améliorer la recherche de la distance minimale
-    private static Point getMinKey(Map<Point, Double> map) {
-        Point minKey = null;
-        double minValue = Integer.MAX_VALUE;
-        for(Point key : map.keySet()) {
-            double value = map.get(key);
-            if(value < minValue) {
-                minValue = value;
-                minKey = key;
-            }
-        }
-        return minKey;
-    }
 
     public static Itineraire dijkstra(Plan plan, Point depart, Point arrive) {
         Map<Point, Double> parcourus = new HashMap<>();
         HashMap<Point, List<Troncon>> graph = plan.getGraph();
         Map<Point, Double> distances = new HashMap<>();
+        PriorityQueue<Pair<Point, Double>> distanceQueue = new PriorityQueue<>(plan.getPoints().size(), Comparator.comparing(Pair::getValue));
         Map<Point, Point> predecesseurs = new HashMap<>();
         for(Point p : plan.getPoints()){
-            distances.put(p, (double) 10000);
+            distanceQueue.add(new Pair<>(p, Double.MAX_VALUE));
+            distances.put(p, Double.MAX_VALUE);
         }
+
         distances.put(depart, (double) 0);
-        predecesseurs.put(depart, depart);
+        distanceQueue.add(new Pair<>(depart, 0d));
+
+        Pair<Point, Double> minPair;
         while(parcourus.size()<plan.getPoints().size())
         {
-            Point minDistances = getMinKey(distances);
+            do {
+                minPair = distanceQueue.poll();
+            } while (!distances.containsKey(minPair.getKey()));
 
-            if(graph.containsKey(minDistances))
+            if(graph.containsKey(minPair.getKey()))
             {
-                List<Troncon> troncons = graph.get(minDistances);
+                List<Troncon> troncons = graph.get(minPair.getKey());
                 for(Troncon t : troncons)
                 {
-                    double newLongueur = distances.get(minDistances) + t.getLongueur();
+                    double newLongueur = minPair.getValue() + t.getLongueur();
                     if(distances.containsKey(t.getDestination()))
                     {
                         if(distances.get(t.getDestination())> newLongueur)
                         {
                             distances.put(t.getDestination(),newLongueur);
-                            predecesseurs.put(t.getDestination(),minDistances);
+                            distanceQueue.add(new Pair<>(t.getDestination(), newLongueur));
+                            predecesseurs.put(t.getDestination(),minPair.getKey());
                         }
                     }
 
 
                 }
             }
-            parcourus.put(minDistances, distances.get(minDistances));
-            distances.remove(minDistances);
-
+            parcourus.put(minPair.getKey(), minPair.getValue());
+            distances.remove(minPair.getKey());
         }
+
         List<Troncon> itineraire = new ArrayList<>();
         Point current = arrive;
         Point predecesseurCurrent;
@@ -64,6 +58,7 @@ public class Dijkstra {
                 if(t.getDestination().equals(current)){
 
                     itineraire.add(0, t);
+                    break;
                 }
             }
             current = predecesseurCurrent;
@@ -97,7 +92,7 @@ public class Dijkstra {
         );
 
         Plan plan = new Plan(points, troncons);
-        System.out.println(dijkstra(plan, points.get(0), points.get(3)));
+        //System.out.println(dijkstra(plan, points.get(0), points.get(3)));
     }
-    }
+}
 

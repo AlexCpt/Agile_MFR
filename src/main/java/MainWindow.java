@@ -1,11 +1,10 @@
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
 
 
 public class MainWindow extends Application
@@ -39,14 +38,15 @@ public class MainWindow extends Application
         mapPane.setPrefSize(mapWidth,mapHeight);
 
         Button btn = new Button();
-        btn.setText("Say 'Hello World'");
+        btn.setText("Calculer tournée");
         btn.setOnAction(event -> {
-            DemandeDeLivraison ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand20.xml");
+            DemandeDeLivraison ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand10.xml");
             plan.print(mapPane);
+            tournee = ddl.calculerTournee(plan);
+            tournee.print(mapPane);
         });
 
         plan.print(mapPane);
-        //tournee.print(mapPane);
 
         StackPane root = new StackPane();
         root.getChildren().add(mapPane);
