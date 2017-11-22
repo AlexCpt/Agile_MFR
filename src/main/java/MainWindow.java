@@ -20,7 +20,7 @@ public class MainWindow extends Application
     final int mapWidth = 800;
     final int mapHeight = 800;
     final int sceneWidth = mapWidth+bandeauWidth ;
-    final int sceneHeight = mapHeight+bandeauHeigth;
+    final int sceneHeight = mapHeight;
 
     Plan plan;
     ParserXML parser;
@@ -70,27 +70,22 @@ public class MainWindow extends Application
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Charger Livraison");
-                DemandeDeLivraison ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand20.xml");
-                plan.print(mapPane);
+                //DemandeDeLivraison ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand20.xml");
+                //plan.print(mapPane);
             }
         });
 
         //LeftHighVbox
         VBox highVbox = new VBox();
         highVbox.getChildren().add(lblTitle);
+        highVbox.getChildren().add(btn);
         highVbox.setPrefSize(bandeauWidth, bandeauHeigth);
         highVbox.setAlignment(Pos.CENTER);
 
-        //LeftBotVbox
-        VBox botVbox = new VBox();
-        botVbox.getChildren().add(btn);
-        botVbox.setPrefSize(bandeauWidth, bandeauHeigth);
-        botVbox.setAlignment(Pos.CENTER);
 
         //Left Pane
         BorderPane leftPane = new BorderPane();
-        leftPane.setTop(highVbox);
-        leftPane.setBottom(botVbox);
+        leftPane.setLeft(highVbox);
 
         plan.print(mapPane);
         //tournee.print(mapPane);
