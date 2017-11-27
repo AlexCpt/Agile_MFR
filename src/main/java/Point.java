@@ -33,6 +33,12 @@ public class Point {
         mLivraison = livraison;
     }
 
+    public void setPoint() {
+        mType = Type.POINT;
+        mEntrepot = null;
+        mLivraison = null;
+    }
+
     public Type getType() {
         return mType;
     }
