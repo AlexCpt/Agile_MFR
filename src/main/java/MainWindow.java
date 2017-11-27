@@ -147,19 +147,14 @@ public class MainWindow extends Application
         // --------------------------------
 
         //Create PopOver and add look and feel
-        PopOver popOver = new PopOver(Vbox);
+        PopOver popOver = new PopOver();
+        popOver.setContentNode(lblTitleDL);
+        popOver.setAutoFix(true);
+        popOver.setAutoHide(true);
+        popOver.setHideOnEscape(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        popOver.setDetachable(false);
 
-
-        Label label = new Label("Mouse mouse over me");
-        label.setOnMouseEntered(mouseEvent -> {
-            //Show PopOver when mouse enters label
-            popOver.show(label);
-        });
-
-        label.setOnMouseExited(mouseEvent -> {
-            //Hide PopOver when mouse exits label
-            popOver.hide();
-        });
 
 
         Vbox.getChildren().add(lblTitleDL);
@@ -181,5 +176,6 @@ public class MainWindow extends Application
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
+        popOver.show(primaryStage); //TODO : to improve
     }
 }
