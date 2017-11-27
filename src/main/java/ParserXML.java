@@ -128,7 +128,6 @@ public class ParserXML implements Parser {
                         entrepot=idMapToPoint.get(idEntrepot);
                       //  System.out.println("point : "+entrepot.getX());
                         entrepot.setEntrepot(new Entrepot());
-
                     }
                     if (noeud.getTagName() == "livraison") {
                         String idLivraison=noeud.getAttribute("adresse");
@@ -136,7 +135,6 @@ public class ParserXML implements Parser {
                         livraisons.add(livraison);
                         livraison.setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), 0));
                     }
-
                 }
             }
 
