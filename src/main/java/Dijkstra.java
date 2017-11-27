@@ -62,7 +62,6 @@ public class Dijkstra {
             predecesseurCurrent = predecesseurs.get(current);
             for(Troncon t : plan.getGraph().get(predecesseurCurrent)){
                 if(t.getDestination().equals(current)){
-
                     itineraire.add(0, t);
                 }
             }
