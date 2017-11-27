@@ -43,22 +43,22 @@ public class DemandeDeLivraison {
             }
         }
 
-        TSP1 tsp1 = new TSP1();
-        tsp1.chercheSolution(1000, nombreSommets, couts, duree);
+        TSP3 tsp = new TSP3();
+        tsp.chercheSolution(240000, nombreSommets, couts, duree);
 
-        if (tsp1.getTempsLimiteAtteint()) {
+        if (tsp.getTempsLimiteAtteint()) {
             System.out.println("TSP : Temps limite atteint");
             return null;
         }
 
         List<Itineraire> listeItineraires = new ArrayList<>();
         for (int i = 0; i < nombreSommets - 1; i++) {
-            int indexPoint1 = tsp1.getMeilleureSolution(i);
-            int indexPoint2 = tsp1.getMeilleureSolution(i+1);
+            int indexPoint1 = tsp.getMeilleureSolution(i);
+            int indexPoint2 = tsp.getMeilleureSolution(i+1);
             listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[indexPoint1], sommets[indexPoint2])));
         }
 
-        listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[tsp1.getMeilleureSolution(nombreSommets - 1)], sommets[tsp1.getMeilleureSolution(0)])));
+        listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[tsp.getMeilleureSolution(nombreSommets - 1)], sommets[tsp.getMeilleureSolution(0)])));
 
         return new Tournee(listeItineraires);
     }
