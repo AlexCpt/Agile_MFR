@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
+
 public class MainWindow extends Application
 {
 
@@ -25,12 +26,13 @@ public class MainWindow extends Application
     Plan plan;
     ParserXML parser;
     Tournee tournee;
+    DemandeDeLivraison ddl;
 
 
     public MainWindow(){
         parser = new ParserXML();
 
-        plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
+        plan = parser.parsePlan("fichiersXML/planLyonGrand.xml");
 
     }
 
@@ -64,30 +66,35 @@ public class MainWindow extends Application
 
         //Button
         Button btn = new Button();
-        btn.setText("Charger Livraison");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Charger Livraison");
-                //DemandeDeLivraison ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand20.xml");
-                //plan.print(mapPane);
-            }
+        btn.setText("Charger demande de livraison");
+        btn.setOnAction(event -> {
+            ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand20.xml");
+            plan.print(mapPane);
         });
 
-        //LeftHighVbox
+        Button btn2 = new Button();
+        btn2.setText("Calculer tournée");
+        btn2.setOnAction(event -> {
+            if (ddl == null) {
+                return;
+            }
+            tournee = ddl.calculerTournee(plan);
+            tournee.print(mapPane);
+        });
+
+        // LeftHighVBox
         VBox Vbox = new VBox();
         Vbox.getChildren().add(lblTitle);
         Vbox.getChildren().add(btn);
+        Vbox.getChildren().add(btn2);
         Vbox.setPrefSize(bandeauWidth, bandeauHeigth);
-        Vbox.setLayoutY(150);
-        Vbox.setAlignment(Pos.TOP_CENTER);
+        Vbox.setAlignment(Pos.CENTER);
 
         //Left Pane
         Pane leftPane = new Pane();
         leftPane.getChildren().add(Vbox);
 
         plan.print(mapPane);
-        //tournee.print(mapPane);
 
         BorderPane root = new BorderPane();
         root.setRight(mapPane);

@@ -95,13 +95,13 @@ public class Point {
         }
 
         //Position
-        System.out.println("prefw : " +mapPane.getPrefWidth());
-        System.out.println("prefH : " +mapPane.getPrefHeight());
+        //System.out.println("prefw : " +mapPane.getPrefWidth());
+        //System.out.println("prefH : " +mapPane.getPrefHeight());
 
 
         circle.relocate((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - radiusAffichage,((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - radiusAffichage);
-        System.out.println("x du point : " + ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
-        System.out.println("y du point : " + (mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
+        //System.out.println("x du point : " + ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
+        //System.out.println("y du point : " + (mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
 
         mapPane.getChildren().add(circle);
     }
