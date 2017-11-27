@@ -153,7 +153,7 @@ public class MainWindow extends Application
         Label label = new Label("Mouse mouse over me");
         label.setOnMouseEntered(mouseEvent -> {
             //Show PopOver when mouse enters label
-            //popOver.show(lblTitlePlan);
+            popOver.show(label);
         });
 
         label.setOnMouseExited(mouseEvent -> {
