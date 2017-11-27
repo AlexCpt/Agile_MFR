@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+import org.controlsfx.control.PopOver;
 
 
 public class MainWindow extends Application
@@ -143,6 +143,24 @@ public class MainWindow extends Application
                 tournee.print(mapPane);
             }
         });
+
+        // --------------------------------
+
+        //Create PopOver and add look and feel
+        PopOver popOver = new PopOver(Vbox);
+
+
+        Label label = new Label("Mouse mouse over me");
+        label.setOnMouseEntered(mouseEvent -> {
+            //Show PopOver when mouse enters label
+            //popOver.show(lblTitlePlan);
+        });
+
+        label.setOnMouseExited(mouseEvent -> {
+            //Hide PopOver when mouse exits label
+            popOver.hide();
+        });
+
 
         Vbox.getChildren().add(lblTitleDL);
         Vbox.getChildren().add(comboBoxDemandeLivraison);
