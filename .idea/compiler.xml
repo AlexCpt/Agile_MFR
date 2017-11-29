@@ -4,6 +4,8 @@
     <bytecodeTargetLevel>
       <module name="agile_main" target="1.8" />
       <module name="agile_test" target="1.8" />
+      <module name="Programming-agile_main" target="1.8" />
+      <module name="Programming-agile_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

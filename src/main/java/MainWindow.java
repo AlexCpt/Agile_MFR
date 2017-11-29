@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+import org.controlsfx.control.PopOver;
 
 
 public class MainWindow extends Application
@@ -144,6 +144,19 @@ public class MainWindow extends Application
             }
         });
 
+        // --------------------------------
+
+        //Create PopOver and add look and feel
+        PopOver popOver = new PopOver();
+        popOver.setContentNode(lblTitleDL);
+        popOver.setAutoFix(true);
+        popOver.setAutoHide(true);
+        popOver.setHideOnEscape(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        popOver.setDetachable(false);
+
+
+
         Vbox.getChildren().add(lblTitleDL);
         Vbox.getChildren().add(comboBoxDemandeLivraison);
         Vbox.getChildren().add(btnCalculerTournee);
@@ -163,5 +176,6 @@ public class MainWindow extends Application
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
+        popOver.show(primaryStage); //TODO : to improve
     }
 }
