@@ -1,3 +1,8 @@
+package fr.insalyon.agile;
+
+import fr.insalyon.agile.DemandeDeLivraison;
+import fr.insalyon.agile.ParserXML;
+
 import static java.lang.Thread.sleep;
 
 public class Profiling {

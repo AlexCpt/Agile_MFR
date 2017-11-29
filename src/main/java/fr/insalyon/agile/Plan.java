@@ -1,5 +1,8 @@
+package fr.insalyon.agile;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,8 +11,8 @@ import java.util.List;
 public class Plan {
     private List<Point> mPoints;
     private  List<Troncon> mTroncons;
-    public static int mPointXmin = Integer.MAX_VALUE;
-    public static int mPointYmin = Integer.MAX_VALUE;
+    public static int mPointXmin;
+    public static int mPointYmin;
     public static int mPointXmax;
     public static int mPointYmax;
 
@@ -60,6 +63,12 @@ public class Plan {
 
     public void calculEchelle()
     {
+        //reset of values
+        mPointXmin = Integer.MAX_VALUE;
+        mPointYmin = Integer.MAX_VALUE;
+        mPointXmax = Integer.MIN_VALUE;
+        mPointYmax = Integer.MIN_VALUE;
+
         for(Point point : mPoints)
         {
             if(point.getX() > mPointXmax){
@@ -79,14 +88,22 @@ public class Plan {
         //System.out.println("x min : " + mPointXmin + " xmax : " + mPointXmax + " ymin : " + mPointYmin + " ymax : " + mPointYmax);
     }
 
-    public void print(Pane mapPane) {
+    public void resetTypePoints(){
+        for(Point point: mPoints){
+            if(point.getType() != Point.Type.POINT){
+                point.setPoint();
+            }
+        }
+    }
+
+    public void print(Pane mapPane, Stage primaryStage) {
 
         for (Troncon troncon: mTroncons) {
             troncon.print(mapPane, Color.WHITE, 1);
         }
 
         for (Point point: mPoints) {
-            point.print(mapPane);
+            point.print(mapPane, primaryStage);
         }
     }
 }

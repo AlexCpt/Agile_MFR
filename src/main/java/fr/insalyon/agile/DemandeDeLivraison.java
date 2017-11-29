@@ -1,5 +1,9 @@
+package fr.insalyon.agile;
+
+import fr.insalyon.agile.*;
+import fr.insalyon.agile.tsp.TSP1;
 import javafx.util.Pair;
-import tsp.TSP1;
+
 
 import java.time.LocalTime;
 import java.util.ArrayList;

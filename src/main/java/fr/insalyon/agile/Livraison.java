@@ -1,3 +1,5 @@
+package fr.insalyon.agile;
+
 import java.time.LocalTime;
 
 public class Livraison {
@@ -36,4 +38,11 @@ public class Livraison {
         return mDureeLivraison;
     }
 
+    public void setDateLivraison(LocalTime mDateLivraison) {
+        this.mDateLivraison = mDateLivraison;
+    }
+
+    public void setDateArrivee(LocalTime mDateArrivee) {
+        this.mDateArrivee = mDateArrivee;
+    }
 }

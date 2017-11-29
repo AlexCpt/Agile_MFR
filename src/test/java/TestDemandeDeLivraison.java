@@ -1,3 +1,4 @@
+import fr.insalyon.agile.*;
 import org.junit.Test;
 
 import java.time.LocalTime;
@@ -40,12 +41,9 @@ public class TestDemandeDeLivraison {
 
         Plan plan = new Plan(points, troncons);
 
-        HashMap<Point, List<Troncon>> graph = plan.getGraph();
-
         DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.now());
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
-
 
         List<Itineraire> itineraires = new ArrayList<>();
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(0), points.get(2), 9, "a"))));

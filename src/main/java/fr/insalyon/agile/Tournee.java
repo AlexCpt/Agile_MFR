@@ -1,10 +1,9 @@
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+package fr.insalyon.agile;
 
-import java.lang.reflect.Array;
+import javafx.scene.layout.Pane;
+
 import java.time.LocalTime;
-import java.time.Period;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +73,7 @@ public class Tournee {
     }
 
     private LocalTime subLocalTime(LocalTime time1, LocalTime time2) {
-         return time1.minusHours(time2.getHour()).minusMinutes(time2.getMinute()).minusSeconds(time2.getSecond());
+        return time1.minusHours(time2.getHour()).minusMinutes(time2.getMinute()).minusSeconds(time2.getSecond());
     }
 
     public List<Boolean> modifierTournee (Point livraison)
