@@ -53,8 +53,8 @@ public class Plan {
         //reset of values
         mPointXmin = Integer.MAX_VALUE;
         mPointYmin = Integer.MAX_VALUE;
-        mPointXmax = 0;
-        mPointYmax = 0;
+        mPointXmax = Integer.MIN_VALUE;
+        mPointYmax = Integer.MIN_VALUE;
 
         for(Point point : mPoints)
         {

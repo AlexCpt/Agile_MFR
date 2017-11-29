@@ -19,6 +19,9 @@ public class ParserXML implements Parser {
 
     @Override
     public Plan parsePlan(String fichier) {
+        if (idMapToPoint != null) {
+            idMapToPoint.clear();
+        }
 
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -53,7 +56,7 @@ public class ParserXML implements Parser {
                         /*System.out.println(id);
                         System.out.println(x);
                         System.out.println(y);*/
-                        Point unPoint = new Point(id,x,y);
+                        Point unPoint = new Point(id,y,-x);
                         listePoints.add(unPoint);
                         idMapToPoint.put(id,unPoint);
                     }
