@@ -1,4 +1,3 @@
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -8,13 +7,12 @@ import org.controlsfx.control.PopOver;
 import javafx.stage.Stage;
 
 
-
 public class Point {
     private String mId;
     private int mX;
     private int mY;
     final double radiusAffichage = 4;
-    final double popoverButtonRadius = 12;
+    final double popoverButtonRadius = 20;
 
     public String mAdresse;
 
@@ -22,7 +20,9 @@ public class Point {
         POINT,
         LIVRAISON,
         ENTREPOT
-    };
+    }
+
+    ;
 
     private Type mType;
     private Livraison mLivraison;
@@ -54,7 +54,11 @@ public class Point {
         mAdresse = adresse;
     }
 
-    public Point(){};
+    public Point() {
+    }
+
+    ;
+
     public Point(String id, int x, int y) {
         mType = Type.POINT;
         mId = id;
@@ -94,54 +98,51 @@ public class Point {
         return mEntrepot != null ? mEntrepot.equals(point.mEntrepot) : point.mEntrepot == null;
     }
 
-    public void print(Pane mapPane, Stage primaryStage){
+    public void print(Pane mapPane, Stage primaryStage) {
 
         Circle circle = new Circle(radiusAffichage);
         Button rndBtnPopover = new Button();
-        rndBtnPopover.setLayoutX((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - popoverButtonRadius);
-        rndBtnPopover.setLayoutY(((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - popoverButtonRadius);
-        circle.relocate((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - radiusAffichage,((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - radiusAffichage);
+        double coordX = ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth();
+        double coordY = ((mY - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin) * mapPane.getPrefHeight());
+        rndBtnPopover.setLayoutX(coordX - popoverButtonRadius);
+        rndBtnPopover.setLayoutY(coordY - popoverButtonRadius);
+        circle.relocate(coordX - radiusAffichage, coordY - radiusAffichage);
         rndBtnPopover.setStyle(
                 "-fx-background-radius: 5em; " +
-                        "-fx-min-width: "+popoverButtonRadius*2+"px; " +
-                        "-fx-min-height: "+popoverButtonRadius*2+"px; " +
-                        "-fx-max-width: "+popoverButtonRadius*2+"px; " +
-                        "-fx-max-height: "+popoverButtonRadius*2+"px; " +
-                        "-fx-background-color: transparent;"+
+                        "-fx-min-width: " + popoverButtonRadius * 2 + "px; " +
+                        "-fx-min-height: " + popoverButtonRadius * 2 + "px; " +
+                        "-fx-max-width: " + popoverButtonRadius * 2 + "px; " +
+                        "-fx-max-height: " + popoverButtonRadius * 2 + "px; " +
+                        "-fx-background-color: white;" +
                         "-fx-background-insets: 0px; " +
                         "-fx-padding: 0px;"
         );
 
-        //Popover
-        Label lblLivraisonPopover = new Label("Livraison 1 - 10h30");
-        lblLivraisonPopover.setPadding(new Insets(10,10,10,10));
-        PopOver popOver = new PopOver();
-        popOver.setContentNode(lblLivraisonPopover);
-        popOver.setX((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()));
-        popOver.setY(((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()));
-        popOver.setAutoHide(true);
-        popOver.setHideOnEscape(true);
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-        popOver.setDetachable(false);
-
-
-        rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
-        rndBtnPopover.setOnMouseExited(e -> popOver.hide());
-
-
-        if(mType == Type.ENTREPOT){
+        if (mType == Type.ENTREPOT) {
             circle.setFill(Color.RED);
             mapPane.getChildren().add(circle);
             mapPane.getChildren().add(rndBtnPopover);
+
+
         } else if (mType == Type.LIVRAISON) {
             circle.setFill(Color.BLUE);
             mapPane.getChildren().add(circle);
             mapPane.getChildren().add(rndBtnPopover);
-        }
-        else {
-        }
 
-        /*//Create PopOver and add look and feel
-        ;*/
+        }
+        //Popover
+        Label lblLivraisonPopover = new Label("Livraison 1 - 10h30");
+        //lblLivraisonPopover.setPadding(new Insets(10,10,10,10));
+        PopOver popOver = new PopOver();
+        popOver.setContentNode(lblLivraisonPopover);
+
+        //popOver.setAutoHide(true);
+        popOver.setHideOnEscape(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        //   popOver.setDetachable(true);
+        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX() - popoverButtonRadius * 2.5);
+        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - popoverButtonRadius * 2.5);
+        rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
+        rndBtnPopover.setOnMouseExited(e -> popOver.hide());
     }
 }
