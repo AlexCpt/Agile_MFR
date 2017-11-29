@@ -1,3 +1,4 @@
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,6 +16,9 @@ public class Point {
     private int mY;
     final double radiusAffichage = 4;
     final double popoverButtonRadius = 12;
+    private double mXscaled;
+    private double mYscaled;
+
 
     public String mAdresse;
 
@@ -96,11 +100,14 @@ public class Point {
 
     public void print(Pane mapPane, Stage primaryStage){
 
+        mXscaled = (((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
+        mYscaled = ((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
+
         Circle circle = new Circle(radiusAffichage);
         Button rndBtnPopover = new Button();
-        rndBtnPopover.setLayoutX((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - popoverButtonRadius);
-        rndBtnPopover.setLayoutY(((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - popoverButtonRadius);
-        circle.relocate((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - radiusAffichage,((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - radiusAffichage);
+        rndBtnPopover.setLayoutX(mXscaled - popoverButtonRadius);
+        rndBtnPopover.setLayoutY(mYscaled - popoverButtonRadius);
+        circle.relocate(mXscaled - radiusAffichage,mYscaled - radiusAffichage);
         rndBtnPopover.setStyle(
                 "-fx-background-radius: 5em; " +
                         "-fx-min-width: "+popoverButtonRadius*2+"px; " +
@@ -117,17 +124,18 @@ public class Point {
         lblLivraisonPopover.setPadding(new Insets(10,10,10,10));
         PopOver popOver = new PopOver();
         popOver.setContentNode(lblLivraisonPopover);
-        popOver.setX((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()));
-        popOver.setY(((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()));
+        popOver.setX(mXscaled);
+        popOver.setY(mYscaled);
         popOver.setAutoHide(true);
         popOver.setHideOnEscape(true);
         popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
         popOver.setDetachable(false);
 
+        Bounds bounds = lblLivraisonPopover.localToScreen(lblLivraisonPopover.getBoundsInLocal());
+
 
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
-
 
         if(mType == Type.ENTREPOT){
             circle.setFill(Color.RED);
