@@ -1,3 +1,5 @@
+package fr.insalyon.agile;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;

@@ -1,6 +1,8 @@
+import fr.insalyon.agile.Plan;
+import fr.insalyon.agile.Point;
+import fr.insalyon.agile.Troncon;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;

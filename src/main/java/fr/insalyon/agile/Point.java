@@ -1,3 +1,7 @@
+package fr.insalyon.agile;
+
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -7,22 +11,22 @@ import org.controlsfx.control.PopOver;
 import javafx.stage.Stage;
 
 
+
 public class Point {
     private String mId;
     private int mX;
     private int mY;
     final double radiusAffichage = 4;
     final double popoverButtonRadius = 20;
-
+    private double coordX;
+    private double coordY;
     public String mAdresse;
 
-    enum Type {
+    public enum Type {
         POINT,
         LIVRAISON,
         ENTREPOT
-    }
-
-    ;
+    };
 
     private Type mType;
     private Livraison mLivraison;
@@ -50,15 +54,15 @@ public class Point {
         return mType;
     }
 
+    public Livraison getLivraison() {
+        return mLivraison;
+    }
+
     public void setAdresse(String adresse) {
         mAdresse = adresse;
     }
 
-    public Point() {
-    }
-
-    ;
-
+    public Point(){};
     public Point(String id, int x, int y) {
         mType = Type.POINT;
         mId = id;
@@ -102,8 +106,8 @@ public class Point {
 
         Circle circle = new Circle(radiusAffichage);
         Button rndBtnPopover = new Button();
-        double coordX = ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth();
-        double coordY = ((mY - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin) * mapPane.getPrefHeight());
+        coordX = ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth();
+        coordY = ((mY - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin) * mapPane.getPrefHeight());
         rndBtnPopover.setLayoutX(coordX - popoverButtonRadius);
         rndBtnPopover.setLayoutY(coordY - popoverButtonRadius);
         circle.relocate(coordX - radiusAffichage, coordY - radiusAffichage);

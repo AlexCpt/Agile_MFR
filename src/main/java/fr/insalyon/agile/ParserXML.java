@@ -1,3 +1,5 @@
+package fr.insalyon.agile;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalTime;
@@ -8,6 +10,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import fr.insalyon.agile.DemandeDeLivraison;
+import fr.insalyon.agile.Entrepot;
+import fr.insalyon.agile.Parser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,8 +20,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class ParserXML implements Parser {
-    private Map<String,Point> idMapToPoint;
-
+    private Map<String, Point> idMapToPoint;
+    private Plan plan;
     @Override
     public Plan parsePlan(String fichier) {
         if (idMapToPoint != null) {
@@ -80,7 +85,7 @@ public class ParserXML implements Parser {
                 }
             }
             //System.out.println("longueur liste finale:"+listeTroncons.get(0).getOrigine().getX());
-            Plan plan = new Plan(listePoints,listeTroncons);
+            plan = new Plan(listePoints,listeTroncons);
             return plan;
         }
 
@@ -113,6 +118,8 @@ public class ParserXML implements Parser {
 
             List<Point> livraisons=new ArrayList<>();
             LocalTime depart = null;
+            LocalTime debutPlage = null;
+            LocalTime finPlage = null;
             String idEntrepot;
             Point entrepot=new Point();
 
@@ -120,28 +127,43 @@ public class ParserXML implements Parser {
             for (int i = 0; i < nbRacineNoeuds; i++) {
                 if (racineNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     final Element noeud = (Element) racineNoeuds.item(i);
+
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m:s");
                     if (noeud.getTagName() == "entrepot") {
                         idEntrepot=noeud.getAttribute("adresse");
 
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m:s");
                         String departString = noeud.getAttribute("heureDepart");
-                        depart= LocalTime.parse(departString, formatter);
-
+                        depart = LocalTime.parse(departString, formatter);
 
                         entrepot=idMapToPoint.get(idEntrepot);
-                      //  System.out.println("point : "+entrepot.getX());
+                        //  System.out.println("point : "+entrepot.getX());
                         entrepot.setEntrepot(new Entrepot());
                     }
                     if (noeud.getTagName() == "livraison") {
                         String idLivraison=noeud.getAttribute("adresse");
                         Point livraison=idMapToPoint.get(idLivraison);
                         livraisons.add(livraison);
-                        livraison.setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), 0));
+
+                        if (noeud.hasAttribute("debutPlage")) {
+                            String debutPlageString = noeud.getAttribute("debutPlage");
+                            debutPlage = LocalTime.parse(debutPlageString, formatter);
+                        } else {
+                            debutPlage = null;
+                        }
+
+                        if (noeud.hasAttribute("finPlage")) {
+                            String finPlageString = noeud.getAttribute("finPlage");
+                            finPlage = LocalTime.parse(finPlageString, formatter);
+                        } else {
+                            finPlage = null;
+                        }
+
+                        livraison.setLivraison(new Livraison(debutPlage, finPlage, null, null, LocalTime.of(0,0)));
                     }
                 }
             }
 
-            return new DemandeDeLivraison(livraisons,entrepot,depart);
+            return new DemandeDeLivraison(plan, livraisons,entrepot,depart);
 
         } catch (ParserConfigurationException e) {
             e.printStackTrace();

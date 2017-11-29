@@ -1,4 +1,4 @@
-package tsp;
+package fr.insalyon.agile.tsp;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -1,3 +1,8 @@
+package fr.insalyon.agile;
+
+import fr.insalyon.agile.DemandeDeLivraison;
+import fr.insalyon.agile.ParserXML;
+
 import static java.lang.Thread.sleep;
 
 public class Profiling {
@@ -12,6 +17,6 @@ public class Profiling {
             e.printStackTrace();
         }
         DemandeDeLivraison ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand10.xml");
-        Tournee tournee = ddl.calculerTournee(plan);
+        Tournee tournee = ddl.calculerTournee();
     }
 }
