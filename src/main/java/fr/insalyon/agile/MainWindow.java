@@ -21,7 +21,6 @@ import javafx.stage.Stage;
 
 public class MainWindow extends Application
 {
-
     final int bandeauWidth = 200;
     final int bandeauHeigth = 800;
     final int mapWidth = 800;

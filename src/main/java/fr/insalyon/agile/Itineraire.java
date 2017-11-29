@@ -30,10 +30,6 @@ public class Itineraire {
         return mDuree;
     }
 
-    public void setTroncons(List<Troncon> mTroncons) {
-        this.mTroncons = mTroncons;
-    }
-
     public int getLongueur() {
         return mLongueur;
     }

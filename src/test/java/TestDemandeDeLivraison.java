@@ -49,7 +49,7 @@ public class TestDemandeDeLivraison {
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(0), points.get(2), 9, "a"))));
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(2), points.get(5), 2, "a"))));
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(5), points.get(0), 2, "a"))));
-        Tournee validTournee = new Tournee(itineraires, demandeDeLivraison);
+        Tournee validTournee = new Tournee(itineraires, LocalTime.now(), demandeDeLivraison);
 
         assertEquals(validTournee, tournee);
     }

@@ -2,6 +2,7 @@ package fr.insalyon.agile;
 
 import fr.insalyon.agile.*;
 import fr.insalyon.agile.tsp.TSP1;
+import fr.insalyon.agile.tsp.TSP4;
 import javafx.util.Pair;
 
 
@@ -27,10 +28,6 @@ public class DemandeDeLivraison {
 
     public Plan getPlan() {
         return mPlan;
-    }
-
-    public List<Point> getLivraisons() {
-        return mLivraisons;
     }
 
     public Point getEntrepot() {
@@ -66,29 +63,47 @@ public class DemandeDeLivraison {
             for (int j = 0; j < sommets.length; j++) {
                 if (i != j) {
                     itineraireHashMap.put(new Pair<>(sommets[i], sommets[j]), currentItineraires.get(j));
-                    couts[i][j] = currentItineraires.get(j).getLongueur();
+                    couts[i][j] = ((currentItineraires.get(j).getLongueur() * 3600) / 1000) / 15;
                 }
             }
         }
 
-        TSP1 tsp1 = new TSP1();
-        tsp1.chercheSolution(1000, nombreSommets, couts, duree);
+        TSP4 tsp = new TSP4(mLivraisons, mDepart);
+        tsp.chercheSolution(240000, nombreSommets, couts, duree);
 
-        if (tsp1.getTempsLimiteAtteint()) {
+        if (tsp.getTempsLimiteAtteint()) {
             System.out.println("TSP : Temps limite atteint");
             return null;
         }
 
         List<Itineraire> listeItineraires = new ArrayList<>();
+        LocalTime tempsActuel = mDepart;
         for (int i = 0; i < nombreSommets - 1; i++) {
-            int indexPoint1 = tsp1.getMeilleureSolution(i);
-            int indexPoint2 = tsp1.getMeilleureSolution(i+1);
+            int indexPoint1 = tsp.getMeilleureSolution(i);
+            int indexPoint2 = tsp.getMeilleureSolution(i+1);
             listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[indexPoint1], sommets[indexPoint2])));
+
+            tempsActuel = tempsActuel.plusSeconds(couts[indexPoint1][indexPoint2] + duree[indexPoint2]);
+
+            if (sommets[indexPoint2].getType() == Point.Type.LIVRAISON) {
+                sommets[indexPoint2].getLivraison().setDateArrivee(tempsActuel);
+
+                if (sommets[indexPoint2].getLivraison().getDebutPlage() != null &&
+                        sommets[indexPoint2].getLivraison().getFinPlage() != null) {
+                    if (tempsActuel.isBefore(sommets[indexPoint2].getLivraison().getDebutPlage())) {
+                        tempsActuel = sommets[indexPoint2].getLivraison().getDebutPlage();
+                    }
+                }
+
+                sommets[indexPoint2].getLivraison().setDateLivraison(tempsActuel);
+            }
         }
 
-        listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[tsp1.getMeilleureSolution(nombreSommets - 1)], sommets[tsp1.getMeilleureSolution(0)])));
+        listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[tsp.getMeilleureSolution(nombreSommets - 1)], sommets[tsp.getMeilleureSolution(0)])));
 
-        return new Tournee(listeItineraires, this);
+        tempsActuel = tempsActuel.plusSeconds(couts[tsp.getMeilleureSolution(nombreSommets - 1)][tsp.getMeilleureSolution(0)] + duree[tsp.getMeilleureSolution(0)]);
+
+        return new Tournee(listeItineraires, tempsActuel, this);
     }
 
 

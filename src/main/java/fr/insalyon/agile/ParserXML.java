@@ -136,7 +136,7 @@ public class ParserXML implements Parser {
                         depart = LocalTime.parse(departString, formatter);
 
                         entrepot=idMapToPoint.get(idEntrepot);
-                      //  System.out.println("point : "+entrepot.getX());
+                        //  System.out.println("point : "+entrepot.getX());
                         entrepot.setEntrepot(new Entrepot());
                     }
                     if (noeud.getTagName() == "livraison") {

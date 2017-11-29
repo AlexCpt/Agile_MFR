@@ -51,16 +51,6 @@ public class Plan {
         return mTroncons;
     }
 
-    public void addPoint(Point point)
-    {
-        mPoints.add(point);
-    }
-
-    public void addTroncon(Troncon troncon)
-    {
-        mTroncons.add(troncon);
-    }
-
     public void calculEchelle()
     {
         //reset of values

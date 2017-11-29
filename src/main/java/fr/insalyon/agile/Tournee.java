@@ -13,8 +13,10 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class Tournee {
 
+    LocalTime mDateArrivee;
     List<Itineraire> mItineraires;
     DemandeDeLivraison mDemandeDeLivraison;
+
     List<Point> livraisons;
     Map<Point, LocalTime> margesLivraison;
 
@@ -22,8 +24,9 @@ public class Tournee {
 
     }
 
-    public Tournee(List<Itineraire> itineraires, DemandeDeLivraison demandeDeLivraison) {
+    public Tournee(List<Itineraire> itineraires, LocalTime dateArrivee, DemandeDeLivraison demandeDeLivraison) {
         mItineraires = itineraires;
+        mDateArrivee = dateArrivee;
         mDemandeDeLivraison = demandeDeLivraison;
         livraisons = new ArrayList<>();
         margesLivraison = new HashMap<>();
@@ -40,6 +43,8 @@ public class Tournee {
 
         Tournee tournee = (Tournee) o;
 
+        if (mDateArrivee != null ? !mDateArrivee.equals(tournee.mDateArrivee) : tournee.mDateArrivee != null)
+            return false;
         return mItineraires != null ? mItineraires.equals(tournee.mItineraires) : tournee.mItineraires == null;
     }
 
