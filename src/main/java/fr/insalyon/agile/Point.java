@@ -117,7 +117,7 @@ public class Point {
                         "-fx-min-height: " + popoverButtonRadius * 2 + "px; " +
                         "-fx-max-width: " + popoverButtonRadius * 2 + "px; " +
                         "-fx-max-height: " + popoverButtonRadius * 2 + "px; " +
-                        "-fx-background-color: white;" +
+                        "-fx-background-color: transparent;" +
                         "-fx-background-insets: 0px; " +
                         "-fx-padding: 0px;"
         );
@@ -136,16 +136,16 @@ public class Point {
         }
         //Popover
         Label lblLivraisonPopover = new Label("Livraison 1 - 10h30");
-        //lblLivraisonPopover.setPadding(new Insets(10,10,10,10));
+        lblLivraisonPopover.setPadding(new Insets(10,10,10,10));
         PopOver popOver = new PopOver();
         popOver.setContentNode(lblLivraisonPopover);
 
         //popOver.setAutoHide(true);
-        popOver.setHideOnEscape(true);
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        //popOver.setHideOnEscape(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
         //   popOver.setDetachable(true);
-        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX() - popoverButtonRadius * 2.5);
-        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - popoverButtonRadius * 2.5);
+        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX());
+        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 15);
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
     }

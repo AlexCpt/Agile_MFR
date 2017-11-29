@@ -17,7 +17,7 @@ public class Tournee {
     List<Itineraire> mItineraires;
     DemandeDeLivraison mDemandeDeLivraison;
 
-    List<Point> livraisons;
+    List<Point> livraisons; //todo : never initialized
     Map<Point, LocalTime> margesLivraison;
 
     public Tournee(){

@@ -18,7 +18,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainWindow extends Application
@@ -142,6 +148,10 @@ public class MainWindow extends Application
             }
         });
 
+        //Right Pane
+        Pane rightPane = new Pane();
+        rightPane.getChildren().add(rightVbox);
+
         Button btnCalculerTournee = new Button();
         btnCalculerTournee.setText("Calculer tournée");
         leftVbox.setSpacing(20);
@@ -151,6 +161,7 @@ public class MainWindow extends Application
             public void handle(ActionEvent event) {
                 tournee = ddl.calculerTournee();
                 mapPane.getChildren().clear();
+                timeLineBuild(rightPane, tournee);
                 plan.print(mapPane, primaryStage);
                 tournee.print(mapPane);
             }
@@ -170,10 +181,7 @@ public class MainWindow extends Application
         Pane leftPane = new Pane();
         leftPane.getChildren().add(leftVbox);
 
-        //Right Pane
-        Pane rightPane = new Pane();
-        rightPane.getChildren().add(rightVbox);
-        timeLineBuild(rightPane, tournee);
+
 
         plan.print(mapPane, primaryStage);
 
@@ -190,26 +198,76 @@ public class MainWindow extends Application
     public void timeLineBuild(Pane rightPane, Tournee tournee){
 
         //Todo : externaliser ça
-        int xPoint = (int) rightPaneWidth/2; //TODO : bug
-        int yFirstPoint = 50;
-        int yLastPoint = 700;
+        double xPoint =  rightPaneWidth/2; //TODO : bug
+        double yFirstPoint = 50;
+        double yLastPoint = 700;
         final int radiusAffichageTimeline = 11;
+        double widthLabelTime = 56;
+        double heightLabelTime = 7; //Todo : L'avoir dynamiquement ? ça a l'air chiant
+        LocalTime heureDebutTournee = LocalTime.of(8,0);
+        LocalTime heureFinTournee = LocalTime.of(18,0);
 
-        //Point de départ
+
+        //Point de départ et label
         Circle pointEntrepotDepart = new Circle(radiusAffichageTimeline);
-        pointEntrepotDepart.setFill(Color.RED);
+        pointEntrepotDepart.setFill(Color.rgb(244,39,70));
         pointEntrepotDepart.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
-        rightPane.getChildren().add(pointEntrepotDepart);
+
+        Label lblEntrepotDepart = new Label(heureDebutTournee.toString()); //Todo : rendre dynamique
+        lblEntrepotDepart.setLayoutX(xPoint - widthLabelTime);
+        lblEntrepotDepart.setLayoutY(yFirstPoint- heightLabelTime);
+        lblEntrepotDepart.setTextFill(Color.grayRgb(96));
 
         //Point d'arrivée
         Circle pointEntrepotArrivee = new Circle(radiusAffichageTimeline);
-        pointEntrepotArrivee.setFill(Color.RED);
+        pointEntrepotArrivee.setFill(Color.rgb(244,39,70));
         pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
+
+        Label lblEntrepotArrivee = new Label(heureFinTournee.toString()); //Todo : rendre dynamique
+        lblEntrepotArrivee.setLayoutX(xPoint - widthLabelTime);
+        lblEntrepotArrivee.setLayoutY(yLastPoint- heightLabelTime);
+        lblEntrepotArrivee.setTextFill(Color.grayRgb(96));
+
+        //LigneTest -> à virer
+        Line line = new Line();
+        line.setStroke(Color.grayRgb(133));
+        line.setStrokeWidth(1);
+        line.getStrokeDashArray().addAll(4d);
+        line.setStartX(xPoint);
+        line.setStartY(yFirstPoint);
+        line.setEndX(xPoint);
+        line.setEndY(yLastPoint);
+
+        System.out.println(tournee.livraisons.isEmpty());
+        //Vrai ligne
+        for (Point pointLivraison: tournee.livraisons) {
+            System.out.println("coucou2");
+
+            if(pointLivraison.getType() != Point.Type.LIVRAISON){
+                continue;
+            }
+
+            //Points
+            Circle pointIti = new Circle(radiusAffichageTimeline);
+            pointEntrepotArrivee.setFill(Color.rgb(56, 120, 244));
+            System.out.println(heureDebutTournee.getSecond());//pointLivraison.getLivraison().getDateArrivee().getSecond();
+            pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,  - radiusAffichageTimeline);
+
+            //Label
+
+
+            //lignes
+        }
+
+        //Voiture
+
+
+        //Affichage
+        rightPane.getChildren().add(line);
+        rightPane.getChildren().add(lblEntrepotDepart);
+        rightPane.getChildren().add(lblEntrepotArrivee);
+        rightPane.getChildren().add(pointEntrepotDepart);
         rightPane.getChildren().add(pointEntrepotArrivee);
-
-        //LigneTest
-
-
 
     }
 }
