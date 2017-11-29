@@ -16,17 +16,21 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 
 public class MainWindow extends Application
 {
-    final int bandeauWidth = 200;
-    final int bandeauHeigth = 800;
-    final int mapWidth = 800;
-    final int mapHeight = 800;
-    final int sceneWidth = mapWidth+bandeauWidth ;
-    final int sceneHeight = mapHeight;
+    final double bandeauWidth = 200;
+    final double bandeauHeigth = 800;
+    final double rightPaneWidth = 200;
+    final double rightPaneHeigth = 800;
+    final double mapWidth = 800;
+    final double mapHeight = 800;
+    final double sceneWidth = mapWidth+bandeauWidth ;
+    final double sceneHeight = mapHeight;
 
     ObservableList<String> planOptions =
             FXCollections.observableArrayList(
@@ -169,6 +173,7 @@ public class MainWindow extends Application
         //Right Pane
         Pane rightPane = new Pane();
         rightPane.getChildren().add(rightVbox);
+        timeLineBuild(rightPane, tournee);
 
         plan.print(mapPane, primaryStage);
 
@@ -182,7 +187,28 @@ public class MainWindow extends Application
         primaryStage.show();
     }
 
-    public void timeLineBuild(Pane leftPane){
+    public void timeLineBuild(Pane rightPane, Tournee tournee){
+
+        //Todo : externaliser ça
+        int xPoint = (int) rightPaneWidth/2; //TODO : bug
+        int yFirstPoint = 50;
+        int yLastPoint = 700;
+        final int radiusAffichageTimeline = 11;
+
+        //Point de départ
+        Circle pointEntrepotDepart = new Circle(radiusAffichageTimeline);
+        pointEntrepotDepart.setFill(Color.RED);
+        pointEntrepotDepart.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
+        rightPane.getChildren().add(pointEntrepotDepart);
+
+        //Point d'arrivée
+        Circle pointEntrepotArrivee = new Circle(radiusAffichageTimeline);
+        pointEntrepotArrivee.setFill(Color.RED);
+        pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
+        rightPane.getChildren().add(pointEntrepotArrivee);
+
+        //LigneTest
+
 
 
     }
