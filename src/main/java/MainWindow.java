@@ -16,6 +16,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 
 public class MainWindow extends Application
 {
@@ -57,12 +60,10 @@ public class MainWindow extends Application
     Tournee tournee;
     DemandeDeLivraison ddl;
 
-
     public MainWindow(){
         parser = new ParserXML();
 
         plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
-
     }
 
     public static void main(String[] args) {
@@ -147,17 +148,26 @@ public class MainWindow extends Application
         // --------------------------------
 
         //Create PopOver and add look and feel
+        Label lblLivraisonPopover = new Label("Livraison 1 - 10H30");
         PopOver popOver = new PopOver();
-        popOver.setContentNode(lblTitleDL);
+        popOver.setContentNode(lblLivraisonPopover);
         popOver.setAutoFix(true);
         popOver.setAutoHide(true);
         popOver.setHideOnEscape(true);
         popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
         popOver.setDetachable(false);
 
+        Button btnPopover = new Button();
+        btnPopover.setText("Test");
+        btnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
+        btnPopover.setOnMouseExited(e -> popOver.hide());
 
+
+
+        // --------------------------------
 
         Vbox.getChildren().add(lblTitleDL);
+        Vbox.getChildren().add(btnPopover);
         Vbox.getChildren().add(comboBoxDemandeLivraison);
         Vbox.getChildren().add(btnCalculerTournee);
         Vbox.setPrefSize(bandeauWidth, bandeauHeigth);
@@ -176,6 +186,5 @@ public class MainWindow extends Application
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
-        popOver.show(primaryStage); //TODO : to improve
     }
 }
