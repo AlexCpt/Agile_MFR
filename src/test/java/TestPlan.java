@@ -1,8 +1,10 @@
 import org.junit.Test;
 
 import java.lang.reflect.Array;
+import java.time.LocalTime;
 import java.util.*;
 
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.junit.Assert.assertEquals;
 
 public class TestPlan {

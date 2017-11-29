@@ -12,6 +12,6 @@ public class Profiling {
             e.printStackTrace();
         }
         DemandeDeLivraison ddl = parser.parseDemandeDeLivraison("fichiersXML/DLgrand10.xml");
-        Tournee tournee = ddl.calculerTournee(plan);
+        Tournee tournee = ddl.calculerTournee();
     }
 }

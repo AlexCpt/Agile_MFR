@@ -78,7 +78,7 @@ public class MainWindow extends Application
             if (ddl == null) {
                 return;
             }
-            tournee = ddl.calculerTournee(plan);
+            tournee = ddl.calculerTournee();
             tournee.print(mapPane);
         });
 

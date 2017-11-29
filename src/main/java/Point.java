@@ -11,7 +11,7 @@ public class Point {
 
     public String mAdresse;
 
-    enum Type {
+    public enum Type {
         POINT,
         LIVRAISON,
         ENTREPOT
@@ -32,6 +32,11 @@ public class Point {
         mEntrepot = null;
         mLivraison = livraison;
     }
+
+    public Livraison getLivraison() {
+        return mLivraison;
+    }
+
 
     public Type getType() {
         return mType;

@@ -30,8 +30,8 @@ public class TestDemandeDeLivraison {
                 new Troncon(points.get(5), points.get(0),2, "a")
         );
         List<Point> livraisons = new ArrayList<>();
-        points.get(2).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), 3));
-        points.get(5).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), 3));
+        points.get(2).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(),  LocalTime.now()));
+        points.get(5).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(),  LocalTime.now()));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         Entrepot entrepot = new Entrepot();
@@ -42,16 +42,17 @@ public class TestDemandeDeLivraison {
 
         HashMap<Point, List<Troncon>> graph = plan.getGraph();
 
-        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(livraisons, points.get(0), LocalTime.now());
+        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.now());
 
-        Tournee tournee = demandeDeLivraison.calculerTournee(plan);
+        Tournee tournee = demandeDeLivraison.calculerTournee();
 
 
         List<Itineraire> itineraires = new ArrayList<>();
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(0), points.get(2), 9, "a"))));
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(2), points.get(5), 2, "a"))));
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(5), points.get(0), 2, "a"))));
-        Tournee validTournee = new Tournee(itineraires);
+        Tournee validTournee = new Tournee(itineraires, demandeDeLivraison);
+
         assertEquals(validTournee, tournee);
     }
 }

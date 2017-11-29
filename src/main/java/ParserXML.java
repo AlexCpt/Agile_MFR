@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 
 public class ParserXML implements Parser {
     private Map<String,Point> idMapToPoint;
+    private Plan plan;
 
     @Override
     public Plan parsePlan(String fichier) {
@@ -77,7 +78,7 @@ public class ParserXML implements Parser {
                 }
             }
             //System.out.println("longueur liste finale:"+listeTroncons.get(0).getOrigine().getX());
-            Plan plan = new Plan(listePoints,listeTroncons);
+            plan = new Plan(listePoints,listeTroncons);
             return plan;
         }
 
@@ -134,13 +135,13 @@ public class ParserXML implements Parser {
                         String idLivraison=noeud.getAttribute("adresse");
                         Point livraison=idMapToPoint.get(idLivraison);
                         livraisons.add(livraison);
-                        livraison.setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), 0));
+                        livraison.setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now()));
                     }
 
                 }
             }
 
-            return new DemandeDeLivraison(livraisons,entrepot,depart);
+            return new DemandeDeLivraison(plan, livraisons,entrepot,depart);
 
         } catch (ParserConfigurationException e) {
             e.printStackTrace();

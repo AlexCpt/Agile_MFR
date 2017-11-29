@@ -8,17 +8,41 @@ import java.util.List;
 
 public class DemandeDeLivraison {
 
-    List<Point> mLivraisons;
-    Point mEntrepot;
-    LocalTime mDepart;
+    private List<Point> mLivraisons;
+    private Point mEntrepot;
+    private LocalTime mDepart;
+    private LocalTime mFin = LocalTime.of(18,0);
+    private Plan mPlan;
 
-    public DemandeDeLivraison(List<Point> livraisons, Point entrepot, LocalTime depart) {
+    public DemandeDeLivraison(Plan plan, List<Point> livraisons, Point entrepot, LocalTime depart) {
+        this.mPlan = plan;
         this.mLivraisons = livraisons;
         this.mEntrepot = entrepot;
         this.mDepart = depart;
     }
 
-    public Tournee calculerTournee(Plan plan){
+    public Plan getPlan() {
+        return mPlan;
+    }
+
+    public List<Point> getLivraisons() {
+        return mLivraisons;
+    }
+
+    public Point getEntrepot() {
+        return mEntrepot;
+    }
+
+    public LocalTime getDepart() {
+        return mDepart;
+    }
+
+    public LocalTime getFin() {
+        return mFin;
+    }
+
+    public Tournee calculerTournee(){
+
         HashMap<Pair<Point, Point>, Itineraire> itineraireHashMap = new HashMap<>();
 
         int nombreSommets = mLivraisons.size() + 1;
@@ -34,7 +58,7 @@ public class DemandeDeLivraison {
 
         List<Itineraire> currentItineraires;
         for (int i = 0; i < sommets.length; i++) {
-            currentItineraires = Dijkstra.dijkstra(plan, sommets[i], sommets);
+            currentItineraires = Dijkstra.dijkstra(mPlan, sommets[i], sommets);
             for (int j = 0; j < sommets.length; j++) {
                 if (i != j) {
                     itineraireHashMap.put(new Pair<>(sommets[i], sommets[j]), currentItineraires.get(j));
@@ -60,8 +84,10 @@ public class DemandeDeLivraison {
 
         listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[tsp1.getMeilleureSolution(nombreSommets - 1)], sommets[tsp1.getMeilleureSolution(0)])));
 
-        return new Tournee(listeItineraires);
+        return new Tournee(listeItineraires, this);
     }
+
+
 
 
 }
