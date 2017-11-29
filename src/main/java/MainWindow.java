@@ -16,9 +16,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 
 public class MainWindow extends Application
 {
@@ -89,17 +86,27 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
-        //Label Title
+        //Label
         Label lblTitlePlan = new Label("Plan");
         Label lblTitleDL = new Label("Demande Livraison");
+        Label lblTimeline = new Label("Timeline");
+        lblTimeline.setPadding(new Insets(10));
 
-        // LeftHighVBox
-        VBox Vbox = new VBox();
+        // LeftVBox
+        VBox leftVbox = new VBox();
+
+        //Right vBox
+        VBox rightVbox = new VBox();
+        rightVbox.getChildren().add(lblTimeline);
+        rightVbox.setAlignment(Pos.TOP_CENTER);
+        rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
+
+        //timeLineBuild();
 
         //Partie Plan du bandeau
-        Vbox.getChildren().add(lblTitlePlan);
+        leftVbox.getChildren().add(lblTitlePlan);
         comboBoxPlan.setPromptText("planLyonPetit");
-        Vbox.getChildren().add(comboBoxPlan);
+        leftVbox.getChildren().add(comboBoxPlan);
         comboBoxPlan.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
                 mapPane.getChildren().clear();
@@ -108,7 +115,7 @@ public class MainWindow extends Application
             }
         });
 
-        //Partie DL du bandeau
+        //Partie Demande Livraison du bandeau
         comboBoxDemandeLivraison.setPromptText("Choisir une DL");
         comboBoxDemandeLivraison.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
@@ -133,7 +140,7 @@ public class MainWindow extends Application
 
         Button btnCalculerTournee = new Button();
         btnCalculerTournee.setText("Calculer tournée");
-        Vbox.setSpacing(20);
+        leftVbox.setSpacing(20);
         btnCalculerTournee.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -149,24 +156,34 @@ public class MainWindow extends Application
         // --------------------------------
         //VBOX
 
-        Vbox.getChildren().add(lblTitleDL);
-        Vbox.getChildren().add(comboBoxDemandeLivraison);
-        Vbox.getChildren().add(btnCalculerTournee);
-        Vbox.setPrefSize(bandeauWidth, bandeauHeigth);
-        Vbox.setAlignment(Pos.CENTER);
+        leftVbox.getChildren().add(lblTitleDL);
+        leftVbox.getChildren().add(comboBoxDemandeLivraison);
+        leftVbox.getChildren().add(btnCalculerTournee);
+        leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
+        leftVbox.setAlignment(Pos.CENTER);
 
         //Left Pane
         Pane leftPane = new Pane();
-        leftPane.getChildren().add(Vbox);
+        leftPane.getChildren().add(leftVbox);
+
+        //Right Pane
+        Pane rightPane = new Pane();
+        rightPane.getChildren().add(rightVbox);
 
         plan.print(mapPane, primaryStage);
 
         BorderPane root = new BorderPane();
-        root.setRight(mapPane);
+        root.setRight(rightPane);
+        root.setCenter(mapPane);
         root.setLeft(leftPane);
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public void timeLineBuild(Pane leftPane){
+
+
     }
 }

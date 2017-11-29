@@ -121,17 +121,16 @@ public class Point {
 
         //Popover
         Label lblLivraisonPopover = new Label("Livraison 1 - 10h30");
+        Bounds boundsInScreen = lblLivraisonPopover.localToScreen(lblLivraisonPopover.getBoundsInLocal());
         lblLivraisonPopover.setPadding(new Insets(10,10,10,10));
         PopOver popOver = new PopOver();
         popOver.setContentNode(lblLivraisonPopover);
-        popOver.setX(mXscaled);
-        popOver.setY(mYscaled);
+        //popOver.setX(boundsInScreen.getMinX());
+        //popOver.setY(boundsInScreen.getMinY());
         popOver.setAutoHide(true);
         popOver.setHideOnEscape(true);
         popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
         popOver.setDetachable(false);
-
-        Bounds bounds = lblLivraisonPopover.localToScreen(lblLivraisonPopover.getBoundsInLocal());
 
 
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
@@ -148,8 +147,5 @@ public class Point {
         }
         else {
         }
-
-        /*//Create PopOver and add look and feel
-        ;*/
     }
 }
