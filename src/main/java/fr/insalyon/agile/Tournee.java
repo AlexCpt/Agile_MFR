@@ -1,13 +1,18 @@
+package fr.insalyon.agile;
+
 import javafx.scene.layout.Pane;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public class Tournee {
 
+    LocalTime mDateArrivee;
     List<Itineraire> mItineraires;
 
-    public Tournee(List<Itineraire> itineraires) {
+    public Tournee(List<Itineraire> itineraires, LocalTime dateArrivee) {
         mItineraires = itineraires;
+        mDateArrivee = dateArrivee;
     }
 
     @Override
@@ -17,6 +22,8 @@ public class Tournee {
 
         Tournee tournee = (Tournee) o;
 
+        if (mDateArrivee != null ? !mDateArrivee.equals(tournee.mDateArrivee) : tournee.mDateArrivee != null)
+            return false;
         return mItineraires != null ? mItineraires.equals(tournee.mItineraires) : tournee.mItineraires == null;
     }
 

@@ -1,3 +1,4 @@
+import fr.insalyon.agile.*;
 import org.junit.Test;
 
 import java.time.LocalTime;

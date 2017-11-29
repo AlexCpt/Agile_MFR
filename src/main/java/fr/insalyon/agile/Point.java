@@ -1,3 +1,5 @@
+package fr.insalyon.agile;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -11,7 +13,7 @@ public class Point {
 
     public String mAdresse;
 
-    enum Type {
+    public enum Type {
         POINT,
         LIVRAISON,
         ENTREPOT
@@ -41,6 +43,10 @@ public class Point {
 
     public Type getType() {
         return mType;
+    }
+
+    public Livraison getLivraison() {
+        return mLivraison;
     }
 
     public void setAdresse(String adresse) {
@@ -105,7 +111,7 @@ public class Point {
         //System.out.println("prefH : " +mapPane.getPrefHeight());
 
 
-        circle.relocate((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - radiusAffichage,((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - radiusAffichage);
+        circle.relocate((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - radiusAffichage,((mY- Plan.mPointYmin)/(double) (Plan.mPointYmax- Plan.mPointYmin)*mapPane.getPrefHeight()) - radiusAffichage);
         //System.out.println("x du point : " + ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
         //System.out.println("y du point : " + (mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
 

@@ -1,3 +1,5 @@
+package fr.insalyon.agile;
+
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -126,7 +128,6 @@ public class MainWindow extends Application
 
                 mapPane.getChildren().clear();
                 plan.print(mapPane);
-                tournee.print(mapPane);
             }
         });
 

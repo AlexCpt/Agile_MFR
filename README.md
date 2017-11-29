@@ -13,7 +13,7 @@ Nous utilisons JavaFX pour le tracé des routes et l'interface utilisateur.
 ## Calcul d'itinéraire
 C'est le coeur de notre application. Cette implémentation du problème du voyageur de commerce se doit d'être optimisée pour pouvoir gérer un maximum de points de livraison dans un temps de calcul convenable.
 
-Nous utilisons Dijkstra pour le calcul des distances entre les points, puis un algorithme de TSP
+Nous utilisons Ddfijkstra pour le calcul des distances entre les points, puis un algorithme de TSP
 
 ### Algorithmie
 > À détailler.

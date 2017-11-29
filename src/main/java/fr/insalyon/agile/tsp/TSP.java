@@ -1,4 +1,4 @@
-package tsp;
+package fr.insalyon.agile.tsp;
 
 public interface TSP {
 		

@@ -1,26 +1,13 @@
-package tsp;
+package fr.insalyon.agile.tsp;
 
-import javafx.util.Pair;
-import tsp.IteratorSeq;
-import tsp.TemplateTSP;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 
-public class TSP3 extends TemplateTSP {
+public class TSP2 extends TemplateTSP {
 
     @Override
     protected Iterator<Integer> iterator(Integer sommetCrt, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
-        ArrayList<Integer> coutsDepuisSommet = new ArrayList<>(nonVus.size());
-        for (int i = 0; i < nonVus.size(); i++) {
-            coutsDepuisSommet.add(nonVus.get(i));
-        }
-
-        coutsDepuisSommet.sort(Comparator.comparing(o -> Integer.valueOf(cout[sommetCrt][o])));
-
-        return coutsDepuisSommet.iterator();
+        return new IteratorSeq(nonVus, sommetCrt);
     }
 
     @Override
@@ -51,6 +38,4 @@ public class TSP3 extends TemplateTSP {
 
         return somme;
     }
-
-
 }
