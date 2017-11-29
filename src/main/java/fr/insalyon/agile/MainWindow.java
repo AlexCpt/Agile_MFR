@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,7 +17,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.controlsfx.control.PopOver;
 
 
 public class MainWindow extends Application
@@ -59,12 +59,10 @@ public class MainWindow extends Application
     Tournee tournee;
     DemandeDeLivraison ddl;
 
-
     public MainWindow(){
         parser = new ParserXML();
 
         plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
-
     }
 
     public static void main(String[] args) {
@@ -90,33 +88,43 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
-        //Label Title
+        //Label
         Label lblTitlePlan = new Label("Plan");
         Label lblTitleDL = new Label("Demande Livraison");
+        Label lblTimeline = new Label("Timeline");
+        lblTimeline.setPadding(new Insets(10));
 
-        // LeftHighVBox
-        VBox Vbox = new VBox();
+        // LeftVBox
+        VBox leftVbox = new VBox();
+
+        //Right vBox
+        VBox rightVbox = new VBox();
+        rightVbox.getChildren().add(lblTimeline);
+        rightVbox.setAlignment(Pos.TOP_CENTER);
+        rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
+
+        //timeLineBuild();
 
         //Partie Plan du bandeau
-        Vbox.getChildren().add(lblTitlePlan);
+        leftVbox.getChildren().add(lblTitlePlan);
         comboBoxPlan.setPromptText("planLyonPetit");
-        Vbox.getChildren().add(comboBoxPlan);
+        leftVbox.getChildren().add(comboBoxPlan);
         comboBoxPlan.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
                 mapPane.getChildren().clear();
                 plan = parser.parsePlan("fichiersXML/"+ t1 +".xml");
-                plan.print(mapPane);
+                plan.print(mapPane, primaryStage);
             }
         });
 
-        //Partie DL du bandeau
+        //Partie Demande Livraison du bandeau
         comboBoxDemandeLivraison.setPromptText("Choisir une DL");
         comboBoxDemandeLivraison.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
                 if(t1.equals(DLOptions.get(0)))
                 {
                     mapPane.getChildren().clear();
-                    plan.print(mapPane);
+                    plan.print(mapPane, primaryStage);
                     return;
                 }
 
@@ -127,56 +135,56 @@ public class MainWindow extends Application
                 }
 
                 mapPane.getChildren().clear();
-                plan.print(mapPane);
+                plan.print(mapPane, primaryStage);
             }
         });
 
         Button btnCalculerTournee = new Button();
         btnCalculerTournee.setText("Calculer tournée");
-        Vbox.setSpacing(20);
+        leftVbox.setSpacing(20);
         btnCalculerTournee.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
                 tournee = ddl.calculerTournee(plan);
                 mapPane.getChildren().clear();
-                plan.print(mapPane);
+                plan.print(mapPane, primaryStage);
                 tournee.print(mapPane);
             }
         });
 
+
         // --------------------------------
+        //VBOX
 
-        //Create PopOver and add look and feel
-        PopOver popOver = new PopOver();
-        popOver.setContentNode(lblTitleDL);
-        popOver.setAutoFix(true);
-        popOver.setAutoHide(true);
-        popOver.setHideOnEscape(true);
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-        popOver.setDetachable(false);
-
-
-
-        Vbox.getChildren().add(lblTitleDL);
-        Vbox.getChildren().add(comboBoxDemandeLivraison);
-        Vbox.getChildren().add(btnCalculerTournee);
-        Vbox.setPrefSize(bandeauWidth, bandeauHeigth);
-        Vbox.setAlignment(Pos.CENTER);
+        leftVbox.getChildren().add(lblTitleDL);
+        leftVbox.getChildren().add(comboBoxDemandeLivraison);
+        leftVbox.getChildren().add(btnCalculerTournee);
+        leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
+        leftVbox.setAlignment(Pos.CENTER);
 
         //Left Pane
         Pane leftPane = new Pane();
-        leftPane.getChildren().add(Vbox);
+        leftPane.getChildren().add(leftVbox);
 
-        plan.print(mapPane);
+        //Right Pane
+        Pane rightPane = new Pane();
+        rightPane.getChildren().add(rightVbox);
+
+        plan.print(mapPane, primaryStage);
 
         BorderPane root = new BorderPane();
-        root.setRight(mapPane);
+        root.setRight(rightPane);
+        root.setCenter(mapPane);
         root.setLeft(leftPane);
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
-        popOver.show(primaryStage); //TODO : to improve
+    }
+
+    public void timeLineBuild(Pane leftPane){
+
+
     }
 }
