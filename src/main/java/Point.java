@@ -1,13 +1,20 @@
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.controlsfx.control.PopOver;
+import javafx.stage.Stage;
+
 
 
 public class Point {
     private String mId;
     private int mX;
     private int mY;
-    final double radiusAffichage = 3;
+    final double radiusAffichage = 4;
+    final double popoverButtonRadius = 12;
 
     public String mAdresse;
 
@@ -87,28 +94,54 @@ public class Point {
         return mEntrepot != null ? mEntrepot.equals(point.mEntrepot) : point.mEntrepot == null;
     }
 
-    public void print(Pane mapPane){
+    public void print(Pane mapPane, Stage primaryStage){
 
-        Circle circle;
-        //Color
+        Circle circle = new Circle(radiusAffichage);
+        Button rndBtnPopover = new Button();
+        rndBtnPopover.setLayoutX((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - popoverButtonRadius);
+        rndBtnPopover.setLayoutY(((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - popoverButtonRadius);
+        circle.relocate((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - radiusAffichage,((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - radiusAffichage);
+        rndBtnPopover.setStyle(
+                "-fx-background-radius: 5em; " +
+                        "-fx-min-width: "+popoverButtonRadius*2+"px; " +
+                        "-fx-min-height: "+popoverButtonRadius*2+"px; " +
+                        "-fx-max-width: "+popoverButtonRadius*2+"px; " +
+                        "-fx-max-height: "+popoverButtonRadius*2+"px; " +
+                        "-fx-background-color: transparent;"+
+                        "-fx-background-insets: 0px; " +
+                        "-fx-padding: 0px;"
+        );
+
+        //Popover
+        Label lblLivraisonPopover = new Label("Livraison 1 - 10h30");
+        lblLivraisonPopover.setPadding(new Insets(10,10,10,10));
+        PopOver popOver = new PopOver();
+        popOver.setContentNode(lblLivraisonPopover);
+        popOver.setX((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()));
+        popOver.setY(((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()));
+        popOver.setAutoHide(true);
+        popOver.setHideOnEscape(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        popOver.setDetachable(false);
+
+
+        rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
+        rndBtnPopover.setOnMouseExited(e -> popOver.hide());
+
+
         if(mType == Type.ENTREPOT){
-            circle = new Circle(radiusAffichage, Color.RED);
+            circle.setFill(Color.RED);
+            mapPane.getChildren().add(circle);
+            mapPane.getChildren().add(rndBtnPopover);
         } else if (mType == Type.LIVRAISON) {
-            circle = new Circle(radiusAffichage, Color.BLUE);
+            circle.setFill(Color.BLUE);
+            mapPane.getChildren().add(circle);
+            mapPane.getChildren().add(rndBtnPopover);
         }
         else {
-            circle = new Circle(0, Color.BLACK);
         }
 
-        //Position
-        //System.out.println("prefw : " +mapPane.getPrefWidth());
-        //System.out.println("prefH : " +mapPane.getPrefHeight());
-
-
-        circle.relocate((((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth()) - radiusAffichage,((mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight()) - radiusAffichage);
-        //System.out.println("x du point : " + ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
-        //System.out.println("y du point : " + (mY-Plan.mPointYmin)/(double) (Plan.mPointYmax-Plan.mPointYmin)*mapPane.getPrefHeight());
-
-        mapPane.getChildren().add(circle);
+        /*//Create PopOver and add look and feel
+        ;*/
     }
 }

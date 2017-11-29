@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,7 +15,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.controlsfx.control.PopOver;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -104,7 +104,7 @@ public class MainWindow extends Application
             @Override public void changed(ObservableValue ov, String t, String t1) {
                 mapPane.getChildren().clear();
                 plan = parser.parsePlan("fichiersXML/"+ t1 +".xml");
-                plan.print(mapPane);
+                plan.print(mapPane, primaryStage);
             }
         });
 
@@ -115,7 +115,7 @@ public class MainWindow extends Application
                 if(t1.equals(DLOptions.get(0)))
                 {
                     mapPane.getChildren().clear();
-                    plan.print(mapPane);
+                    plan.print(mapPane, primaryStage);
                     return;
                 }
 
@@ -126,7 +126,7 @@ public class MainWindow extends Application
                 }
 
                 mapPane.getChildren().clear();
-                plan.print(mapPane);
+                plan.print(mapPane, primaryStage);
                 tournee.print(mapPane);
             }
         });
@@ -140,34 +140,16 @@ public class MainWindow extends Application
             public void handle(ActionEvent event) {
                 tournee = ddl.calculerTournee(plan);
                 mapPane.getChildren().clear();
-                plan.print(mapPane);
+                plan.print(mapPane, primaryStage);
                 tournee.print(mapPane);
             }
         });
 
-        // --------------------------------
-
-        //Create PopOver and add look and feel
-        Label lblLivraisonPopover = new Label("Livraison 1 - 10H30");
-        PopOver popOver = new PopOver();
-        popOver.setContentNode(lblLivraisonPopover);
-        popOver.setAutoFix(true);
-        popOver.setAutoHide(true);
-        popOver.setHideOnEscape(true);
-        popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-        popOver.setDetachable(false);
-
-        Button btnPopover = new Button();
-        btnPopover.setText("Test");
-        btnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
-        btnPopover.setOnMouseExited(e -> popOver.hide());
-
-
 
         // --------------------------------
+        //VBOX
 
         Vbox.getChildren().add(lblTitleDL);
-        Vbox.getChildren().add(btnPopover);
         Vbox.getChildren().add(comboBoxDemandeLivraison);
         Vbox.getChildren().add(btnCalculerTournee);
         Vbox.setPrefSize(bandeauWidth, bandeauHeigth);
@@ -177,7 +159,7 @@ public class MainWindow extends Application
         Pane leftPane = new Pane();
         leftPane.getChildren().add(Vbox);
 
-        plan.print(mapPane);
+        plan.print(mapPane, primaryStage);
 
         BorderPane root = new BorderPane();
         root.setRight(mapPane);
