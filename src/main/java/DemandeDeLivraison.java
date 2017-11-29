@@ -1,5 +1,5 @@
 import javafx.util.Pair;
-import tsp.TSP1;
+import tsp.TSP3;
 
 import java.time.LocalTime;
 import java.util.ArrayList;

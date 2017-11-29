@@ -1,3 +1,5 @@
+package tsp;
+
 import tsp.IteratorSeq;
 import tsp.TemplateTSP;
 

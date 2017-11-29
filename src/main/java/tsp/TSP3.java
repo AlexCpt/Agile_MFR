@@ -1,3 +1,5 @@
+package tsp;
+
 import javafx.util.Pair;
 import tsp.IteratorSeq;
 import tsp.TemplateTSP;
@@ -49,4 +51,6 @@ public class TSP3 extends TemplateTSP {
 
         return somme;
     }
+
+
 }
