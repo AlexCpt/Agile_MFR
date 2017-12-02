@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.image.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -21,6 +22,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -206,6 +208,8 @@ public class MainWindow extends Application
         double heightLabelTime = 7; //Todo : L'avoir dynamiquement ? ça a l'air chiant
         LocalTime heureDebutTournee = LocalTime.of(8,0);
         LocalTime heureFinTournee = LocalTime.of(18,0);
+        final double deliveryWidth = 40.0;
+        final double deliveryHeight = 40.0;
 
 
         //Point de départ et label
@@ -260,6 +264,12 @@ public class MainWindow extends Application
         }
 
         //Voiture
+        final String test = new File("..").toURI().toString();
+        final String imageURI = new File("images/delivery-icon.jpg").toURI().toString();
+        final Image image = makeTransparent(new Image(imageURI, deliveryWidth, deliveryWidth, true, false));
+        final ImageView imageView = new ImageView(image);
+        imageView.relocate(xPoint - deliveryWidth/2,yFirstPoint - image.getHeight()/2);
+
 
 
         //Affichage
@@ -268,6 +278,35 @@ public class MainWindow extends Application
         rightPane.getChildren().add(lblEntrepotArrivee);
         rightPane.getChildren().add(pointEntrepotDepart);
         rightPane.getChildren().add(pointEntrepotArrivee);
+        rightPane.getChildren().add(imageView);
 
+    }
+
+    public Image makeTransparent(Image inputImage) {
+        int W = (int) inputImage.getWidth();
+        int H = (int) inputImage.getHeight();
+        WritableImage outputImage = new WritableImage(W, H);
+        PixelReader reader = inputImage.getPixelReader();
+        PixelWriter writer = outputImage.getPixelWriter();
+        for (int y = 0; y < H; y++) {
+            for (int x = 0; x < W; x++) {
+                int argb = reader.getArgb(x, y);
+
+
+
+                int r = (argb >> 16) & 0xFF;
+                int g = (argb >> 8) & 0xFF;
+                int b = argb & 0xFF;
+
+                if (r >= 0xFF
+                        && g >= 0xFF
+                        && b >= 0xFF) {
+                    argb &= 0x00FFFFFF;
+                }
+
+                writer.setArgb(x, y, argb);
+            }
+        }
+        return outputImage;
     }
 }
