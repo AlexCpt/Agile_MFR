@@ -31,8 +31,8 @@ public class TestDemandeDeLivraison {
                 new Troncon(points.get(5), points.get(0),2, "a")
         );
         List<Point> livraisons = new ArrayList<>();
-        points.get(2).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(),  LocalTime.now()));
-        points.get(5).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(),  LocalTime.now()));
+        points.get(2).setLivraison(new Livraison(null, null, null, null,  null));
+        points.get(5).setLivraison(new Livraison(null, null, null, null,  null));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         Entrepot entrepot = new Entrepot();
@@ -41,7 +41,7 @@ public class TestDemandeDeLivraison {
 
         Plan plan = new Plan(points, troncons);
 
-        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.now());
+        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(0, 0, 0));
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
@@ -49,7 +49,7 @@ public class TestDemandeDeLivraison {
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(0), points.get(2), 9, "a"))));
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(2), points.get(5), 2, "a"))));
         itineraires.add(new Itineraire(Arrays.asList(new Troncon(points.get(5), points.get(0), 2, "a"))));
-        Tournee validTournee = new Tournee(itineraires, LocalTime.now(), demandeDeLivraison);
+        Tournee validTournee = new Tournee(itineraires, LocalTime.of(0, 0, 2), demandeDeLivraison);
 
         assertEquals(validTournee, tournee);
     }
