@@ -1,7 +1,9 @@
 package fr.insalyon.agile;
 
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
+import org.controlsfx.control.PopOver;
 
 public class Troncon {
 
@@ -26,6 +28,8 @@ public class Troncon {
     }
 
     public double getLongueur() { return mLongueur; }
+
+    public String getNomRue() { return mNomRue; }
 
     @Override
     public String toString() {
@@ -58,5 +62,8 @@ public class Troncon {
         line.setEndX(((this.getDestination().getX() - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth());
         line.setEndY(((this.getDestination().getY() - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin)) * mapPane.getPrefHeight());
         mapPane.getChildren().add(line);
+
+
+
     }
 }

@@ -2,6 +2,7 @@ package fr.insalyon.agile;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -51,9 +52,13 @@ public class Itineraire {
         return mTroncons != null ? mTroncons.equals(that.mTroncons) : that.mTroncons == null;
     }
 
-    public void print(Pane mapPane){
+    public void print(Pane mapPane, Stage primaryStage, String label){
         for (Troncon troncon: mTroncons) {
             troncon.print(mapPane, Color.YELLOW,2);
+            troncon.getOrigine().print(mapPane,primaryStage, label);
+           //afficher nom rue sur les troncons
+            // troncon.getOrigine().print(mapPane,primaryStage, troncon.getNomRue());
+
         }
     }
 }

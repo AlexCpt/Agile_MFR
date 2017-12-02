@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.controlsfx.control.PopOver;
 import javafx.stage.Stage;
-
+import java.time.LocalTime;
 
 
 public class Point {
@@ -21,6 +21,7 @@ public class Point {
     private double coordX;
     private double coordY;
     public String mAdresse;
+    PopOver popOver;
 
     public enum Type {
         POINT,
@@ -102,7 +103,10 @@ public class Point {
         return mEntrepot != null ? mEntrepot.equals(point.mEntrepot) : point.mEntrepot == null;
     }
 
-    public void print(Pane mapPane, Stage primaryStage) {
+    public void print(Pane mapPane, Stage primaryStage, String label) {
+        popOver = new PopOver();
+        Label lblLivraisonPopover = new Label("Livraison 1 - 10h30");
+        lblLivraisonPopover.setPadding(new Insets(10,10,10,10));
 
         Circle circle = new Circle(radiusAffichage);
         Button rndBtnPopover = new Button();
@@ -126,19 +130,17 @@ public class Point {
             circle.setFill(Color.RED);
             mapPane.getChildren().add(circle);
             mapPane.getChildren().add(rndBtnPopover);
+            popOver.setContentNode(new Label("Entrepot"));
 
 
         } else if (mType == Type.LIVRAISON) {
             circle.setFill(Color.BLUE);
             mapPane.getChildren().add(circle);
             mapPane.getChildren().add(rndBtnPopover);
+            popOver.setContentNode(new Label(label));
 
         }
         //Popover
-        Label lblLivraisonPopover = new Label("Livraison 1 - 10h30");
-        lblLivraisonPopover.setPadding(new Insets(10,10,10,10));
-        PopOver popOver = new PopOver();
-        popOver.setContentNode(lblLivraisonPopover);
 
         //popOver.setAutoHide(true);
         //popOver.setHideOnEscape(true);
@@ -148,5 +150,11 @@ public class Point {
         popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 15);
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
+    }
+
+    public void printPopOver(){
+        popOver = new PopOver();
+
+
     }
 }

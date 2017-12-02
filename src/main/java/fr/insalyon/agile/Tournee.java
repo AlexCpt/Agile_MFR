@@ -1,6 +1,7 @@
 package fr.insalyon.agile;
 
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.time.LocalTime;
 
@@ -48,9 +49,14 @@ public class Tournee {
         return mItineraires != null ? mItineraires.equals(tournee.mItineraires) : tournee.mItineraires == null;
     }
 
-    public void print(Pane mapPane){
+    public void print(Pane mapPane, Stage primaryStage ){
+        int index = 0;
+        String label;
         for (Itineraire itineraire: mItineraires) {
-            itineraire.print(mapPane);
+            label = "Livraison : " + index + " heure: " + mDemandeDeLivraison.getDepart().toString();
+            itineraire.print(mapPane, primaryStage, label);
+            index++;
+
         }
     }
 

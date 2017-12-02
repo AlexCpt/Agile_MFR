@@ -163,7 +163,7 @@ public class MainWindow extends Application
                 mapPane.getChildren().clear();
                 timeLineBuild(rightPane, tournee);
                 plan.print(mapPane, primaryStage);
-                tournee.print(mapPane);
+                tournee.print(mapPane, primaryStage);
             }
         });
 

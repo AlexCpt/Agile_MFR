@@ -93,7 +93,7 @@ public class Plan {
         }
 
         for (Point point: mPoints) {
-            point.print(mapPane, primaryStage);
+            point.print(mapPane, primaryStage, point.mAdresse);
         }
     }
 }
