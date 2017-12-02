@@ -27,6 +27,7 @@ public class TestModifierTournee {
                 new Troncon(points.get(0), points.get(1),10, "a"),
                 new Troncon(points.get(0), points.get(2),90, "a"),
                 new Troncon(points.get(0), points.get(5),140, "a"),
+                new Troncon(points.get(3), points.get(0),600, "a"),
                 new Troncon(points.get(1), points.get(2),100, "a"),
                 new Troncon(points.get(1), points.get(3),15, "a"),
                 new Troncon(points.get(2), points.get(5),20, "a"),
@@ -42,8 +43,8 @@ public class TestModifierTournee {
     public final void TestTournee() {
 
         List<Point> livraisons = new ArrayList<>();
-        points.get(2).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.of(2,8), LocalTime.of(2,6),  LocalTime.of(0,6)));
-        points.get(5).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.of(4,1), LocalTime.of(3,1),  LocalTime.of(1,0)));
+        points.get(2).setLivraison(new Livraison(null, null, LocalTime.of(0,6)));
+        points.get(5).setLivraison(new Livraison(null, null, LocalTime.of(1,0)));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         Entrepot entrepot = new Entrepot();
@@ -83,9 +84,9 @@ public class TestModifierTournee {
     public final void modifierTournee()
     {
         List<Point> livraisons = new ArrayList<>();
-        points.get(5).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.of(5,0), LocalTime.of(5,0), LocalTime.of(0,10)));
-        points.get(1).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.of(2,8), LocalTime.of(2,6),  LocalTime.of(0,6)));
-        points.get(2).setLivraison(new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.of(4,1), LocalTime.of(3,1),  LocalTime.of(0,20)));
+        points.get(5).setLivraison(new Livraison(null, null, LocalTime.of(0,10)));
+        points.get(1).setLivraison(new Livraison(null, null, LocalTime.of(0,6)));
+        points.get(2).setLivraison(new Livraison(null, null, LocalTime.of(0,20)));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         livraisons.add(points.get(1));
@@ -99,7 +100,7 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
-        Livraison livraison = new Livraison(LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.now(), LocalTime.of(0,20));
+        Livraison livraison = new Livraison(null, null,  LocalTime.of(0,20));
 
         points.get(4).setLivraison(livraison);
         tournee.modifierTournee(points.get(4));

@@ -158,7 +158,7 @@ public class ParserXML implements Parser {
                             finPlage = null;
                         }
 
-                        livraison.setLivraison(new Livraison(debutPlage, finPlage, null, null, LocalTime.of(0,0)));
+                        livraison.setLivraison(new Livraison(debutPlage, finPlage, LocalTime.of(0,0)));
                     }
                 }
             }

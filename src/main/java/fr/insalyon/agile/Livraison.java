@@ -10,11 +10,9 @@ public class Livraison {
     private LocalTime mDateArrivee;
     private LocalTime mDureeLivraison;
 
-    public Livraison(LocalTime mDebutPlage, LocalTime mFinPlage, LocalTime mDateLivraison, LocalTime mDateArrivee, LocalTime mDureeLivraison) {
+    public Livraison(LocalTime mDebutPlage, LocalTime mFinPlage, LocalTime mDureeLivraison) {
         this.mDebutPlage = mDebutPlage;
         this.mFinPlage = mFinPlage;
-        this.mDateLivraison = mDateLivraison;
-        this.mDateArrivee = mDateArrivee;
         this.mDureeLivraison = mDureeLivraison;
     }
 
