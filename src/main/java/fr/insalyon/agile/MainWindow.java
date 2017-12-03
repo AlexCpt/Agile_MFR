@@ -30,7 +30,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Double.max;
 
 
 public class MainWindow extends Application
@@ -217,8 +216,8 @@ public class MainWindow extends Application
         LocalTime heureDebutTournee = LocalTime.of(8,0);
         LocalTime heureFinTournee = LocalTime.of(
                 tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getHour() +
-                tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getHour() +
-                tournee.mItineraires.get(tournee.mItineraires.size()-1).getDuree().getHour(),
+                        tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getHour() +
+                        tournee.mItineraires.get(tournee.mItineraires.size()-1).getDuree().getHour(),
                 tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getMinute() +
                         tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getMinute() +
                         tournee.mItineraires.get(tournee.mItineraires.size()-1).getDuree().getMinute());
@@ -318,7 +317,9 @@ public class MainWindow extends Application
         imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                System.out.println("Image dragged !");
 
+                imageView.relocate(centreRightPane - deliveryWidth/2, event.getY());
             }
         });
 
