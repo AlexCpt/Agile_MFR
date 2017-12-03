@@ -86,14 +86,14 @@ public class Plan {
         }
     }
 
-    public void print(Pane mapPane, Stage primaryStage) {
+    public void print(Pane mapPane) {
 
         for (Troncon troncon: mTroncons) {
             troncon.print(mapPane, Color.WHITE, 1);
         }
 
         for (Point point: mPoints) {
-            point.print(mapPane, primaryStage, point.mAdresse);
+            point.print(mapPane);
         }
     }
 }

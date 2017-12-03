@@ -49,14 +49,9 @@ public class Tournee {
         return mItineraires != null ? mItineraires.equals(tournee.mItineraires) : tournee.mItineraires == null;
     }
 
-    public void print(Pane mapPane, Stage primaryStage ){
-        int index = 0;
-        String label;
+    public void print(Pane mapPane){
         for (Itineraire itineraire: mItineraires) {
-            label = "Livraison : " + index + " heure: " + mDemandeDeLivraison.getDepart().toString();
-            itineraire.print(mapPane, primaryStage, label);
-            index++;
-
+            itineraire.print(mapPane);
         }
     }
 

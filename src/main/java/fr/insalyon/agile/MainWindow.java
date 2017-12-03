@@ -118,7 +118,7 @@ public class MainWindow extends Application
             @Override public void changed(ObservableValue ov, String t, String t1) {
                 mapPane.getChildren().clear();
                 plan = parser.parsePlan("fichiersXML/"+ t1 +".xml");
-                plan.print(mapPane, primaryStage);
+                plan.print(mapPane);
             }
         });
 
@@ -129,7 +129,7 @@ public class MainWindow extends Application
                 if(t1.equals(DLOptions.get(0)))
                 {
                     mapPane.getChildren().clear();
-                    plan.print(mapPane, primaryStage);
+                    plan.print(mapPane);
                     return;
                 }
 
@@ -140,7 +140,7 @@ public class MainWindow extends Application
                 }
 
                 mapPane.getChildren().clear();
-                plan.print(mapPane, primaryStage);
+                plan.print(mapPane);
             }
         });
 
@@ -167,9 +167,9 @@ public class MainWindow extends Application
             public void handle(ActionEvent event) {
                 tournee = ddl.calculerTournee();
                 mapPane.getChildren().clear();
-                timeLineBuild(rightPane, tournee);
-                plan.print(mapPane, primaryStage);
-                tournee.print(mapPane, primaryStage);
+                timeLineBuild(rightPane, tournee,mapPane,primaryStage);
+                plan.print(mapPane);
+                tournee.print(mapPane);
             }
         });
 
@@ -189,7 +189,7 @@ public class MainWindow extends Application
 
 
 
-        plan.print(mapPane, primaryStage);
+        plan.print(mapPane);
 
         BorderPane root = new BorderPane();
         root.setRight(rightPane);
@@ -201,7 +201,7 @@ public class MainWindow extends Application
         primaryStage.show();
     }
 
-    public void timeLineBuild(Pane rightPane, Tournee tournee){
+    public void timeLineBuild(Pane rightPane, Tournee tournee, Pane mapPane, Stage primaryStage){
 
         rightPane.getChildren().clear();
 
@@ -224,6 +224,14 @@ public class MainWindow extends Application
         final double deliveryWidth = 40.0;
         final double deliveryHeight = 40.0;
         final int decalageLabelLivraison = 25;
+        String popOverButtonStyle = "-fx-background-radius: 5em; " +
+                "-fx-min-width: " + radiusAffichageTimeline*2 + "px; " +
+                "-fx-min-height: " + radiusAffichageTimeline*2 + "px; " +
+                "-fx-max-width: " + radiusAffichageTimeline*2 + "px; " +
+                "-fx-max-height: " + radiusAffichageTimeline*2 + "px; " +
+                "-fx-background-color: transparent;" +
+                "-fx-background-insets: 0px; " +
+                "-fx-padding: 0px;";
 
         System.out.println(heureFinTournee);
 
@@ -241,6 +249,12 @@ public class MainWindow extends Application
         Circle pointEntrepotDepart = new Circle(radiusAffichageTimeline);
         pointEntrepotDepart.setFill(Color.rgb(244,39,70));
         pointEntrepotDepart.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
+        Button entrepotDepButton = new Button();
+        entrepotDepButton.setStyle(popOverButtonStyle);
+        entrepotDepButton.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
+        tournee.mDemandeDeLivraison.getEntrepot().printHover(mapPane,primaryStage,entrepotDepButton,
+                "Entrepot - Depart : "+ heureDebutTournee.toString() );
+
 
         Label lblEntrepotDepartHeure = new Label(heureDebutTournee.toString());
         lblEntrepotDepartHeure.setLayoutX(centreRightPane - widthLabelTime);
@@ -256,6 +270,12 @@ public class MainWindow extends Application
         Circle pointEntrepotArrivee = new Circle(radiusAffichageTimeline);
         pointEntrepotArrivee.setFill(Color.rgb(244,39,70));
         pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
+        Button entrepotArrButton = new Button();
+        entrepotArrButton.setStyle(popOverButtonStyle);
+        entrepotArrButton.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
+        tournee.mDemandeDeLivraison.getEntrepot().printHover(mapPane,primaryStage,entrepotArrButton,
+                "Entrepot - Arrivee : "+ heureFinTournee.toString() );
+
 
         Label lblEntrepotArriveeHeure = new Label(heureFinTournee.toString());
         lblEntrepotArriveeHeure.setLayoutX(centreRightPane - widthLabelTime);
@@ -287,6 +307,13 @@ public class MainWindow extends Application
                     + yFirstPoint;
             pointIti.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
 
+            //button
+
+            Button btnPopover = new Button();
+            btnPopover.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
+            btnPopover.setStyle(popOverButtonStyle);
+
+
 
             //Label heure
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
@@ -301,7 +328,12 @@ public class MainWindow extends Application
             lblpointItiLivraison.setLayoutY(yRelocate - heightLabelTime);
             lblpointItiLivraison.setTextFill(Color.grayRgb(96));
 
+            itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,btnPopover,
+                    "Livraison " +compteurLivraison + " - Heure : " + heurex.format(dtf));
+
             compteurLivraison++;
+
+
 
             // 3lignes d'accroche
 
@@ -329,9 +361,8 @@ public class MainWindow extends Application
             linePane.getChildren().add(line);
             rightPane.getChildren().add(lblpointItiHeure);
             rightPane.getChildren().add(lblpointItiLivraison);
+            pointPane.getChildren().add(btnPopover);
         }
-
-
 
 
         //Voiture
@@ -373,6 +404,8 @@ public class MainWindow extends Application
         rightPane.getChildren().add(lblEntrepotArrivee);
         pointPane.getChildren().add(pointEntrepotDepart);
         pointPane.getChildren().add(pointEntrepotArrivee);
+        pointPane.getChildren().add(entrepotArrButton);
+        pointPane.getChildren().add(entrepotDepButton);
         rightPane.getChildren().add(rightVbox);
         rightPane.getChildren().add(rightVboxDown);
         rightPane.getChildren().add(linePane);
