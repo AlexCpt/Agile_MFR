@@ -218,12 +218,12 @@ public class MainWindow extends Application
         double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
         LocalTime heureDebutTournee = LocalTime.of(8,0);
         LocalTime heureFinTournee = LocalTime.of(
-                tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getHour() +
-                tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getHour() +
-                tournee.mItineraires.get(tournee.mItineraires.size()-1).getDuree().getHour(),
-                tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getMinute() +
-                        tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getMinute() +
-                        tournee.mItineraires.get(tournee.mItineraires.size()-1).getDuree().getMinute());
+                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getHour() +
+                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getHour() +
+                tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree().getHour(),
+                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getMinute() +
+                        tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getMinute() +
+                        tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree().getMinute());
         final double deliveryWidth = 40.0;
         final double deliveryHeight = 40.0;
         final double dragAndDropWidth = 20;
@@ -281,7 +281,7 @@ public class MainWindow extends Application
         Pane linePane = new Pane();
         Pane accrochePointPane = new Pane();
 
-        for (Itineraire itineraire: tournee.mItineraires) {
+        for (Itineraire itineraire: tournee.getItineraires()) {
 
             if(itineraire.getTroncons().get(0).getOrigine().getType() != Point.Type.LIVRAISON){
                 continue;
