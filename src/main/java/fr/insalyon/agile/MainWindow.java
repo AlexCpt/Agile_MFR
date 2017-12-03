@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -28,6 +29,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Double.max;
 
 
 public class MainWindow extends Application
@@ -283,6 +286,7 @@ public class MainWindow extends Application
             pointIti.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
 
 
+
             //Label heure
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
             Label lblpointIti = new Label(heurex.format(dtf));
@@ -310,6 +314,15 @@ public class MainWindow extends Application
         final Image image = makeTransparent(new Image(imageURI, deliveryWidth, deliveryWidth, true, false));
         final ImageView imageView = new ImageView(image);
         imageView.relocate(centreRightPane - deliveryWidth/2,yFirstPoint - image.getHeight()/2);
+
+        imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+            }
+        });
+
+
 
 
 
