@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,19 +103,10 @@ public class MainWindow extends Application
         //Label
         Label lblTitlePlan = new Label("Plan");
         Label lblTitleDL = new Label("Demande Livraison");
-        Label lblTimeline = new Label("Timeline");
-        lblTimeline.setPadding(new Insets(10));
 
         // LeftVBox
         VBox leftVbox = new VBox();
 
-        //Right vBox
-        VBox rightVbox = new VBox();
-        rightVbox.getChildren().add(lblTimeline);
-        rightVbox.setAlignment(Pos.TOP_CENTER);
-        rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
-
-        //timeLineBuild();
 
         //Partie Plan du bandeau
         leftVbox.getChildren().add(lblTitlePlan);
@@ -150,9 +142,19 @@ public class MainWindow extends Application
             }
         });
 
+        //Titre
+        Label lblTimeline = new Label("Timeline");
+        lblTimeline.setPadding(new Insets(10));
+        //Right vBox
+        VBox rightVbox = new VBox();
+        rightVbox.getChildren().add(lblTimeline);
+        rightVbox.setAlignment(Pos.TOP_CENTER);
+        rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
+
         //Right Pane
         Pane rightPane = new Pane();
         rightPane.getChildren().add(rightVbox);
+
 
         Button btnCalculerTournee = new Button();
         btnCalculerTournee.setText("Calculer tournée");
@@ -199,17 +201,37 @@ public class MainWindow extends Application
 
     public void timeLineBuild(Pane rightPane, Tournee tournee){
 
+        rightPane.getChildren().clear();
+
         //Todo : externaliser ça
-        double xPoint =  rightPaneWidth/2; //TODO : bug
+        double centreRightPane = rightPaneWidth/2;
+        double xPoint =  centreRightPane;
         double yFirstPoint = 50;
         double yLastPoint = 700;
         final int radiusAffichageTimeline = 11;
-        double widthLabelTime = 56;
-        double heightLabelTime = 7; //Todo : L'avoir dynamiquement ? ça a l'air chiant
+        double widthLabelTime = 75;
+        double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
         LocalTime heureDebutTournee = LocalTime.of(8,0);
-        LocalTime heureFinTournee = LocalTime.of(18,0);
+        LocalTime heureFinTournee = LocalTime.of(
+                tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getHour() +
+                tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getHour() +
+                tournee.mItineraires.get(tournee.mItineraires.size()-1).getDuree().getHour(),
+                tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getMinute() +
+                        tournee.mItineraires.get(tournee.mItineraires.size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getMinute() +
+                        tournee.mItineraires.get(tournee.mItineraires.size()-1).getDuree().getMinute());
         final double deliveryWidth = 40.0;
         final double deliveryHeight = 40.0;
+
+        System.out.println(heureFinTournee);
+
+        //Titre
+        Label lblTimeline = new Label("Timeline");
+        lblTimeline.setPadding(new Insets(10));
+        //Right vBox
+        VBox rightVbox = new VBox();
+        rightVbox.getChildren().add(lblTimeline);
+        rightVbox.setAlignment(Pos.TOP_CENTER);
+        rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
 
 
         //Point de départ et label
@@ -218,7 +240,7 @@ public class MainWindow extends Application
         pointEntrepotDepart.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
 
         Label lblEntrepotDepart = new Label(heureDebutTournee.toString()); //Todo : rendre dynamique
-        lblEntrepotDepart.setLayoutX(xPoint - widthLabelTime);
+        lblEntrepotDepart.setLayoutX(centreRightPane - widthLabelTime);
         lblEntrepotDepart.setLayoutY(yFirstPoint- heightLabelTime);
         lblEntrepotDepart.setTextFill(Color.grayRgb(96));
 
@@ -228,7 +250,7 @@ public class MainWindow extends Application
         pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
 
         Label lblEntrepotArrivee = new Label(heureFinTournee.toString()); //Todo : rendre dynamique
-        lblEntrepotArrivee.setLayoutX(xPoint - widthLabelTime);
+        lblEntrepotArrivee.setLayoutX(centreRightPane - widthLabelTime);
         lblEntrepotArrivee.setLayoutY(yLastPoint- heightLabelTime);
         lblEntrepotArrivee.setTextFill(Color.grayRgb(96));
 
@@ -242,25 +264,44 @@ public class MainWindow extends Application
         line.setEndX(xPoint);
         line.setEndY(yLastPoint);
 
-        System.out.println(tournee.livraisons.isEmpty());
-        //Vrai ligne
-        for (Point pointLivraison: tournee.livraisons) {
-            System.out.println("coucou2");
 
-            if(pointLivraison.getType() != Point.Type.LIVRAISON){
+        //Vrai ligne
+        for (Itineraire itineraire: tournee.mItineraires) {
+
+            if(itineraire.getTroncons().get(0).getOrigine().getType() != Point.Type.LIVRAISON){
                 continue;
             }
 
             //Points
             Circle pointIti = new Circle(radiusAffichageTimeline);
-            pointEntrepotArrivee.setFill(Color.rgb(56, 120, 244));
-            System.out.println(heureDebutTournee.getSecond());//pointLivraison.getLivraison().getDateArrivee().getSecond();
-            pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,  - radiusAffichageTimeline);
+            pointIti.setFill(Color.rgb(56, 120, 244));
+            LocalTime heurex = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee();
+            double yRelocate = ((localTimeToSecond(heurex) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
+                    * (yLastPoint - yFirstPoint)
+                    + yFirstPoint;
+            System.out.println(localTimeToSecond(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee()));
+            pointIti.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
 
-            //Label
+
+            //Label heure
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+            Label lblpointIti = new Label(heurex.format(dtf));
+            lblpointIti.setLayoutX(centreRightPane - widthLabelTime);
+            lblpointIti.setLayoutY(yRelocate - heightLabelTime);
+            lblpointIti.setTextFill(Color.grayRgb(96));
+
+            //Label Livraison machintruc
+
+
+            // 3lignes d'accroche
 
 
             //lignes
+
+            //Affichage
+            rightPane.getChildren().add(pointIti);
+            rightPane.getChildren().add(lblpointIti);
+
         }
 
         //Voiture
@@ -268,7 +309,7 @@ public class MainWindow extends Application
         final String imageURI = new File("images/delivery-icon.jpg").toURI().toString();
         final Image image = makeTransparent(new Image(imageURI, deliveryWidth, deliveryWidth, true, false));
         final ImageView imageView = new ImageView(image);
-        imageView.relocate(xPoint - deliveryWidth/2,yFirstPoint - image.getHeight()/2);
+        imageView.relocate(centreRightPane - deliveryWidth/2,yFirstPoint - image.getHeight()/2);
 
 
 
@@ -279,6 +320,8 @@ public class MainWindow extends Application
         rightPane.getChildren().add(pointEntrepotDepart);
         rightPane.getChildren().add(pointEntrepotArrivee);
         rightPane.getChildren().add(imageView);
+        rightPane.getChildren().add(rightVbox);
+
 
     }
 
@@ -308,5 +351,12 @@ public class MainWindow extends Application
             }
         }
         return outputImage;
+    }
+
+    private double localTimeToMinute(LocalTime time){
+        return (time.getHour()*60 + time.getMinute());
+    }
+    private double localTimeToSecond(LocalTime time){
+        return (time.getHour()*60*60 + time.getMinute()*60 + time.getSecond());
     }
 }

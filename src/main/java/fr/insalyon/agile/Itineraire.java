@@ -35,6 +35,7 @@ public class Itineraire {
         return mLongueur;
     }
 
+
     @Override
     public String toString() {
         return "I{" +
