@@ -35,6 +35,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Double.max;
+import static java.lang.Double.min;
 
 
 public class MainWindow extends Application
@@ -47,6 +49,20 @@ public class MainWindow extends Application
     final double mapWidth = 800;
     final double mapHeight = sceneHeight;
     final double sceneWidth = mapWidth+bandeauWidth ;
+
+    // RightPane
+    double centreRightPane = rightPaneWidth/2;
+    double xPoint =  centreRightPane;
+    double yFirstPoint = 50;
+    double yLastPoint = rightPaneHeigth - 100;
+    final int radiusAffichageTimeline = 11;
+    double widthLabelTime = 75;
+    double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
+    double deliveryWidth = 40.0;
+    double deliveryHeight = 40.0;
+
+    double orgSceneY;
+    double orgTranslateY;
 
 
     ObservableList<String> planOptions =
@@ -212,13 +228,7 @@ public class MainWindow extends Application
         rightPane.getChildren().clear();
 
         //Todo : externaliser ça
-        double centreRightPane = rightPaneWidth/2;
-        double xPoint =  centreRightPane;
-        double yFirstPoint = 50;
-        double yLastPoint = rightPaneHeigth - 100;
-        final int radiusAffichageTimeline = 11;
-        double widthLabelTime = 75;
-        double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
+
         LocalTime heureDebutTournee = LocalTime.of(8,0);
         LocalTime heureFinTournee = LocalTime.of(
 
@@ -228,8 +238,7 @@ public class MainWindow extends Application
                 tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getMinute() +
                         tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getMinute() +
                         tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree().getMinute());
-        final double deliveryWidth = 40.0;
-        final double deliveryHeight = 40.0;
+
         final double dragAndDropWidth = 20;
         final double dragAndDropHeight = 20;
         final int decalageLabelLivraison = 25;
@@ -360,6 +369,7 @@ public class MainWindow extends Application
                 rightPane.getChildren().add(lblpointItiArrivee);
             }
 
+
             //button sur chaque point de livraison
 
             Button btnPopover = new Button();
@@ -445,18 +455,18 @@ public class MainWindow extends Application
             final String test = new File("..").toURI().toString();
             final String imageURI = new File("images/delivery-icon.jpg").toURI().toString();
             final Image image = makeTransparent(new Image(imageURI, deliveryWidth, deliveryWidth, true, false));
-            final ImageView imageView = new ImageView(image);
-            imageView.relocate(centreRightPane - deliveryWidth/2,yFirstPoint - image.getHeight()/2);
+            deliveryHeight = image.getHeight();
+            deliveryWidth = image.getWidth();
+            ImageView imageView = new ImageView(image);
+            imageView.relocate(centreRightPane - deliveryWidth/2,yFirstPoint - deliveryHeight/2);
+            System.out.println(imageView.getY());
+
             voiturePane.getChildren().add(imageView);
 
-            imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    System.out.println("Image dragged !");
-                    imageView.relocate(centreRightPane - deliveryWidth/2, event.getY());
-                }
-            });
+            imageView.setOnMousePressed(deliveryOnMousePressedEventHandler);
+            imageView.setOnMouseDragged(deliveryOnMouseDraggedEventHandler);
         }
+
 
         //bouton modifier
         Button modifierTimeline = new Button();
@@ -541,6 +551,33 @@ public class MainWindow extends Application
         }
         return outputImage;
     }
+
+    EventHandler<MouseEvent> deliveryOnMousePressedEventHandler =
+            new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    orgSceneY = t.getSceneY();
+                    orgTranslateY = ((ImageView)(t.getSource())).getTranslateY();
+
+                }
+            };
+
+    EventHandler<MouseEvent> deliveryOnMouseDraggedEventHandler =
+            new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    double offsetY = t.getSceneY() - orgSceneY;
+                    double newTranslateY = ((ImageView)(t.getSource())).getTranslateY();
+                    if (t.getSceneY() >= yFirstPoint - deliveryHeight/2 && t.getSceneY() <= yLastPoint + deliveryHeight/2) {
+                        newTranslateY = orgTranslateY + offsetY;
+                    }
+
+                    ((ImageView)(t.getSource())).setTranslateY(newTranslateY);
+                }
+            };
+
 
     private double localTimeToMinute(LocalTime time){
         return (time.getHour()*60 + time.getMinute());
