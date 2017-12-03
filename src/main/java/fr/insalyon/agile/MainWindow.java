@@ -30,19 +30,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Double.max;
-
 
 public class MainWindow extends Application
 {
+    final double sceneHeight = 750;
     final double bandeauWidth = 200;
-    final double bandeauHeigth = 800;
+    final double bandeauHeigth = sceneHeight;
     final double rightPaneWidth = 200;
-    final double rightPaneHeigth = 800;
+    final double rightPaneHeigth = sceneHeight;
     final double mapWidth = 800;
-    final double mapHeight = 800;
+    final double mapHeight = sceneHeight;
     final double sceneWidth = mapWidth+bandeauWidth ;
-    final double sceneHeight = mapHeight;
+
 
     ObservableList<String> planOptions =
             FXCollections.observableArrayList(
@@ -210,7 +209,7 @@ public class MainWindow extends Application
         double centreRightPane = rightPaneWidth/2;
         double xPoint =  centreRightPane;
         double yFirstPoint = 50;
-        double yLastPoint = 700;
+        double yLastPoint = rightPaneHeigth - 100;
         final int radiusAffichageTimeline = 11;
         double widthLabelTime = 75;
         double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
@@ -268,19 +267,11 @@ public class MainWindow extends Application
         lblEntrepotArrivee.setLayoutY(yLastPoint- heightLabelTime);
         lblEntrepotArrivee.setTextFill(Color.grayRgb(96));
 
-        //LigneTest -> à virer
-        Line line = new Line();
-        line.setStroke(Color.grayRgb(133));
-        line.setStrokeWidth(1);
-        line.getStrokeDashArray().addAll(4d);
-        line.setStartX(xPoint);
-        line.setStartY(yFirstPoint);
-        line.setEndX(xPoint);
-        line.setEndY(yLastPoint);
-
-
         int compteurLivraison = 1;
-        //Vrai ligne
+        double yRelocateFromLastPoint = yFirstPoint;
+        Pane pointPane = new Pane();
+        Pane linePane = new Pane();
+
         for (Itineraire itineraire: tournee.mItineraires) {
 
             if(itineraire.getTroncons().get(0).getOrigine().getType() != Point.Type.LIVRAISON){
@@ -294,8 +285,8 @@ public class MainWindow extends Application
             double yRelocate = ((localTimeToSecond(heurex) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
                     * (yLastPoint - yFirstPoint)
                     + yFirstPoint;
-            System.out.println(localTimeToSecond(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee()));
             pointIti.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
+
 
             //Label heure
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
@@ -314,15 +305,34 @@ public class MainWindow extends Application
 
             // 3lignes d'accroche
 
-
             //lignes
+            Line line = new Line();
+            line.setStroke(Color.grayRgb(133));
+            line.setStrokeWidth(1);
+            //line.getStrokeDashArray().addAll(4d); //pointillés
+            line.setStartX(xPoint);
+            line.setStartY(yRelocateFromLastPoint);
+            line.setEndX(xPoint);
+
+            //Cas spécial dernier troncon
+            if(Point.Type.ENTREPOT == itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getType()){
+                line.setEndY(yLastPoint);
+            }
+            else{
+                line.setEndY(yRelocate);
+            }
+
+            yRelocateFromLastPoint = yRelocate;
 
             //Affichage
-            rightPane.getChildren().add(pointIti);
+            pointPane.getChildren().add(pointIti);
+            linePane.getChildren().add(line);
             rightPane.getChildren().add(lblpointItiHeure);
             rightPane.getChildren().add(lblpointItiLivraison);
-
         }
+
+
+
 
         //Voiture
         final String test = new File("..").toURI().toString();
@@ -340,20 +350,34 @@ public class MainWindow extends Application
 
 
         //bouton modifier
+        Button modifierTimeline = new Button();
+        modifierTimeline.setText("Modifier");
+        modifierTimeline.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+        //Right vBox
+        VBox rightVboxDown = new VBox();
+        rightVboxDown.getChildren().add(modifierTimeline);
+        rightVboxDown.setAlignment(Pos.BOTTOM_CENTER);
+        rightVboxDown.setPadding(new Insets(35));
+        rightVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
 
         //Affichage
-        rightPane.getChildren().add(line);
         rightPane.getChildren().add(lblEntrepotDepartHeure);
         rightPane.getChildren().add(lblEntrepotDepart);
         rightPane.getChildren().add(lblEntrepotArriveeHeure);
         rightPane.getChildren().add(lblEntrepotArrivee);
-        rightPane.getChildren().add(pointEntrepotDepart);
-        rightPane.getChildren().add(pointEntrepotArrivee);
-        rightPane.getChildren().add(imageView);
+        pointPane.getChildren().add(pointEntrepotDepart);
+        pointPane.getChildren().add(pointEntrepotArrivee);
         rightPane.getChildren().add(rightVbox);
-
-
+        rightPane.getChildren().add(rightVboxDown);
+        rightPane.getChildren().add(linePane);
+        rightPane.getChildren().add(pointPane);
+        rightPane.getChildren().add(imageView);
     }
 
     public Image makeTransparent(Image inputImage) {
