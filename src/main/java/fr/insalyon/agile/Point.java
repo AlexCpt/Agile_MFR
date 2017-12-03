@@ -17,7 +17,6 @@ public class Point {
     private double coordX;
     private double coordY;
     public String mAdresse;
-    PopOver popOver;
 
     public enum Type {
         POINT,
@@ -118,11 +117,12 @@ public class Point {
     }
 
     public void printHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String label){
-        popOver = new PopOver();
+        PopOver popOver = new PopOver();
         popOver.setAutoHide(true);
         popOver.setDetachable(false);
         popOver.setContentNode(new Label(label));
         popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
+
         popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX());
         popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 10);
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
