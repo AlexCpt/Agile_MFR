@@ -14,15 +14,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -167,7 +170,7 @@ public class MainWindow extends Application
             public void handle(ActionEvent event) {
                 tournee = ddl.calculerTournee();
                 mapPane.getChildren().clear();
-                timeLineBuild(rightPane, tournee,mapPane,primaryStage);
+                timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
                 plan.print(mapPane);
                 tournee.print(mapPane);
             }
@@ -201,7 +204,7 @@ public class MainWindow extends Application
         primaryStage.show();
     }
 
-    public void timeLineBuild(Pane rightPane, Tournee tournee, Pane mapPane, Stage primaryStage){
+    public void timeLineBuild(Pane rightPane, Tournee tournee, Pane mapPane, Stage primaryStage, boolean modeModifier){
 
         rightPane.getChildren().clear();
 
@@ -223,7 +226,12 @@ public class MainWindow extends Application
                         tournee.mItineraires.get(tournee.mItineraires.size()-1).getDuree().getMinute());
         final double deliveryWidth = 40.0;
         final double deliveryHeight = 40.0;
+        final double dragAndDropWidth = 20;
+        final double dragAndDropHeight = 20;
         final int decalageLabelLivraison = 25;
+        final int decalageXIconDragAndDropPoint = 20;
+        final int decalageYIconDragAndDropPoint = 0;
+
         String popOverButtonStyle = "-fx-background-radius: 5em; " +
                 "-fx-min-width: " + radiusAffichageTimeline*2 + "px; " +
                 "-fx-min-height: " + radiusAffichageTimeline*2 + "px; " +
@@ -249,6 +257,7 @@ public class MainWindow extends Application
         Circle pointEntrepotDepart = new Circle(radiusAffichageTimeline);
         pointEntrepotDepart.setFill(Color.rgb(244,39,70));
         pointEntrepotDepart.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
+       //Boutton entrepot depart
         Button entrepotDepButton = new Button();
         entrepotDepButton.setStyle(popOverButtonStyle);
         entrepotDepButton.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
@@ -270,6 +279,7 @@ public class MainWindow extends Application
         Circle pointEntrepotArrivee = new Circle(radiusAffichageTimeline);
         pointEntrepotArrivee.setFill(Color.rgb(244,39,70));
         pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
+       //Boutton entrepot arrivee
         Button entrepotArrButton = new Button();
         entrepotArrButton.setStyle(popOverButtonStyle);
         entrepotArrButton.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
@@ -291,6 +301,7 @@ public class MainWindow extends Application
         double yRelocateFromLastPoint = yFirstPoint;
         Pane pointPane = new Pane();
         Pane linePane = new Pane();
+        Pane accrochePointPane = new Pane();
 
         for (Itineraire itineraire: tournee.mItineraires) {
 
@@ -307,7 +318,7 @@ public class MainWindow extends Application
                     + yFirstPoint;
             pointIti.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
 
-            //button
+            //button sur chaque point de livraison
 
             Button btnPopover = new Button();
             btnPopover.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
@@ -333,13 +344,30 @@ public class MainWindow extends Application
 
             compteurLivraison++;
 
-
-
             // 3lignes d'accroche
+            if(modeModifier == true){
+                final String imageURI = new File("images/drag2.jpg").toURI().toString();
+                final Image image = makeTransparent(new Image(imageURI, dragAndDropWidth, dragAndDropHeight, false, true));
+                final ImageView imageView = new ImageView(image);
+                imageView.relocate(centreRightPane - dragAndDropWidth/2 - decalageXIconDragAndDropPoint,yRelocate - image.getHeight()/2 - decalageYIconDragAndDropPoint);
+                accrochePointPane.getChildren().add(imageView);
+
+                imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+
+                    }
+                });
+            }
 
             //lignes
+            //System.out.println(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine())); //utile pour la couleur //TOdo : à améliorer parce qu'on le fait plein de fois
+            //double marge = localTimeToSecond(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()));
+            //double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
+            //Color lineColor = Color.GREEN.interpolate(Color.RED, marge / margeMax);
+
             Line line = new Line();
-            line.setStroke(Color.grayRgb(133));
+            line.setStroke(Color.grayRgb(96));
             line.setStrokeWidth(1);
             //line.getStrokeDashArray().addAll(4d); //pointillés
             line.setStartX(xPoint);
@@ -366,30 +394,49 @@ public class MainWindow extends Application
 
 
         //Voiture
-        final String test = new File("..").toURI().toString();
-        final String imageURI = new File("images/delivery-icon.jpg").toURI().toString();
-        final Image image = makeTransparent(new Image(imageURI, deliveryWidth, deliveryWidth, true, false));
-        final ImageView imageView = new ImageView(image);
-        imageView.relocate(centreRightPane - deliveryWidth/2,yFirstPoint - image.getHeight()/2);
+        Pane voiturePane = new Pane();
+        if(modeModifier == false){
+            final String test = new File("..").toURI().toString();
+            final String imageURI = new File("images/delivery-icon.jpg").toURI().toString();
+            final Image image = makeTransparent(new Image(imageURI, deliveryWidth, deliveryWidth, true, false));
+            final ImageView imageView = new ImageView(image);
+            imageView.relocate(centreRightPane - deliveryWidth/2,yFirstPoint - image.getHeight()/2);
+            voiturePane.getChildren().add(imageView);
 
-        imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
+            imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
 
-            }
-        });
-
+                }
+            });
+        }
 
         //bouton modifier
         Button modifierTimeline = new Button();
-        modifierTimeline.setText("Modifier");
-        modifierTimeline.setOnAction(new EventHandler<ActionEvent>() {
+        if(modeModifier == false)
+        {
+            modifierTimeline.setText("Modifier");
+            modifierTimeline.setOnAction(new EventHandler<ActionEvent>() {
 
-            @Override
-            public void handle(ActionEvent event) {
+                @Override
+                public void handle(ActionEvent event) {
+                    timeLineBuild(rightPane,tournee,mapPane,primaryStage,true);
+                }
+            });
+        }
+        else if (modeModifier == true){
+            modifierTimeline.setText("Valider");
+            modifierTimeline.setOnAction(new EventHandler<ActionEvent>() {
 
-            }
-        });
+                @Override
+                public void handle(ActionEvent event) {
+                    timeLineBuild(rightPane,tournee,mapPane,primaryStage,false);
+                }
+            });
+        }
+
+
+
         //Right vBox
         VBox rightVboxDown = new VBox();
         rightVboxDown.getChildren().add(modifierTimeline);
@@ -410,10 +457,17 @@ public class MainWindow extends Application
         rightPane.getChildren().add(rightVboxDown);
         rightPane.getChildren().add(linePane);
         rightPane.getChildren().add(pointPane);
-        rightPane.getChildren().add(imageView);
+        rightPane.getChildren().add(accrochePointPane);
+        rightPane.getChildren().add(voiturePane);
     }
 
-    public Image makeTransparent(Image inputImage) {
+    public void timeLineModifierBuild(Pane rightPane, Tournee tournee) {
+
+    }
+
+
+
+        public Image makeTransparent(Image inputImage) {
         int W = (int) inputImage.getWidth();
         int H = (int) inputImage.getHeight();
         WritableImage outputImage = new WritableImage(W, H);
