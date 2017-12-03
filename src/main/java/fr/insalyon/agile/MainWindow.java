@@ -261,7 +261,7 @@ public class MainWindow extends Application
         Button entrepotDepButton = new Button();
         entrepotDepButton.setStyle(popOverButtonStyle);
         entrepotDepButton.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
-        tournee.mDemandeDeLivraison.getEntrepot().printHover(mapPane,primaryStage,entrepotDepButton,
+        tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,entrepotDepButton,
                 "Entrepot - Depart : "+ heureDebutTournee.toString() );
 
 
@@ -283,7 +283,7 @@ public class MainWindow extends Application
         Button entrepotArrButton = new Button();
         entrepotArrButton.setStyle(popOverButtonStyle);
         entrepotArrButton.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
-        tournee.mDemandeDeLivraison.getEntrepot().printHover(mapPane,primaryStage,entrepotArrButton,
+        tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,entrepotArrButton,
                 "Entrepot - Arrivee : "+ heureFinTournee.toString() );
 
 
