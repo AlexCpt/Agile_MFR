@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class MainWindow extends Application
 {
     final double sceneHeight = 750;
@@ -218,6 +219,7 @@ public class MainWindow extends Application
         double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
         LocalTime heureDebutTournee = LocalTime.of(8,0);
         LocalTime heureFinTournee = LocalTime.of(
+
                 tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getHour() +
                 tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getHour() +
                 tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree().getHour(),
@@ -253,7 +255,7 @@ public class MainWindow extends Application
         rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
 
 
-        //Point de départ et label
+        //Point de départ et label -------------------------------------
         Circle pointEntrepotDepart = new Circle(radiusAffichageTimeline);
         pointEntrepotDepart.setFill(Color.rgb(244,39,70));
         pointEntrepotDepart.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
@@ -263,7 +265,6 @@ public class MainWindow extends Application
         entrepotDepButton.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
         tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,entrepotDepButton,
                 "Entrepot - Depart : "+ heureDebutTournee.toString() );
-
 
         Label lblEntrepotDepartHeure = new Label(heureDebutTournee.toString());
         lblEntrepotDepartHeure.setLayoutX(centreRightPane - widthLabelTime);
@@ -275,10 +276,11 @@ public class MainWindow extends Application
         lblEntrepotDepart.setLayoutY(yFirstPoint- heightLabelTime);
         lblEntrepotDepart.setTextFill(Color.grayRgb(96));
 
-        //Point d'arrivée
+        //Point d'arrivée -------------------------------------
         Circle pointEntrepotArrivee = new Circle(radiusAffichageTimeline);
         pointEntrepotArrivee.setFill(Color.rgb(244,39,70));
         pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
+
        //Boutton entrepot arrivee
         Button entrepotArrButton = new Button();
         entrepotArrButton.setStyle(popOverButtonStyle);
@@ -297,6 +299,7 @@ public class MainWindow extends Application
         lblEntrepotArrivee.setLayoutY(yLastPoint- heightLabelTime);
         lblEntrepotArrivee.setTextFill(Color.grayRgb(96));
 
+        // Livraisons intermédiaires -------------------------------------
         int compteurLivraison = 1;
         double yRelocateFromLastPoint = yFirstPoint;
         Pane pointPane = new Pane();
@@ -361,13 +364,19 @@ public class MainWindow extends Application
             }
 
             //lignes
-            //System.out.println(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine())); //utile pour la couleur //TOdo : à améliorer parce qu'on le fait plein de fois
-            //double marge = localTimeToSecond(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()));
-            //double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
-            //Color lineColor = Color.GREEN.interpolate(Color.RED, marge / margeMax);
+            System.out.println(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine())); //utile pour la couleur //TOdo : à améliorer parce qu'on le fait plein de fois
+            double marge = localTimeToSecond(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()));
+            double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
+
+            if (marge > margeMax){
+                marge = margeMax;
+            }
+
+            System.out.println("marge = "+marge+" margeMax = "+margeMax);
+            Color lineColor = Color.RED.interpolate(Color.GREEN, marge / margeMax);
 
             Line line = new Line();
-            line.setStroke(Color.grayRgb(96));
+            line.setStroke(lineColor);
             line.setStrokeWidth(1);
             //line.getStrokeDashArray().addAll(4d); //pointillés
             line.setStartX(xPoint);
@@ -406,7 +415,8 @@ public class MainWindow extends Application
             imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-
+                    System.out.println("Image dragged !");
+                    imageView.relocate(centreRightPane - deliveryWidth/2, event.getY());
                 }
             });
         }
