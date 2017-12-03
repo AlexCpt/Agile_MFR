@@ -224,6 +224,7 @@ public class MainWindow extends Application
                         tournee.mItineraires.get(tournee.mItineraires.size()-1).getDuree().getMinute());
         final double deliveryWidth = 40.0;
         final double deliveryHeight = 40.0;
+        final int decalageLabelLivraison = 25;
 
         System.out.println(heureFinTournee);
 
@@ -242,8 +243,13 @@ public class MainWindow extends Application
         pointEntrepotDepart.setFill(Color.rgb(244,39,70));
         pointEntrepotDepart.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
 
-        Label lblEntrepotDepart = new Label(heureDebutTournee.toString()); //Todo : rendre dynamique
-        lblEntrepotDepart.setLayoutX(centreRightPane - widthLabelTime);
+        Label lblEntrepotDepartHeure = new Label(heureDebutTournee.toString());
+        lblEntrepotDepartHeure.setLayoutX(centreRightPane - widthLabelTime);
+        lblEntrepotDepartHeure.setLayoutY(yFirstPoint- heightLabelTime);
+        lblEntrepotDepartHeure.setTextFill(Color.grayRgb(96));
+
+        Label lblEntrepotDepart = new Label("Entrepôt");
+        lblEntrepotDepart.setLayoutX(centreRightPane + decalageLabelLivraison);
         lblEntrepotDepart.setLayoutY(yFirstPoint- heightLabelTime);
         lblEntrepotDepart.setTextFill(Color.grayRgb(96));
 
@@ -252,8 +258,13 @@ public class MainWindow extends Application
         pointEntrepotArrivee.setFill(Color.rgb(244,39,70));
         pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
 
-        Label lblEntrepotArrivee = new Label(heureFinTournee.toString()); //Todo : rendre dynamique
-        lblEntrepotArrivee.setLayoutX(centreRightPane - widthLabelTime);
+        Label lblEntrepotArriveeHeure = new Label(heureFinTournee.toString());
+        lblEntrepotArriveeHeure.setLayoutX(centreRightPane - widthLabelTime);
+        lblEntrepotArriveeHeure.setLayoutY(yLastPoint- heightLabelTime);
+        lblEntrepotArriveeHeure.setTextFill(Color.grayRgb(96));
+
+        Label lblEntrepotArrivee = new Label("Entrepôt");
+        lblEntrepotArrivee.setLayoutX(centreRightPane + decalageLabelLivraison);
         lblEntrepotArrivee.setLayoutY(yLastPoint- heightLabelTime);
         lblEntrepotArrivee.setTextFill(Color.grayRgb(96));
 
@@ -268,6 +279,7 @@ public class MainWindow extends Application
         line.setEndY(yLastPoint);
 
 
+        int compteurLivraison = 1;
         //Vrai ligne
         for (Itineraire itineraire: tournee.mItineraires) {
 
@@ -285,17 +297,20 @@ public class MainWindow extends Application
             System.out.println(localTimeToSecond(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee()));
             pointIti.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
 
-
-
             //Label heure
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-            Label lblpointIti = new Label(heurex.format(dtf));
-            lblpointIti.setLayoutX(centreRightPane - widthLabelTime);
-            lblpointIti.setLayoutY(yRelocate - heightLabelTime);
-            lblpointIti.setTextFill(Color.grayRgb(96));
+            Label lblpointItiHeure = new Label(heurex.format(dtf));
+            lblpointItiHeure.setLayoutX(centreRightPane - widthLabelTime);
+            lblpointItiHeure.setLayoutY(yRelocate - heightLabelTime);
+            lblpointItiHeure.setTextFill(Color.grayRgb(96));
 
             //Label Livraison machintruc
+            Label lblpointItiLivraison = new Label("Livraison " +compteurLivraison);
+            lblpointItiLivraison.setLayoutX(centreRightPane + decalageLabelLivraison);
+            lblpointItiLivraison.setLayoutY(yRelocate - heightLabelTime);
+            lblpointItiLivraison.setTextFill(Color.grayRgb(96));
 
+            compteurLivraison++;
 
             // 3lignes d'accroche
 
@@ -304,7 +319,8 @@ public class MainWindow extends Application
 
             //Affichage
             rightPane.getChildren().add(pointIti);
-            rightPane.getChildren().add(lblpointIti);
+            rightPane.getChildren().add(lblpointItiHeure);
+            rightPane.getChildren().add(lblpointItiLivraison);
 
         }
 
@@ -323,12 +339,14 @@ public class MainWindow extends Application
         });
 
 
-
+        //bouton modifier
 
 
         //Affichage
         rightPane.getChildren().add(line);
+        rightPane.getChildren().add(lblEntrepotDepartHeure);
         rightPane.getChildren().add(lblEntrepotDepart);
+        rightPane.getChildren().add(lblEntrepotArriveeHeure);
         rightPane.getChildren().add(lblEntrepotArrivee);
         rightPane.getChildren().add(pointEntrepotDepart);
         rightPane.getChildren().add(pointEntrepotArrivee);
