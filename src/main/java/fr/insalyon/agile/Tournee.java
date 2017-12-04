@@ -49,6 +49,10 @@ public class Tournee {
         return margesLivraison;
     }
 
+    public void setDateArrivee(LocalTime dateArrivee) {
+        this.mDateArrivee = dateArrivee;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -99,6 +103,7 @@ public class Tournee {
 
         return false;
     }
+    //Test si entrepot
 
     public void ajouterLivraison(Point livraison, Itineraire itineraire){
         if(getItinerairesModifiable(livraison, itineraire)){
@@ -106,13 +111,12 @@ public class Tournee {
             mItineraires.remove(itineraire);
             LocalTime dateArrive = dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(dijkstraAllee.getDuree());
             livraison.getLivraison().setDateArrivee(dateArrive);
-            if(dateArrive.isBefore(livraison.getLivraison().getDebutPlage()))
-            {
-                livraison.getLivraison().setDateLivraison(livraison.getLivraison().getDebutPlage());
-            }
-            else
-            {
-                livraison.getLivraison().setDateLivraison(dateArrive);
+            livraison.getLivraison().setDateLivraison(dateArrive);
+            if(livraison.getLivraison().getDebutPlage() !=null){
+                if(dateArrive.isBefore(livraison.getLivraison().getDebutPlage()))
+                {
+                    livraison.getLivraison().setDateLivraison(livraison.getLivraison().getDebutPlage());
+                }
             }
             mItineraires.add(index, dijkstraAllee);
             mItineraires.add(index+1, dijkstraRetour);
@@ -138,9 +142,38 @@ public class Tournee {
                 mItineraires.remove(itiAlle);
                 mItineraires.remove(itiRetour);
                 mItineraires.add(index, newItineraire);
-                break;
+                LocalTime dateArrivee;
+                LocalTime dateLivraison;
+
+
+                if(newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getType().equals(Point.Type.ENTREPOT)){
+                    this.setDateArrivee(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()));
+                }else
+                {
+                    if(newItineraire.getTroncons().get(0).getOrigine().getType().equals(Point.Type.ENTREPOT)){
+                        dateArrivee = mDemandeDeLivraison.getDepart().plus(newItineraire.getDuree());
+
+                    }else
+                    {
+                        dateArrivee = newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(newItineraire.getDuree());
+
+                    }
+                    LocalTime dateDebPlage = newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().getDebutPlage();
+                    dateLivraison = dateArrivee;
+                    if(dateDebPlage!=null){
+                        if(dateArrivee.isBefore(dateDebPlage)){
+                            dateLivraison=dateDebPlage;
+                        }
+                    }
+                    newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateLivraison);
+                    newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateArrivee);
+                }
+
+                 break;
             }
         }
+        livraisons.remove(livraison);
+
     }
 
     public List<Point> getLivraisons() {
