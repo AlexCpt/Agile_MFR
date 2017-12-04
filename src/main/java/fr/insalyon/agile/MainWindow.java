@@ -301,27 +301,29 @@ public class MainWindow extends Application
                 continue;
             }
 
-            LocalTime heurex = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee();
-            double yRelocate = ((localTimeToSecond(heurex) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
+            //LocalTime heurex = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee();
+            LocalTime heurexDebutLivraiosn = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison();
+            double yRelocate = ((localTimeToSecond(heurexDebutLivraiosn) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
                     * (yLastPoint - yFirstPoint)
                     + yFirstPoint;
 
-            LocalTime heureLivraisonx = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison();
-            double yRelocateLivraison = ((localTimeToSecond(heureLivraisonx) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
+            //LocalTime heureLivraisonx = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison();
+            LocalTime heurexFinLivraiosn = heurexDebutLivraiosn.plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison());
+            double yRelocateLivraison = ((localTimeToSecond(heurexFinLivraiosn) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
                     * (yLastPoint - yFirstPoint)
                     + yFirstPoint;
 
             //Point Oblong
-            if (heurex != heureLivraisonx) {
+            if (heurexDebutLivraiosn != heurexFinLivraiosn) {
                 Rectangle rectangle = new Rectangle(radiusAffichageTimeline * 2, yRelocateLivraison - yRelocate);
                 rectangle.relocate(xPoint - radiusAffichageTimeline, yRelocate);
 
                 //Label arrivée
-                Label lblpointItiHeureArrivee = new Label(heurex.format(dtf));
+                Label lblpointItiHeureArrivee = new Label(heurexDebutLivraiosn.format(dtf));
                 lblpointItiHeureArrivee.setLayoutY(yRelocate - heightLabelTime);
 
                 //Label Livraison machintruc
-                Label lblpointItiArrivee = new Label("Arrivée " +compteurLivraison);
+                Label lblpointItiArrivee = new Label("Livraison " +compteurLivraison);
                 lblpointItiArrivee.setLayoutY(yRelocate - heightLabelTime);
 
                 PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateLivraison, yRelocate,  rectangle, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureArrivee,lblpointItiArrivee);
@@ -342,7 +344,7 @@ public class MainWindow extends Application
 
 
             //Label heure
-            Label lblpointItiHeure = new Label(heureLivraisonx.format(dtf));
+            Label lblpointItiHeure = new Label(heurexFinLivraiosn.format(dtf));
             lblpointItiHeure.setLayoutY(yRelocateLivraison - heightLabelTime);
 
             //Label Livraison machintruc
@@ -517,7 +519,6 @@ public class MainWindow extends Application
         rightPane.getChildren().add(pointPane);
         rightPane.getChildren().add(voiturePane);
 
-
         ExportTournee exportTournee = new ExportTournee(tournee);
         exportTournee.exportFile(fileName);
     }
@@ -582,5 +583,9 @@ public class MainWindow extends Application
     }
     private double localTimeToSecond(LocalTime time){
         return (time.getHour()*60*60 + time.getMinute()*60 + time.getSecond());
+    }
+
+    public void pointerTronconPourValidationAjout(int numeroTroncon){
+
     }
 }
