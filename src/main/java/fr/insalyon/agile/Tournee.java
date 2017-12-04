@@ -187,7 +187,5 @@ public class Tournee {
         return livraisons;
     }
 
-    public LocalTime getDateArrivee() {
-        return mDateArrivee;
-    }
+
 }

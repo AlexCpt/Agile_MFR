@@ -31,11 +31,11 @@ public class PointLivraisonUI {
     protected final Color mColorEntrepot = Color.rgb(244,39,70);
     protected final Color mColorLivraison = Color.rgb(56, 120, 244);
     protected final  int decalageLabelLivraison = 25;
-    protected final String popOverButtonStyle = "-fx-background-radius: 5em; " +
-            "-fx-min-width: " + radiusAffichageTimeline*2 + "px; " +
-            "-fx-min-height: " + radiusAffichageTimeline*2 + "px; " +
-            "-fx-max-width: " + radiusAffichageTimeline*2 + "px; " +
-            "-fx-max-height: " + radiusAffichageTimeline*2 + "px; " +
+    protected final String popOverButtonStyle =
+            "-fx-min-width: " + radiusAffichageTimeline*9 + "px; " +
+            "-fx-min-height: " + radiusAffichageTimeline*4 + "px; " +
+            "-fx-max-width: " + radiusAffichageTimeline*9 + "px; " +
+            "-fx-max-height: " + radiusAffichageTimeline*4 + "px; " +
             "-fx-background-color: transparent;" +
             "-fx-background-insets: 0px; " +
             "-fx-padding: 0px;";

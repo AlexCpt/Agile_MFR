@@ -50,8 +50,8 @@ public class MainWindow extends Application
     double yLastPoint = rightPaneHeigth - 100;
     static  double widthLabelTime = 75;
     double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
-    double deliveryWidth = 40.0;
-    double deliveryHeight = 40.0;
+    double deliveryWidth = 100.0;
+    double deliveryHeight = 70.0;
 
     double orgSceneY;
     double orgTranslateY;
@@ -324,12 +324,8 @@ public class MainWindow extends Application
                 pointLivraisonUI_oblong.print(pointPane,labelPane);
             }
 
-            //button sur chaque point de livraison
-            Button btnPopover = new Button();
-            btnPopover.relocate(xPoint - radiusAffichageTimeline*2, yRelocateLivraison - radiusAffichageTimeline*2);
-            btnPopover.setStyle(popOverButtonStyle);
-            itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,btnPopover,
-                    "Livraison " +compteurLivraison + " - Heure : " + heurex.format(dtf));
+
+
 
             //button sur chaque point de livraison pour la suppression
             if (modeModifier == true) {
@@ -391,11 +387,13 @@ public class MainWindow extends Application
             PointLivraisonUI pointLivraisonUI = new PointLivraisonUI(xPoint,yRelocate, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeure, lblpointItiLivraison);
             pointLivraisonUI.print(pointPane, labelPane);
 
+            //hover sur chaque livraison
+            itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,pointLivraisonUI.getButton(),
+                    lblpointItiLivraison.getText() + " - " + lblpointItiHeure.getText());
             //Affichage
             //pointPane.getChildren().add(pointIti);
             rightPane.getChildren().add(lblpointItiHeure);
             rightPane.getChildren().add(lblpointItiLivraison);
-            pointPane.getChildren().add(btnPopover);
         }
 
         //--------------------------- Fin for timeline
@@ -403,12 +401,12 @@ public class MainWindow extends Application
         //Voiture
         Pane voiturePane = new Pane();
         if(modeModifier == false){
-            final String imageURI = new File("images/delivery-icon.jpg").toURI().toString();
-            final Image image = makeTransparent(new Image(imageURI, deliveryWidth, deliveryHeight, true, false));
+            final String imageURI = new File("images/delivery-icon-fleche.png").toURI().toString();
+            final Image image = new Image(imageURI, deliveryWidth, deliveryHeight, true, false);
             deliveryHeight = image.getHeight();
             deliveryWidth = image.getWidth();
             ImageView imageView = new ImageView(image);
-            imageView.relocate(centreRightPane - deliveryWidth/2,yFirstPoint - deliveryHeight/2);
+            imageView.relocate(0,yFirstPoint - deliveryHeight/2);
             System.out.println(imageView.getY());
 
             voiturePane.getChildren().add(imageView);
@@ -472,8 +470,8 @@ public class MainWindow extends Application
         rightPane.getChildren().add(linePane);
         rightPane.getChildren().add(labelPane);
         rightPane.getChildren().add(accrochePointPane);
-        rightPane.getChildren().add(voiturePane);
         rightPane.getChildren().add(pointPane);
+        rightPane.getChildren().add(voiturePane);
 
 
         ExportTournee exportTournee = new ExportTournee(tournee);
