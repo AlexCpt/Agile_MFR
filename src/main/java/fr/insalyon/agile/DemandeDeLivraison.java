@@ -42,6 +42,10 @@ public class DemandeDeLivraison {
         return mFin;
     }
 
+    public List<Point> getLivraisons() {
+        return mLivraisons;
+    }
+
     public Tournee calculerTournee(){
 
         HashMap<Pair<Point, Point>, Itineraire> itineraireHashMap = new HashMap<>();
