@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
@@ -59,8 +60,8 @@ public class MainWindow extends Application
     final int radiusAffichageTimeline = 11;
     double widthLabelTime = 75;
     double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
-    double deliveryWidth = 40.0;
-    double deliveryHeight = 40.0;
+    double deliveryWidth = 100.0;
+    double deliveryHeight = 70.0;
 
     double orgSceneY;
     double orgTranslateY;
@@ -451,12 +452,12 @@ public class MainWindow extends Application
         Pane voiturePane = new Pane();
         if(modeModifier == false){
             final String test = new File("..").toURI().toString();
-            final String imageURI = new File("images/delivery-icon.jpg").toURI().toString();
-            final Image image = makeTransparent(new Image(imageURI, deliveryWidth, deliveryWidth, true, false));
+            final String imageURI = new File("images/delivery-icon-fleche.png").toURI().toString();
+            final Image image = new Image(imageURI, deliveryWidth, deliveryHeight, true, false);
             deliveryHeight = image.getHeight();
             deliveryWidth = image.getWidth();
             ImageView imageView = new ImageView(image);
-            imageView.relocate(centreRightPane - deliveryWidth/2,yFirstPoint - deliveryHeight/2);
+            imageView.relocate(0 ,yFirstPoint - deliveryHeight/2);
             System.out.println(imageView.getY());
 
             voiturePane.getChildren().add(imageView);
@@ -514,6 +515,9 @@ public class MainWindow extends Application
         rightPane.getChildren().add(voiturePane);
         pointPane.getChildren().add(entrepotArrButton);
         pointPane.getChildren().add(entrepotDepButton);
+       // StackPane stackPane = new StackPane();
+        //stackPane.getChildren().addAll(voiturePane, pointPane);
+        //rightPane.getChildren().add(stackPane);
     }
 
     public void timeLineModifierBuild(Pane rightPane, Tournee tournee) {
