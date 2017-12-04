@@ -4,12 +4,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class Tournee {
@@ -18,8 +16,8 @@ public class Tournee {
     private List<Itineraire> mItineraires;
     private DemandeDeLivraison mDemandeDeLivraison;
 
-    private List<Point> livraisons; //todo : never initialized
-    private Map<Point, LocalTime> margesLivraison;
+    private List<Point> livraisons;
+    private Map<Point, Duration> margesLivraison;
     private Itineraire dijkstraAllee;
     private Itineraire dijkstraRetour;
 
@@ -43,8 +41,7 @@ public class Tournee {
         return mItineraires;
     }
 
-
-    public Map<Point, LocalTime> getMargesLivraison() {
+    public Map<Point, Duration> getMargesLivraison() {
         if(margesLivraison.isEmpty())
         {
             calculMargesPointsLivraison();
@@ -78,11 +75,11 @@ public class Tournee {
 
         for(Point point : livraisons)
         {
-            LocalTime marge  = subLocalTime(point.getLivraison().getDateLivraison(), point.getLivraison().getDateArrivee());
+            Duration marge = Duration.between(point.getLivraison().getDateLivraison(), point.getLivraison().getDateArrivee());
             margesLivraison.put(point, marge);
         }
         Point derniereLivraison =  mItineraires.get(mItineraires.size()-1).getTroncons().get(0).getOrigine();
-        LocalTime marge = subLocalTime(mDemandeDeLivraison.getFin(),sumLocalTime(sumLocalTime(derniereLivraison.getLivraison().getDateLivraison(), derniereLivraison.getLivraison().getDureeLivraison()), mItineraires.get(mItineraires.size()-1).getDuree()));
+        Duration marge = Duration.between(mDemandeDeLivraison.getFin(), derniereLivraison.getLivraison().getDateLivraison().plus(derniereLivraison.getLivraison().getDureeLivraison()).plus(mItineraires.get(mItineraires.size()-1).getDuree()));
 
         margesLivraison.put(mDemandeDeLivraison.getEntrepot(), marge);
     }
@@ -93,13 +90,13 @@ public class Tournee {
         this.calculMargesPointsLivraison();
         Point origineItineraire = itineraire.getTroncons().get(0).getOrigine();
         Point arriveeItineraire = itineraire.getTroncons().get(itineraire.getTroncons().size()-1).getDestination();
-        LocalTime tempsActuel = sumLocalTime(itineraire.getDuree(), margesLivraison.get(arriveeItineraire));
+        Duration tempsActuel = margesLivraison.get(arriveeItineraire).plus(itineraire.getDuree());
         dijkstraAllee = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), origineItineraire, new Point[]{livraison} ).get(0);
-        LocalTime dureeAllee = dijkstraAllee.getDuree();
+        Duration dureeAllee = dijkstraAllee.getDuree();
         dijkstraRetour = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), livraison, new Point[]{arriveeItineraire}).get(0);
-        LocalTime dureeRetour = dijkstraRetour.getDuree();
-        LocalTime nouvTemps = sumLocalTime(sumLocalTime(dureeAllee, livraison.getLivraison().getDureeLivraison()),dureeRetour);
-        if(nouvTemps.isBefore(tempsActuel))
+        Duration dureeRetour = dijkstraRetour.getDuree();
+        Duration nouvTemps = dureeAllee.plus(livraison.getLivraison().getDureeLivraison()).plus(dureeRetour);
+        if(nouvTemps.compareTo(tempsActuel) < 0)
         {
             return true;
         }
@@ -112,7 +109,7 @@ public class Tournee {
         if(getItinerairesModifiable(livraison, itineraire)){
             int index = mItineraires.indexOf(itineraire);
             mItineraires.remove(itineraire);
-            LocalTime dateArrive = sumLocalTime(sumLocalTime(dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison(), dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()), dijkstraAllee.getDuree());
+            LocalTime dateArrive = dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(dijkstraAllee.getDuree());
             livraison.getLivraison().setDateArrivee(dateArrive);
             livraison.getLivraison().setDateLivraison(dateArrive);
             if(livraison.getLivraison().getDebutPlage() !=null){
@@ -150,15 +147,15 @@ public class Tournee {
 
 
                 if(newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getType().equals(Point.Type.ENTREPOT)){
-                    this.setDateArrivee(sumLocalTime(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison(), newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()));
+                    this.setDateArrivee(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()));
                 }else
                 {
                     if(newItineraire.getTroncons().get(0).getOrigine().getType().equals(Point.Type.ENTREPOT)){
-                        dateArrivee = sumLocalTime(mDemandeDeLivraison.getDepart(), newItineraire.getDuree());
+                        dateArrivee = mDemandeDeLivraison.getDepart().plus(newItineraire.getDuree());
 
                     }else
                     {
-                        dateArrivee = sumLocalTime(sumLocalTime(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison(), newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()), newItineraire.getDuree());
+                        dateArrivee = newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(newItineraire.getDuree());
 
                     }
                     LocalTime dateDebPlage = newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().getDebutPlage();
@@ -179,14 +176,7 @@ public class Tournee {
 
     }
 
-    private LocalTime subLocalTime(LocalTime time1, LocalTime time2) {
-        return time1.minusHours(time2.getHour()).minusMinutes(time2.getMinute()).minusSeconds(time2.getSecond());
+    public List<Point> getLivraisons() {
+        return livraisons;
     }
-
-    public LocalTime sumLocalTime(LocalTime time1, LocalTime time2)
-    {
-        return time1.plusHours(time2.getHour()).plusMinutes(time2.getMinute()).plusSeconds(time2.getSecond());
-    }
-
-
 }

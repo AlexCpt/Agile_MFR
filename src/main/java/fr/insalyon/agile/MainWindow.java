@@ -29,6 +29,7 @@ import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 import java.io.File;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -230,14 +231,11 @@ public class MainWindow extends Application
         //Todo : externaliser ça
 
         LocalTime heureDebutTournee = LocalTime.of(8,0);
-        LocalTime heureFinTournee = LocalTime.of(
 
-                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getHour() +
-                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getHour() +
-                tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree().getHour(),
-                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getMinute() +
-                        tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getMinute() +
-                        tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree().getMinute());
+        LocalTime heureFinTournee =
+                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison()
+                        .plus(tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison())
+                        .plus(tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree());
 
         final double dragAndDropWidth = 20;
         final double dragAndDropHeight = 20;
@@ -245,11 +243,11 @@ public class MainWindow extends Application
         final int decalageXIconDragAndDropPoint = 20;
         final int decalageYIconDragAndDropPoint = 0;
 
-        String popOverButtonStyle = "-fx-background-radius: 5em; " +
-                "-fx-min-width: " + radiusAffichageTimeline*2 + "px; " +
-                "-fx-min-height: " + radiusAffichageTimeline*2 + "px; " +
-                "-fx-max-width: " + radiusAffichageTimeline*2 + "px; " +
-                "-fx-max-height: " + radiusAffichageTimeline*2 + "px; " +
+        String popOverButtonStyle = //"-fx-background-radius: 5em; " +
+                "-fx-min-width: " + radiusAffichageTimeline*10 + "px; " +
+                "-fx-min-height: " + radiusAffichageTimeline*6 + "px; " +
+                "-fx-max-width: " + radiusAffichageTimeline*10 + "px; " +
+                "-fx-max-height: " + radiusAffichageTimeline*6 + "px; " +
                 "-fx-background-color: transparent;" +
                 "-fx-background-insets: 0px; " +
                 "-fx-padding: 0px;";
@@ -273,7 +271,7 @@ public class MainWindow extends Application
        //Boutton entrepot depart
         Button entrepotDepButton = new Button();
         entrepotDepButton.setStyle(popOverButtonStyle);
-        entrepotDepButton.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
+        entrepotDepButton.relocate(xPoint - radiusAffichageTimeline*2,yFirstPoint - radiusAffichageTimeline*2);
         tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,entrepotDepButton,
                 "Entrepot - Depart : "+ heureDebutTournee.toString() );
 
@@ -295,7 +293,7 @@ public class MainWindow extends Application
        //Boutton entrepot arrivee
         Button entrepotArrButton = new Button();
         entrepotArrButton.setStyle(popOverButtonStyle);
-        entrepotArrButton.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
+        entrepotArrButton.relocate(xPoint - radiusAffichageTimeline*3,yLastPoint - radiusAffichageTimeline*3);
         tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,entrepotArrButton,
                 "Entrepot - Arrivee : "+ heureFinTournee.toString() );
 
@@ -373,7 +371,7 @@ public class MainWindow extends Application
             //button sur chaque point de livraison
 
             Button btnPopover = new Button();
-            btnPopover.relocate(xPoint - radiusAffichageTimeline, yRelocateLivraison - radiusAffichageTimeline);
+            btnPopover.relocate(xPoint - radiusAffichageTimeline*2, yRelocateLivraison - radiusAffichageTimeline*2);
             btnPopover.setStyle(popOverButtonStyle);
 
             //Label heure
@@ -412,8 +410,8 @@ public class MainWindow extends Application
 
             //lignes
             System.out.println(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine())); //utile pour la couleur //TOdo : à améliorer parce qu'on le fait plein de fois
-            double marge = localTimeToSecond(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()));
-            double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
+            double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
+            double margeMax = Duration.ofMinutes(30).getSeconds(); //Tout vert
 
             if (marge > margeMax){
                 marge = margeMax;
@@ -508,14 +506,14 @@ public class MainWindow extends Application
         rightPane.getChildren().add(lblEntrepotArrivee);
         pointPane.getChildren().add(pointEntrepotDepart);
         pointPane.getChildren().add(pointEntrepotArrivee);
-        pointPane.getChildren().add(entrepotArrButton);
-        pointPane.getChildren().add(entrepotDepButton);
         rightPane.getChildren().add(rightVbox);
         rightPane.getChildren().add(rightVboxDown);
         rightPane.getChildren().add(linePane);
         rightPane.getChildren().add(pointPane);
         rightPane.getChildren().add(accrochePointPane);
         rightPane.getChildren().add(voiturePane);
+        pointPane.getChildren().add(entrepotArrButton);
+        pointPane.getChildren().add(entrepotDepButton);
     }
 
     public void timeLineModifierBuild(Pane rightPane, Tournee tournee) {
