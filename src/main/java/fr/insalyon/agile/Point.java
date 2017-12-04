@@ -129,4 +129,7 @@ public class Point {
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
     }
 
+    public String getAdresse() {
+        return mAdresse;
+    }
 }

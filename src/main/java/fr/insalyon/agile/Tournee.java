@@ -7,10 +7,7 @@ import javafx.util.Pair;
 import java.time.Duration;
 import java.time.LocalTime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class Tournee {
@@ -146,8 +143,7 @@ public class Tournee {
         }
     }
 
-    private LocalTime subLocalTime(LocalTime time1, LocalTime time2) {
-        return time1.minusHours(time2.getHour()).minusMinutes(time2.getMinute()).minusSeconds(time2.getSecond());
+    public List<Point> getLivraisons() {
+        return livraisons;
     }
-
 }
