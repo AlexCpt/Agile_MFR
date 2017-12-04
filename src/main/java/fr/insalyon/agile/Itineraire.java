@@ -4,6 +4,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class Itineraire {
 
     private List<Troncon> mTroncons;
     private int mLongueur = 0;
-    private LocalTime mDuree;
+    private Duration mDuree;
 
     public Itineraire(List<Troncon> troncons) {
         mTroncons =  troncons;
@@ -19,7 +20,7 @@ public class Itineraire {
             mLongueur += t.getLongueur();
         }
 
-        mDuree = LocalTime.ofSecondOfDay((int) ((mLongueur*(0.001)/15)*3600));
+        mDuree = Duration.ofSeconds((int) ((mLongueur*(0.001)/15)*3600));
 
     }
 
@@ -27,7 +28,7 @@ public class Itineraire {
         return mTroncons;
     }
 
-    public LocalTime getDuree() {
+    public Duration getDuree() {
         return mDuree;
     }
 

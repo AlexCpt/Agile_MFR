@@ -1,5 +1,6 @@
 package fr.insalyon.agile;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
 public class Livraison {
@@ -8,9 +9,9 @@ public class Livraison {
     private LocalTime mFinPlage;
     private LocalTime mDateLivraison;
     private LocalTime mDateArrivee;
-    private LocalTime mDureeLivraison;
+    private Duration mDureeLivraison;
 
-    public Livraison(LocalTime mDebutPlage, LocalTime mFinPlage, LocalTime mDureeLivraison) {
+    public Livraison(LocalTime mDebutPlage, LocalTime mFinPlage, Duration mDureeLivraison) {
         this.mDebutPlage = mDebutPlage;
         this.mFinPlage = mFinPlage;
         this.mDureeLivraison = mDureeLivraison;
@@ -32,7 +33,7 @@ public class Livraison {
         return mDateArrivee;
     }
 
-    public LocalTime getDureeLivraison() {
+    public Duration getDureeLivraison() {
         return mDureeLivraison;
     }
 
