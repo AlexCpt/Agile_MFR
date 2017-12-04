@@ -23,7 +23,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 import java.io.File;
@@ -329,27 +331,62 @@ public class MainWindow extends Application
                     * (yLastPoint - yFirstPoint)
                     + yFirstPoint;
             pointIti.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
+            
+            LocalTime heureLivraisonx = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison();
+            double yRelocateLivraison = ((localTimeToSecond(heureLivraisonx) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
+                    * (yLastPoint - yFirstPoint)
+                    + yFirstPoint;
+
+            if (heurex != heureLivraisonx) {
+                //Points
+                Circle pointItiLivraison = new Circle(radiusAffichageTimeline);
+                pointItiLivraison.setFill(Color.rgb(56, 120, 244));
+
+                pointItiLivraison.relocate(xPoint - radiusAffichageTimeline, yRelocateLivraison - radiusAffichageTimeline);
+
+                pointPane.getChildren().add(pointItiLivraison);
+
+                Rectangle rectangle = new Rectangle(radiusAffichageTimeline * 2, yRelocateLivraison - yRelocate);
+                rectangle.setFill(Color.rgb(56, 120, 244));
+                rectangle.relocate(xPoint - radiusAffichageTimeline, yRelocate);
+
+                pointPane.getChildren().add(rectangle);
+
+                //Label arrivée
+                DateTimeFormatter dtfArrivee = DateTimeFormatter.ofPattern("HH:mm");
+                Label lblpointItiHeureArrivee = new Label(heurex.format(dtfArrivee));
+                lblpointItiHeureArrivee.setLayoutX(centreRightPane - widthLabelTime);
+                lblpointItiHeureArrivee.setLayoutY(yRelocate - heightLabelTime);
+                lblpointItiHeureArrivee.setTextFill(Color.grayRgb(96));
+
+                //Label Livraison machintruc
+                Label lblpointItiArrivee = new Label("Arrivée " +compteurLivraison);
+                lblpointItiArrivee.setLayoutX(centreRightPane + decalageLabelLivraison);
+                lblpointItiArrivee.setLayoutY(yRelocate - heightLabelTime);
+                lblpointItiArrivee.setTextFill(Color.grayRgb(96));
+
+                rightPane.getChildren().add(lblpointItiHeureArrivee);
+                rightPane.getChildren().add(lblpointItiArrivee);
+            }
 
 
             //button sur chaque point de livraison
 
             Button btnPopover = new Button();
-            btnPopover.relocate(xPoint - radiusAffichageTimeline, yRelocate - radiusAffichageTimeline);
+            btnPopover.relocate(xPoint - radiusAffichageTimeline, yRelocateLivraison - radiusAffichageTimeline);
             btnPopover.setStyle(popOverButtonStyle);
-
-
 
             //Label heure
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-            Label lblpointItiHeure = new Label(heurex.format(dtf));
+            Label lblpointItiHeure = new Label(heureLivraisonx.format(dtf));
             lblpointItiHeure.setLayoutX(centreRightPane - widthLabelTime);
-            lblpointItiHeure.setLayoutY(yRelocate - heightLabelTime);
+            lblpointItiHeure.setLayoutY(yRelocateLivraison - heightLabelTime);
             lblpointItiHeure.setTextFill(Color.grayRgb(96));
 
             //Label Livraison machintruc
             Label lblpointItiLivraison = new Label("Livraison " +compteurLivraison);
             lblpointItiLivraison.setLayoutX(centreRightPane + decalageLabelLivraison);
-            lblpointItiLivraison.setLayoutY(yRelocate - heightLabelTime);
+            lblpointItiLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
             lblpointItiLivraison.setTextFill(Color.grayRgb(96));
 
             itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,btnPopover,
@@ -401,7 +438,7 @@ public class MainWindow extends Application
                 line.setEndY(yRelocate);
             }
 
-            yRelocateFromLastPoint = yRelocate;
+            yRelocateFromLastPoint = yRelocateLivraison;
 
             //Affichage
             pointPane.getChildren().add(pointIti);
