@@ -29,6 +29,7 @@ import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 import java.io.File;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -230,14 +231,11 @@ public class MainWindow extends Application
         //Todo : externaliser ça
 
         LocalTime heureDebutTournee = LocalTime.of(8,0);
-        LocalTime heureFinTournee = LocalTime.of(
 
-                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getHour() +
-                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getHour() +
-                tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree().getHour(),
-                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().getMinute() +
-                        tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().getMinute() +
-                        tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree().getMinute());
+        LocalTime heureFinTournee =
+                tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDateLivraison()
+                        .plus(tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison())
+                        .plus(tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree());
 
         final double dragAndDropWidth = 20;
         final double dragAndDropHeight = 20;
@@ -412,8 +410,8 @@ public class MainWindow extends Application
 
             //lignes
             System.out.println(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine())); //utile pour la couleur //TOdo : à améliorer parce qu'on le fait plein de fois
-            double marge = localTimeToSecond(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()));
-            double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
+            double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
+            double margeMax = Duration.ofMinutes(30).getSeconds(); //Tout vert
 
             if (marge > margeMax){
                 marge = margeMax;

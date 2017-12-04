@@ -1,6 +1,7 @@
 import fr.insalyon.agile.*;
 import org.junit.Test;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -31,8 +32,8 @@ public class TestDemandeDeLivraison {
                 new Troncon(points.get(5), points.get(0),2, "a")
         );
         List<Point> livraisons = new ArrayList<>();
-        points.get(2).setLivraison(new Livraison(null, null, null));
-        points.get(5).setLivraison(new Livraison(null, null,  null));
+        points.get(2).setLivraison(new Livraison(null, null, Duration.ZERO));
+        points.get(5).setLivraison(new Livraison(null, null,  Duration.ZERO));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         Entrepot entrepot = new Entrepot();

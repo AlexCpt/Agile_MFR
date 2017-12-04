@@ -4,6 +4,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class Tournee {
     private DemandeDeLivraison mDemandeDeLivraison;
 
     private List<Point> livraisons; //todo : never initialized
-    private Map<Point, LocalTime> margesLivraison;
+    private Map<Point, Duration> margesLivraison;
     private Map<Pair<Point, Point>, Itineraire> dijkstraCalcule;
 
     public Tournee(){
@@ -43,7 +44,7 @@ public class Tournee {
         return mDemandeDeLivraison;
     }
 
-    public Map<Point, LocalTime> getMargesLivraison() {
+    public Map<Point, Duration> getMargesLivraison() {
         if(margesLivraison.isEmpty())
         {
             calculMargesPointsLivraison();
@@ -83,11 +84,11 @@ public class Tournee {
 
         for(Point point : livraisons)
         {
-            LocalTime marge  = subLocalTime(point.getLivraison().getDateLivraison(), point.getLivraison().getDateArrivee());
+            Duration marge = Duration.between(point.getLivraison().getDateLivraison(), point.getLivraison().getDateArrivee());
             margesLivraison.put(point, marge);
         }
         Point derniereLivraison =  mItineraires.get(mItineraires.size()-1).getTroncons().get(0).getOrigine();
-        LocalTime marge = subLocalTime(mDemandeDeLivraison.getFin(),sumLocalTime(sumLocalTime(derniereLivraison.getLivraison().getDateLivraison(), derniereLivraison.getLivraison().getDureeLivraison()), mItineraires.get(mItineraires.size()-1).getDuree()));
+        Duration marge = Duration.between(mDemandeDeLivraison.getFin(), derniereLivraison.getLivraison().getDateLivraison().plus(derniereLivraison.getLivraison().getDureeLivraison()).plus(mItineraires.get(mItineraires.size()-1).getDuree()));
 
         margesLivraison.put(mDemandeDeLivraison.getEntrepot(), marge);
     }
@@ -102,15 +103,15 @@ public class Tournee {
         {
             Point origineItineraire = itineraire.getTroncons().get(0).getOrigine();
             Point arriveeItineraire = itineraire.getTroncons().get(itineraire.getTroncons().size()-1).getDestination();
-            LocalTime tempsActuel = sumLocalTime(itineraire.getDuree(), margesLivraison.get(arriveeItineraire));
+            Duration tempsActuel = margesLivraison.get(arriveeItineraire).plus(itineraire.getDuree());
             Itineraire newItineraireAlle = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), origineItineraire, new Point[]{livraison} ).get(0);
             dijkstraCalcule.put(new Pair<>(origineItineraire, livraison), newItineraireAlle);
-            LocalTime dureeAllee = newItineraireAlle.getDuree();
+            Duration dureeAllee = newItineraireAlle.getDuree();
             Itineraire newItineraireRetour = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), livraison, new Point[]{arriveeItineraire}).get(0);
             dijkstraCalcule.put(new Pair<>(livraison, arriveeItineraire), newItineraireRetour);
-            LocalTime dureeRetour = newItineraireRetour.getDuree();
-            LocalTime nouvTemps = sumLocalTime(sumLocalTime(dureeAllee, livraison.getLivraison().getDureeLivraison()),dureeRetour);
-            if(nouvTemps.isBefore(tempsActuel))
+            Duration dureeRetour = newItineraireRetour.getDuree();
+            Duration nouvTemps = dureeAllee.plus(livraison.getLivraison().getDureeLivraison()).plus(dureeRetour);
+            if(nouvTemps.compareTo(tempsActuel) < 0)
             {
                 result.add(true);
             }else
@@ -127,7 +128,7 @@ public class Tournee {
         mItineraires.remove(itineraire);
         Itineraire allee = dijkstraCalcule.get(new Pair<>(itineraire.getTroncons().get(0).getOrigine(), livraison));
         Itineraire retour = dijkstraCalcule.get(new Pair<>(livraison, itineraire.getTroncons().get(itineraire.getTroncons().size()-1).getDestination()));
-        LocalTime dateArrive = sumLocalTime(sumLocalTime(allee.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison(), allee.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()), allee.getDuree());
+        LocalTime dateArrive = allee.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(allee.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(allee.getDuree());
         livraison.getLivraison().setDateArrivee(dateArrive);
         if(dateArrive.isBefore(livraison.getLivraison().getDebutPlage()))
         {
