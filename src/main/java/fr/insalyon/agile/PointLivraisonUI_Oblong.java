@@ -18,6 +18,8 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
     private Label mLabelFin;
     private Label mLabelArrivee;
 
+    protected String transparentButtonStyle = "-fx-background-color: transparent;";
+
     public PointLivraisonUI_Oblong (double xAffichage, double yAffichage_RelocateLivraison, double yAffichage_Relocate, PointLivraisonUI.Type type, Label labelHeureDebut, Label labelHeureFin,Label LabelNomLivraison){
 
         super(xAffichage,yAffichage_RelocateLivraison, type,labelHeureDebut,LabelNomLivraison);
@@ -41,21 +43,27 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
         mLabelFin.setTextFill(Color.grayRgb(96));
         mLabelFin.relocate(centreRightPane - widthLabelTime, m_yAffichage - radiusAffichageTimeline);
 
-
         //rectangle
         mRectangle = new Rectangle(radiusAffichageTimeline * 2, m_yAffichage - m_yAffichage_Relocate);
         mRectangle.relocate(m_xAffichage - radiusAffichageTimeline, m_yAffichage_Relocate);
         mRectangle.setFill(mColorLivraison);
         mRectangle.setWidth(2*radiusAffichageTimeline);
+
+        //Button
+        mButton = new Button();
+        mButton.setStyle(transparentButtonStyle);
+        mButton.relocate(m_xAffichage - radiusAffichageTimeline*2, m_yAffichage_Relocate - radiusAffichageTimeline); //TODO : lié ligne dessous
+        mButton.setPrefSize(radiusAffichageTimeline*4,m_yAffichage - m_yAffichage_Relocate);
     }
 
     public Button getButton(){ return mButton; }
 
-    public void print (Pane pointPane, Pane labelPane){
-        super.print(pointPane, labelPane);
+    public void print (Pane pointPane, Pane labelPane, Pane buttonPane){
+        super.print(pointPane, labelPane, buttonPane);
         pointPane.getChildren().add(mCircle2);
         labelPane.getChildren().add(mLabelFin);
         labelPane.getChildren().add(mLabelArrivee);
+        buttonPane.getChildren().add(mButton); // Mettre dans PLUI ?
 
         pointPane.getChildren().add(mRectangle);
     }

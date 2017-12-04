@@ -295,6 +295,7 @@ public class MainWindow extends Application
         Pane linePane = new Pane();
         Pane accrochePointPane = new Pane();
         Pane labelPane = new Pane();
+        Pane buttonPane = new Pane();
 
 
         for (Itineraire itineraire: tournee.getItineraires()) {
@@ -328,7 +329,7 @@ public class MainWindow extends Application
             lblpointItiLivraison.setLayoutY(yRelocate - heightLabelTime);
 
              PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateLivraison, yRelocate, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureDebutLivraison,lblpointItiHeureFinLivraison,lblpointItiLivraison);
-            pointLivraisonUI_oblong.print(pointPane,labelPane);
+            pointLivraisonUI_oblong.print(pointPane,labelPane,buttonPane);
             //endregion
 
             //button sur chaque point de livraison pour la suppression
@@ -381,8 +382,8 @@ public class MainWindow extends Application
             //endregion
 
             //hover sur chaque livraison
-            //itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,pointLivraisonUI.getButton(),
-              //      lblpointItiLivraison.getText() + " - " + lblpointItiHeure.getText());
+            itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
+                    lblpointItiLivraison.getText() + " - " + "TODO");
         }
         //endregion
 
@@ -495,8 +496,8 @@ public class MainWindow extends Application
         //endregion
 
         //region <Affichage>
-        pointEntrepotDepart.print(pointPane, labelPane);
-        pointEntrepotArrivee.print(pointPane, labelPane);
+        pointEntrepotDepart.print(pointPane, labelPane, buttonPane);
+        pointEntrepotArrivee.print(pointPane, labelPane, buttonPane);
 
         rightPane.getChildren().add(rightVbox);
         rightPane.getChildren().add(rightVboxDown);
@@ -504,7 +505,9 @@ public class MainWindow extends Application
         rightPane.getChildren().add(labelPane);
         rightPane.getChildren().add(accrochePointPane);
         rightPane.getChildren().add(pointPane);
+        rightPane.getChildren().add(buttonPane);
         rightPane.getChildren().add(voiturePane);
+
 
         //endregion
 

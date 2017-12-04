@@ -76,7 +76,7 @@ public class PointLivraisonUI {
 
     public Button getButton(){ return mButton; }
 
-    public void print (Pane pointPane, Pane labelPane){
+    public void print (Pane pointPane, Pane labelPane, Pane ButtonPane){
         pointPane.getChildren().add(mCircle);
 
         labelPane.getChildren().add(mLabelHeure);
