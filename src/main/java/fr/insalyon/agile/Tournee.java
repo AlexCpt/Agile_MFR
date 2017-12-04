@@ -42,7 +42,7 @@ public class Tournee {
     public List<Itineraire> getItineraires() {
         return mItineraires;
     }
-    
+
 
     public Map<Point, LocalTime> getMargesLivraison() {
         if(margesLivraison.isEmpty())
@@ -50,6 +50,10 @@ public class Tournee {
             calculMargesPointsLivraison();
         }
         return margesLivraison;
+    }
+
+    public void setDateArrivee(LocalTime dateArrivee) {
+        this.mDateArrivee = dateArrivee;
     }
 
     @Override
@@ -102,6 +106,7 @@ public class Tournee {
 
         return false;
     }
+    //Test si entrepot
 
     public void ajouterLivraison(Point livraison, Itineraire itineraire){
         if(getItinerairesModifiable(livraison, itineraire)){
@@ -109,13 +114,12 @@ public class Tournee {
             mItineraires.remove(itineraire);
             LocalTime dateArrive = sumLocalTime(sumLocalTime(dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison(), dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()), dijkstraAllee.getDuree());
             livraison.getLivraison().setDateArrivee(dateArrive);
-            if(dateArrive.isBefore(livraison.getLivraison().getDebutPlage()))
-            {
-                livraison.getLivraison().setDateLivraison(livraison.getLivraison().getDebutPlage());
-            }
-            else
-            {
-                livraison.getLivraison().setDateLivraison(dateArrive);
+            livraison.getLivraison().setDateLivraison(dateArrive);
+            if(livraison.getLivraison().getDebutPlage() !=null){
+                if(dateArrive.isBefore(livraison.getLivraison().getDebutPlage()))
+                {
+                    livraison.getLivraison().setDateLivraison(livraison.getLivraison().getDebutPlage());
+                }
             }
             mItineraires.add(index, dijkstraAllee);
             mItineraires.add(index+1, dijkstraRetour);
@@ -141,9 +145,38 @@ public class Tournee {
                 mItineraires.remove(itiAlle);
                 mItineraires.remove(itiRetour);
                 mItineraires.add(index, newItineraire);
-                break;
+                LocalTime dateArrivee;
+                LocalTime dateLivraison;
+
+
+                if(newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getType().equals(Point.Type.ENTREPOT)){
+                    this.setDateArrivee(sumLocalTime(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison(), newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()));
+                }else
+                {
+                    if(newItineraire.getTroncons().get(0).getOrigine().getType().equals(Point.Type.ENTREPOT)){
+                        dateArrivee = sumLocalTime(mDemandeDeLivraison.getDepart(), newItineraire.getDuree());
+
+                    }else
+                    {
+                        dateArrivee = sumLocalTime(sumLocalTime(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison(), newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()), newItineraire.getDuree());
+
+                    }
+                    LocalTime dateDebPlage = newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().getDebutPlage();
+                    dateLivraison = dateArrivee;
+                    if(dateDebPlage!=null){
+                        if(dateArrivee.isBefore(dateDebPlage)){
+                            dateLivraison=dateDebPlage;
+                        }
+                    }
+                    newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateLivraison);
+                    newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateArrivee);
+                }
+
+                 break;
             }
         }
+        livraisons.remove(livraison);
+
     }
 
     private LocalTime subLocalTime(LocalTime time1, LocalTime time2) {

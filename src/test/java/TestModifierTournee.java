@@ -179,6 +179,7 @@ public class TestModifierTournee {
         itineraires.add(new Itineraire(Arrays.asList(troncons.get(6))));
         itineraires.add(new Itineraire(Arrays.asList(troncons.get(8), troncons.get(10))));
         assertEquals(itineraires, tournee.getItineraires());
+        //assertEquals();
 
     }
 }
