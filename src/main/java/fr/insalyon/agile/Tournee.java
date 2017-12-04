@@ -186,4 +186,8 @@ public class Tournee {
     public List<Point> getLivraisons() {
         return livraisons;
     }
+
+    public LocalTime getDateArrivee() {
+        return mDateArrivee;
+    }
 }
