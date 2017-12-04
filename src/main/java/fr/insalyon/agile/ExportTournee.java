@@ -57,12 +57,26 @@ public class ExportTournee {
 
             text += "Itinéraire à suivre : \n";
 
-            String rueActuelle = "";
+            int longueurTroncon = 0;
             for (Troncon troncon : itineraire.getTroncons()) {
-                if (!troncon.getNomRue().equals(rueActuelle)) {
-                    text += "\t" + troncon.getNomRue() + "\n";
-                    rueActuelle = troncon.getNomRue();
+
+                if (itineraire.getTroncons().indexOf(troncon) != itineraire.getTroncons().size() - 1) {
+                    Troncon nextTroncon = itineraire.getTroncons().get(itineraire.getTroncons().indexOf(troncon)+1);
+                    if (!troncon.getNomRue().equals(nextTroncon.getNomRue())) {
+                        longueurTroncon += troncon.getLongueur();
+                        text += "\tPrendre " + troncon.getNomRue() + " sur " + longueurTroncon + "m\n";
+                        longueurTroncon = 0;
+                    }
+                    else {
+                        longueurTroncon += troncon.getLongueur();
+                    }
                 }
+                else {
+                    longueurTroncon += troncon.getLongueur();
+                    text += "\tPrendre " + troncon.getNomRue() + " sur " + longueurTroncon + "m\n";
+                }
+
+
 
             }
 
