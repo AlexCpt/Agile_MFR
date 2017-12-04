@@ -12,11 +12,10 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
     private double m_yAffichage_Relocate;
     private  Rectangle mRectangle;
 
-    public PointLivraisonUI_Oblong (double xAffichage, double yAffichage_RelocateLivraison, double yAffichage_Relocate, Rectangle rectangle, PointLivraisonUI.Type type, Label labelHeure, Label LabelNomLivraison){
+    public PointLivraisonUI_Oblong (double xAffichage, double yAffichage_RelocateLivraison, double yAffichage_Relocate, PointLivraisonUI.Type type, Label labelHeure, Label LabelNomLivraison){
 
         super(xAffichage,yAffichage_RelocateLivraison, type,labelHeure,LabelNomLivraison);
         m_yAffichage_Relocate = yAffichage_Relocate;
-        mRectangle = rectangle;
 
         //Circle 2
         mCircle2 = new Circle(radiusAffichageTimeline);
@@ -29,7 +28,10 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
         mCircle2.relocate(m_xAffichage - radiusAffichageTimeline,m_yAffichage_Relocate - radiusAffichageTimeline);
 
         //rectangle
+        mRectangle = new Rectangle(radiusAffichageTimeline * 2, m_yAffichage - m_yAffichage_Relocate);
+        mRectangle.relocate(m_xAffichage - radiusAffichageTimeline, m_yAffichage_Relocate);
         mRectangle.setFill(mColorLivraison);
+        mRectangle.setWidth(2*radiusAffichageTimeline);
     }
 
     public Button getButton(){ return mButton; }
