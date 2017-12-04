@@ -43,6 +43,10 @@ public class Tournee {
         return mItineraires;
     }
 
+    public DemandeDeLivraison getDemandeDeLivraison() {
+        return mDemandeDeLivraison;
+    }
+
     public Map<Point, LocalTime> getMargesLivraison() {
         if(margesLivraison.isEmpty())
         {
