@@ -6,6 +6,7 @@ import fr.insalyon.agile.tsp.TSP4;
 import javafx.util.Pair;
 
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,7 +107,7 @@ public class DemandeDeLivraison {
                 sommets[indexPoint2].getLivraison().setDateLivraison(tempsActuel);
             }
 
-            tempsActuel = tempsActuel.plus(duree[indexPoint2]);
+            tempsActuel = tempsActuel.plus(Duration.ofSeconds(duree[indexPoint2]));
         }
 
         listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[tsp.getMeilleureSolution(nombreSommets - 1)], sommets[tsp.getMeilleureSolution(0)])));
