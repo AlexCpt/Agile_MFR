@@ -23,28 +23,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.File;
-<<<<<<< Updated upstream
 import java.time.Duration;
 import java.time.LocalDate;
-=======
->>>>>>> Stashed changes
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 
 public class MainWindow extends Application
 {
-<<<<<<< Updated upstream
-    final double sceneHeight = 750;
-    final double bandeauWidth = 200;
-    final double bandeauHeigth = sceneHeight;
-    final double rightPaneWidth = 200;
-    final double rightPaneHeigth = sceneHeight;
-    final double mapWidth = 800;
-    final double mapHeight = sceneHeight;
-    final double sceneWidth = mapWidth+bandeauWidth ;
-    String fileName;
-=======
     final static double sceneHeight = 750;
     final static double bandeauWidth = 200;
     final static double bandeauHeigth = sceneHeight;
@@ -54,7 +40,7 @@ public class MainWindow extends Application
     final static double mapHeight = sceneHeight;
     final static double sceneWidth = mapWidth+bandeauWidth ;
     final static int radiusAffichageTimeline = 11;
->>>>>>> Stashed changes
+    String fileName;
 
     // RightPane
     static double  centreRightPane = rightPaneWidth/2;
@@ -268,44 +254,17 @@ public class MainWindow extends Application
 
 
         //Point de départ et label -------------------------------------
-<<<<<<< Updated upstream
-        Circle pointEntrepotDepart = new Circle(radiusAffichageTimeline);
-        pointEntrepotDepart.setFill(Color.rgb(244,39,70));
-        pointEntrepotDepart.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
-       //Boutton entrepot depart
-        Button entrepotDepButton = new Button();
-        entrepotDepButton.setStyle(popOverButtonStyle);
-        entrepotDepButton.relocate(xPoint - radiusAffichageTimeline*2,yFirstPoint - radiusAffichageTimeline*2);
-        tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,entrepotDepButton,
-                "Entrepot - Depart : "+ heureDebutTournee.toString() );
-
-=======
->>>>>>> Stashed changes
         Label lblEntrepotDepartHeure = new Label(heureDebutTournee.toString());
         lblEntrepotDepartHeure.setLayoutY(yFirstPoint- heightLabelTime);
 
         Label lblEntrepotDepart = new Label("Entrepôt");
         lblEntrepotDepart.setLayoutY(yFirstPoint- heightLabelTime);
 
-<<<<<<< Updated upstream
-        //Point d'arrivée -------------------------------------
-        Circle pointEntrepotArrivee = new Circle(radiusAffichageTimeline);
-        pointEntrepotArrivee.setFill(Color.rgb(244,39,70));
-        pointEntrepotArrivee.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
-
-       //Boutton entrepot arrivee
-        Button entrepotArrButton = new Button();
-        entrepotArrButton.setStyle(popOverButtonStyle);
-        entrepotArrButton.relocate(xPoint - radiusAffichageTimeline*3,yLastPoint - radiusAffichageTimeline*3);
-        tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,entrepotArrButton,
-                "Entrepot - Arrivee : "+ heureFinTournee.toString() );
-=======
         PointLivraisonUI pointEntrepotDepart = new PointLivraisonUI(xPoint,
                 yFirstPoint, PointLivraisonUI.Type.ENTREPOT_DEPART,lblEntrepotDepartHeure, lblEntrepotDepart);
 
         tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,pointEntrepotDepart.getButton(),
                 "Entrepot - Depart : "+ heureDebutTournee.toString() );
->>>>>>> Stashed changes
 
 
         //Point d'arrivée -------------------------------------
@@ -398,14 +357,8 @@ public class MainWindow extends Application
             }
 
             //lignes
-<<<<<<< Updated upstream
-            System.out.println(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine())); //utile pour la couleur //TOdo : à améliorer parce qu'on le fait plein de fois
             double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
-            double margeMax = Duration.ofMinutes(30).getSeconds(); //Tout vert
-=======
-            double marge = localTimeToSecond(tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()));
             double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
->>>>>>> Stashed changes
 
             if (marge > margeMax){
                 marge = margeMax;
@@ -486,18 +439,9 @@ public class MainWindow extends Application
         rightVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
 
         //Affichage
-<<<<<<< Updated upstream
-        rightPane.getChildren().add(lblEntrepotDepartHeure);
-        rightPane.getChildren().add(lblEntrepotDepart);
-        rightPane.getChildren().add(lblEntrepotArriveeHeure);
-        rightPane.getChildren().add(lblEntrepotArrivee);
-        pointPane.getChildren().add(pointEntrepotDepart);
-        pointPane.getChildren().add(pointEntrepotArrivee);
-=======
         pointEntrepotDepart.print(pointPane, labelPane);
         pointEntrepotArrivee.print(pointPane, labelPane);
 
->>>>>>> Stashed changes
         rightPane.getChildren().add(rightVbox);
         rightPane.getChildren().add(rightVboxDown);
         rightPane.getChildren().add(linePane);
@@ -505,8 +449,6 @@ public class MainWindow extends Application
         rightPane.getChildren().add(labelPane);
         rightPane.getChildren().add(accrochePointPane);
         rightPane.getChildren().add(voiturePane);
-        pointPane.getChildren().add(entrepotArrButton);
-        pointPane.getChildren().add(entrepotDepButton);
 
         ExportTournee exportTournee = new ExportTournee(tournee);
         exportTournee.exportFile(fileName);
