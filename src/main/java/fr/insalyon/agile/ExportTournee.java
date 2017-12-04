@@ -18,7 +18,7 @@ public class ExportTournee {
             text += "Livraison n°" + tournee.getLivraisons().indexOf(point) + 1 + ":\n"
                     + "Adresse de livraison : " + point.getAdresse() + "\n"
                     + "Heure d'arrivée : " + livraison.getDateArrivee() + "\n"
-                    + "Heure de départ : " + heureDépart + "\n"
+                    + "Heure de départ : " + heureDepart + "\n"
                     + "Itinéraire à suivre : \n"
             ;
 
