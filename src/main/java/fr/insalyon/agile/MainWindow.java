@@ -310,22 +310,25 @@ public class MainWindow extends Application
                     + yFirstPoint;
 
             //LocalTime heureLivraisonx = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison();
-            LocalTime heurexFinLivraiosn = heurexDebutLivraiosn.plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison());
-            double yRelocateLivraison = ((localTimeToSecond(heurexFinLivraiosn) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
+            LocalTime heurexFinLivraison = heurexDebutLivraiosn.plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison());
+            double yRelocateLivraison = ((localTimeToSecond(heurexFinLivraison) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
                     * (yLastPoint - yFirstPoint)
                     + yFirstPoint;
 
             //region <Point Oblong>
                 //Label arrivée
-                Label lblpointItiHeureArrivee = new Label(heurexDebutLivraiosn.format(dtf));
-                lblpointItiHeureArrivee.setLayoutY(yRelocate - heightLabelTime);
+            Label lblpointItiHeureDebutLivraison = new Label(heurexDebutLivraiosn.format(dtf));
+            lblpointItiHeureDebutLivraison.setLayoutY(yRelocate - heightLabelTime);
 
-                //Label Livraison machintruc
-                Label lblpointItiArrivee = new Label("Livraison " +compteurLivraison);
-                lblpointItiArrivee.setLayoutY(yRelocate - heightLabelTime);
+            Label lblpointItiHeureFinLivraison = new Label(heurexFinLivraison.format(dtf));
+            lblpointItiHeureFinLivraison.setLayoutY(yRelocate - heightLabelTime);
 
-                PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateLivraison, yRelocate, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureArrivee,lblpointItiArrivee);
-                //pointLivraisonUI_oblong.print(pointPane,labelPane);
+            //Label Livraison machintruc
+            Label lblpointItiLivraison = new Label("Livraison " +compteurLivraison);
+            lblpointItiLivraison.setLayoutY(yRelocate - heightLabelTime);
+
+             PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateLivraison, yRelocate, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureDebutLivraison,lblpointItiHeureFinLivraison,lblpointItiLivraison);
+            pointLivraisonUI_oblong.print(pointPane,labelPane);
             //endregion
 
             //button sur chaque point de livraison pour la suppression
@@ -336,16 +339,6 @@ public class MainWindow extends Application
                 btnSupress.setStyle(popOverButtonStyle);
                 itineraire.getTroncons().get(0).getOrigine().printSuppressButton(mapPane,primaryStage,btnSupress);
             }
-
-
-            //Label heure
-            Label lblpointItiHeure = new Label(heurexFinLivraiosn.format(dtf));
-            lblpointItiHeure.setLayoutY(yRelocateLivraison - heightLabelTime);
-
-            //Label Livraison machintruc
-            Label lblpointItiLivraison = new Label("Livraison " +compteurLivraison);
-            lblpointItiLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
-
             compteurLivraison++;
 
             // FlecheDéplacement de Livraison
@@ -387,18 +380,10 @@ public class MainWindow extends Application
 
             //endregion
 
-            //PointUI
-            PointLivraisonUI pointLivraisonUI = new PointLivraisonUI(xPoint,yRelocate, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeure, lblpointItiLivraison);
-            pointLivraisonUI.print(pointPane, labelPane);
-
             //hover sur chaque livraison
             //itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,pointLivraisonUI.getButton(),
               //      lblpointItiLivraison.getText() + " - " + lblpointItiHeure.getText());
-            //Affichage
-            rightPane.getChildren().add(lblpointItiHeure);
-            rightPane.getChildren().add(lblpointItiLivraison);
         }
-
         //endregion
 
 
@@ -421,7 +406,7 @@ public class MainWindow extends Application
 
         //endregion
 
-//region <bouton modifier>
+        //region <bouton modifier>
         Button modifierTimeline = new Button();
         Button buttonAjout = null;
 
