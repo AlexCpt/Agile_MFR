@@ -330,6 +330,16 @@ public class MainWindow extends Application
             itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,btnPopover,
                     "Livraison " +compteurLivraison + " - Heure : " + heurex.format(dtf));
 
+            //button sur chaque point de livraison pour la suppression
+            if (modeModifier == true) {
+                //TODO: le faire (méthode printSupressButton ?)
+                Button btnSupress = new Button();
+                btnSupress.relocate(xPoint - radiusAffichageTimeline*2, yRelocateLivraison - radiusAffichageTimeline*2);
+                btnSupress.setStyle(popOverButtonStyle);
+                itineraire.getTroncons().get(0).getOrigine().printSuppressButton(mapPane,primaryStage,btnSupress);
+            }
+
+
             //Label heure
             Label lblpointItiHeure = new Label(heureLivraisonx.format(dtf));
             lblpointItiHeure.setLayoutY(yRelocateLivraison - heightLabelTime);
@@ -445,10 +455,11 @@ public class MainWindow extends Application
         rightPane.getChildren().add(rightVbox);
         rightPane.getChildren().add(rightVboxDown);
         rightPane.getChildren().add(linePane);
-        rightPane.getChildren().add(pointPane);
         rightPane.getChildren().add(labelPane);
         rightPane.getChildren().add(accrochePointPane);
         rightPane.getChildren().add(voiturePane);
+        rightPane.getChildren().add(pointPane);
+
 
         ExportTournee exportTournee = new ExportTournee(tournee);
         exportTournee.exportFile(fileName);

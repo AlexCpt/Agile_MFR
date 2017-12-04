@@ -5,6 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
 
 import static fr.insalyon.agile.MainWindow.centreRightPane;
 import static fr.insalyon.agile.MainWindow.widthLabelTime;
@@ -75,10 +77,11 @@ public class PointLivraisonUI {
 
     public void print (Pane pointPane, Pane labelPane){
         pointPane.getChildren().add(mCircle);
-        pointPane.getChildren().add(mButton);
 
         labelPane.getChildren().add(mLabelHeure);
         labelPane.getChildren().add(mLabelNomLivraison);
+        pointPane.getChildren().add(mButton);
+
     }
 
 

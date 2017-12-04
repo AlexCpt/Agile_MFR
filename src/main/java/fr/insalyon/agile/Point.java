@@ -123,10 +123,26 @@ public class Point {
         popOver.setContentNode(new Label(label));
         popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
 
+        System.out.println("coucou");
+
         popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX());
         popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 10);
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
+    }
+
+    public void printSuppressButton(Pane mapPane, Stage primaryStage, Button rndBtnSuppress){
+
+        PopOver popOver = new PopOver();
+        popOver.setAutoHide(false);
+        popOver.setDetachable(false);
+        popOver.setContentNode(new Button("Supprimer"));
+        popOver.setArrowLocation(PopOver.ArrowLocation.RIGHT_CENTER);
+
+        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX());
+        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 10);
+        rndBtnSuppress.setOnMouseClicked(e -> popOver.show(primaryStage));
+        rndBtnSuppress.setOnMouseExited(e -> popOver.hide());
     }
 
     public String getAdresse() {
