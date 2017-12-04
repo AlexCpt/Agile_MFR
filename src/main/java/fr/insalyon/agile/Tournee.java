@@ -42,10 +42,7 @@ public class Tournee {
     public List<Itineraire> getItineraires() {
         return mItineraires;
     }
-
-    public DemandeDeLivraison getDemandeDeLivraison() {
-        return mDemandeDeLivraison;
-    }
+    
 
     public Map<Point, LocalTime> getMargesLivraison() {
         if(margesLivraison.isEmpty())
