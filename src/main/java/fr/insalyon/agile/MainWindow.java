@@ -245,11 +245,11 @@ public class MainWindow extends Application
         final int decalageXIconDragAndDropPoint = 20;
         final int decalageYIconDragAndDropPoint = 0;
 
-        String popOverButtonStyle = "-fx-background-radius: 5em; " +
-                "-fx-min-width: " + radiusAffichageTimeline*2 + "px; " +
-                "-fx-min-height: " + radiusAffichageTimeline*2 + "px; " +
-                "-fx-max-width: " + radiusAffichageTimeline*2 + "px; " +
-                "-fx-max-height: " + radiusAffichageTimeline*2 + "px; " +
+        String popOverButtonStyle = //"-fx-background-radius: 5em; " +
+                "-fx-min-width: " + radiusAffichageTimeline*10 + "px; " +
+                "-fx-min-height: " + radiusAffichageTimeline*6 + "px; " +
+                "-fx-max-width: " + radiusAffichageTimeline*10 + "px; " +
+                "-fx-max-height: " + radiusAffichageTimeline*6 + "px; " +
                 "-fx-background-color: transparent;" +
                 "-fx-background-insets: 0px; " +
                 "-fx-padding: 0px;";
@@ -273,7 +273,7 @@ public class MainWindow extends Application
        //Boutton entrepot depart
         Button entrepotDepButton = new Button();
         entrepotDepButton.setStyle(popOverButtonStyle);
-        entrepotDepButton.relocate(xPoint - radiusAffichageTimeline,yFirstPoint - radiusAffichageTimeline);
+        entrepotDepButton.relocate(xPoint - radiusAffichageTimeline*2,yFirstPoint - radiusAffichageTimeline*2);
         tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,entrepotDepButton,
                 "Entrepot - Depart : "+ heureDebutTournee.toString() );
 
@@ -295,7 +295,7 @@ public class MainWindow extends Application
        //Boutton entrepot arrivee
         Button entrepotArrButton = new Button();
         entrepotArrButton.setStyle(popOverButtonStyle);
-        entrepotArrButton.relocate(xPoint - radiusAffichageTimeline,yLastPoint - radiusAffichageTimeline);
+        entrepotArrButton.relocate(xPoint - radiusAffichageTimeline*3,yLastPoint - radiusAffichageTimeline*3);
         tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,entrepotArrButton,
                 "Entrepot - Arrivee : "+ heureFinTournee.toString() );
 
@@ -373,7 +373,7 @@ public class MainWindow extends Application
             //button sur chaque point de livraison
 
             Button btnPopover = new Button();
-            btnPopover.relocate(xPoint - radiusAffichageTimeline, yRelocateLivraison - radiusAffichageTimeline);
+            btnPopover.relocate(xPoint - radiusAffichageTimeline*2, yRelocateLivraison - radiusAffichageTimeline*2);
             btnPopover.setStyle(popOverButtonStyle);
 
             //Label heure
@@ -508,14 +508,14 @@ public class MainWindow extends Application
         rightPane.getChildren().add(lblEntrepotArrivee);
         pointPane.getChildren().add(pointEntrepotDepart);
         pointPane.getChildren().add(pointEntrepotArrivee);
-        pointPane.getChildren().add(entrepotArrButton);
-        pointPane.getChildren().add(entrepotDepButton);
         rightPane.getChildren().add(rightVbox);
         rightPane.getChildren().add(rightVboxDown);
         rightPane.getChildren().add(linePane);
         rightPane.getChildren().add(pointPane);
         rightPane.getChildren().add(accrochePointPane);
         rightPane.getChildren().add(voiturePane);
+        pointPane.getChildren().add(entrepotArrButton);
+        pointPane.getChildren().add(entrepotDepButton);
     }
 
     public void timeLineModifierBuild(Pane rightPane, Tournee tournee) {
