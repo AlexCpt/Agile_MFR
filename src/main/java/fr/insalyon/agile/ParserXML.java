@@ -33,7 +33,7 @@ public class ParserXML implements Parser {
 
         try {
             final DocumentBuilder builder = factory.newDocumentBuilder();
-            final Document document= builder.parse(new File(fichier));
+            final Document document = builder.parse(new File(fichier));
             final Element racine = document.getDocumentElement();
 
             List<Point> listePoints = new ArrayList<>();

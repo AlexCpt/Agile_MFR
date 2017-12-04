@@ -133,5 +133,8 @@ public class Point {
         return mAdresse;
     }
 
+    public String getId() {
+        return mId;
+    }
 
 }

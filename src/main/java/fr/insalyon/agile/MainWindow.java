@@ -50,6 +50,7 @@ public class MainWindow extends Application
     final double mapWidth = 800;
     final double mapHeight = sceneHeight;
     final double sceneWidth = mapWidth+bandeauWidth ;
+    String fileName;
 
     // RightPane
     double centreRightPane = rightPaneWidth/2;
@@ -156,6 +157,7 @@ public class MainWindow extends Application
                     return;
                 }
 
+                fileName = t1;
                 plan.resetTypePoints();
                 ddl = parser.parseDemandeDeLivraison("fichiersXML/"+t1+".xml");
                 if (ddl == null) {
@@ -514,6 +516,9 @@ public class MainWindow extends Application
         rightPane.getChildren().add(pointPane);
         rightPane.getChildren().add(accrochePointPane);
         rightPane.getChildren().add(voiturePane);
+
+        ExportTournee exportTournee = new ExportTournee(tournee);
+        exportTournee.exportFile(fileName);
     }
 
     public void timeLineModifierBuild(Pane rightPane, Tournee tournee) {
