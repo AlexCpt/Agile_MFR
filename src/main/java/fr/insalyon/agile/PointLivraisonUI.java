@@ -41,9 +41,7 @@ public class PointLivraisonUI {
             "-fx-padding: 0px;";
 
     public PointLivraisonUI(){
-
     }
-
 
     public PointLivraisonUI(double xAffichage, double yAffichage, Type type, Label labelHeure, Label LabelNomLivraison){
 
@@ -84,7 +82,6 @@ public class PointLivraisonUI {
         labelPane.getChildren().add(mLabelHeure);
         labelPane.getChildren().add(mLabelNomLivraison);
         pointPane.getChildren().add(mButton);
-
     }
 
 

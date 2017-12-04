@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -22,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
 
 import java.io.File;
 import java.time.Duration;
@@ -232,6 +234,8 @@ public class MainWindow extends Application
 
         final int decalageXIconDragAndDropPoint = 20;
         final int decalageYIconDragAndDropPoint = 0;
+        final int decalage_x_PopoverAjouterLivraison = -25;
+        final int decalage_y_PopoverAjouterLivraison = -7;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
 
 
@@ -307,8 +311,8 @@ public class MainWindow extends Application
                     * (yLastPoint - yFirstPoint)
                     + yFirstPoint;
 
-            if (heurex != heureLivraisonx) { //Point oblong
-
+            //Point Oblong
+            if (heurex != heureLivraisonx) {
                 Rectangle rectangle = new Rectangle(radiusAffichageTimeline * 2, yRelocateLivraison - yRelocate);
                 rectangle.relocate(xPoint - radiusAffichageTimeline, yRelocate);
 
@@ -392,7 +396,6 @@ public class MainWindow extends Application
             pointLivraisonUI.print(pointPane, labelPane);
 
             //Affichage
-            //pointPane.getChildren().add(pointIti);
             rightPane.getChildren().add(lblpointItiHeure);
             rightPane.getChildren().add(lblpointItiLivraison);
             pointPane.getChildren().add(btnPopover);
@@ -438,6 +441,47 @@ public class MainWindow extends Application
             buttonAjout = new Button("Ajouter");
             buttonAjout.setMinWidth(63);
 
+            buttonAjout.setOnAction(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent event) {
+                    HBox hBoxAjoutInPopover = new HBox();
+                    Label lblAjoutInPopover = new Label("Position de la Livraison : ");
+                    TextField txtFieldInPopover = new TextField();
+                    txtFieldInPopover.setPrefWidth(60);
+                    hBoxAjoutInPopover.getChildren().add(lblAjoutInPopover);
+                    hBoxAjoutInPopover.getChildren().add(txtFieldInPopover);
+                    hBoxAjoutInPopover.setAlignment(Pos.CENTER);
+                    hBoxAjoutInPopover.setPadding(new Insets(20, 20,10,20));
+
+                    VBox vBoxAjoutInPopover = new VBox();
+                    vBoxAjoutInPopover.getChildren().add(hBoxAjoutInPopover);
+                    Button buttonAjoutInPopover = new Button("Valider");
+                    buttonAjoutInPopover.setOnAction(new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent event) {
+                            //mettre truc de louise
+                        }});
+
+                    vBoxAjoutInPopover.getChildren().add(buttonAjoutInPopover);
+                    vBoxAjoutInPopover.setAlignment(Pos.CENTER);
+
+                    Pane panePopOver = new Pane();
+                    panePopOver.getChildren().add(vBoxAjoutInPopover);
+                    panePopOver.setPadding(new Insets(5));
+
+                    PopOver popOver = new PopOver();
+                    popOver.setAutoHide(true);
+                    popOver.setContentNode(panePopOver);
+                    popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+
+
+                    popOver.show(modifierTimeline);
+                    popOver.setX(popOver.getX() + decalage_x_PopoverAjouterLivraison);
+                    popOver.setY(popOver.getY() + decalage_y_PopoverAjouterLivraison);
+                }
+            });
             modifierTimeline.setOnAction(new EventHandler<ActionEvent>() {
 
                 @Override

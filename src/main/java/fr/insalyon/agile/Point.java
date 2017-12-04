@@ -123,8 +123,6 @@ public class Point {
         popOver.setContentNode(new Label(label));
         popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
 
-        System.out.println("coucou");
-
         popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX());
         popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 10);
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
