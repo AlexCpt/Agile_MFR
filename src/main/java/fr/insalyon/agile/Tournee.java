@@ -75,11 +75,11 @@ public class Tournee {
 
         for(Point point : livraisons)
         {
-            Duration marge = Duration.between(point.getLivraison().getDateLivraison(), point.getLivraison().getDateArrivee());
+            Duration marge = Duration.between(point.getLivraison().getDateArrivee(), point.getLivraison().getDateLivraison());
             margesLivraison.put(point, marge);
         }
         Point derniereLivraison =  mItineraires.get(mItineraires.size()-1).getTroncons().get(0).getOrigine();
-        Duration marge = Duration.between(mDemandeDeLivraison.getFin(), derniereLivraison.getLivraison().getDateLivraison().plus(derniereLivraison.getLivraison().getDureeLivraison()).plus(mItineraires.get(mItineraires.size()-1).getDuree()));
+        Duration marge = Duration.between(derniereLivraison.getLivraison().getDateLivraison().plus(derniereLivraison.getLivraison().getDureeLivraison()).plus(mItineraires.get(mItineraires.size()-1).getDuree()), mDemandeDeLivraison.getFin());
 
         margesLivraison.put(mDemandeDeLivraison.getEntrepot(), marge);
     }
@@ -109,15 +109,16 @@ public class Tournee {
         if(getItinerairesModifiable(livraison, itineraire)){
             int index = mItineraires.indexOf(itineraire);
             mItineraires.remove(itineraire);
-            LocalTime dateArrive = dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(dijkstraAllee.getDuree());
-            livraison.getLivraison().setDateArrivee(dateArrive);
-            livraison.getLivraison().setDateLivraison(dateArrive);
-            if(livraison.getLivraison().getDebutPlage() !=null){
-                if(dateArrive.isBefore(livraison.getLivraison().getDebutPlage()))
-                {
-                    livraison.getLivraison().setDateLivraison(livraison.getLivraison().getDebutPlage());
-                }
+            LocalTime dateArrivee;
+            if(itineraire.getTroncons().get(0).getOrigine().getType().equals(Point.Type.ENTREPOT)){
+                dateArrivee= mDemandeDeLivraison.getDepart().plus(dijkstraAllee.getDuree());
             }
+            else
+            {
+                dateArrivee=itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().plus(itineraire.getDuree()));
+            }
+            livraison.getLivraison().setDateArrivee(dateArrivee);
+            livraison.getLivraison().setDateLivraison(dateArrivee);
             mItineraires.add(index, dijkstraAllee);
             mItineraires.add(index+1, dijkstraRetour);
             livraisons.add(livraison);

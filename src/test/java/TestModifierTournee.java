@@ -58,10 +58,10 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
         tournee.calculMargesPointsLivraison();
-        Map<Point, LocalTime> map = new HashMap<>();
-        map.put(points.get(2), LocalTime.of(0, 2));
-        map.put(points.get(5), LocalTime.of(1, 0));
-        map.put(points.get(0), LocalTime.of(12, 58, 58));
+        Map<Point, Duration> map = new HashMap<>();
+        map.put(points.get(2), Duration.ZERO);
+        map.put(points.get(5), Duration.ZERO);
+        map.put(points.get(0), Duration.ofHours(14).plus(Duration.ofMinutes(49).plus(Duration.ofSeconds(33))));
         assertEquals(map, tournee.getMargesLivraison());
 
     }
@@ -138,10 +138,10 @@ public class TestModifierTournee {
     public final void TestSupprimerLivraisonTournee()
     {
         List<Point> livraisons = new ArrayList<>();
-        points.get(5).setLivraison(new Livraison(null, null, Duration.ofMinutes(10)));
-        points.get(1).setLivraison(new Livraison(null, null, Duration.ofMinutes(6)));
-        points.get(2).setLivraison(new Livraison(null, null, Duration.ofMinutes(20)));
-        points.get(4).setLivraison(new Livraison(null, null, Duration.ofMinutes(20)));
+        points.get(5).setLivraison(new Livraison(LocalTime.of(4,0), null, Duration.ofMinutes(10)));
+        points.get(1).setLivraison(new Livraison(LocalTime.of(2,0), null, Duration.ofMinutes(6)));
+        points.get(2).setLivraison(new Livraison(LocalTime.of(3,0), null, Duration.ofMinutes(20)));
+        points.get(4).setLivraison(new Livraison(LocalTime.of(5,0), null, Duration.ofMinutes(20)));
 
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
