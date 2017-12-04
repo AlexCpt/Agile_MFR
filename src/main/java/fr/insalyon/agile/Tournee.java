@@ -6,10 +6,7 @@ import javafx.util.Pair;
 
 import java.time.LocalTime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class Tournee {
@@ -173,5 +170,7 @@ public class Tournee {
         return time1.plusHours(time2.getHour()).plusMinutes(time2.getMinute()).plusSeconds(time2.getSecond());
     }
 
-
+    public List<Point> getLivraisons() {
+        return livraisons;
+    }
 }
