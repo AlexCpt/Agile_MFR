@@ -67,21 +67,6 @@ public class TestModifierTournee {
     }
 
     @Test
-    public final void TestsumLocalTime()
-    {
-        Tournee t = new Tournee();
-        assertEquals(LocalTime.of(4,12), t.sumLocalTime(LocalTime.of(1,17), LocalTime.of(2,55)));
-    }
-
-
-    @Test
-    public final void TestgetDureeItineraire()
-    {
-        Tournee t = new Tournee();
-        assertEquals(LocalTime.of(4,12), t.sumLocalTime(LocalTime.of(1,17), LocalTime.of(2,55)));
-    }
-
-    @Test
     public final void TestGetItinerairesModifiable()
     {
         List<Point> livraisons = new ArrayList<>();
@@ -104,7 +89,7 @@ public class TestModifierTournee {
         Livraison livraison = new Livraison(null, null,  Duration.ofMinutes(20));
 
         points.get(4).setLivraison(livraison);
-        tournee.getItinerairesModifiable(points.get(4));
+        tournee.getItinerairesModifiable(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
 
         assertEquals(1, 1);
 
@@ -133,7 +118,7 @@ public class TestModifierTournee {
         Livraison livraison = new Livraison(LocalTime.of(8,0), null,  Duration.ofMinutes(20));
 
         points.get(4).setLivraison(livraison);
-        List<Boolean> possibilites = tournee.getItinerairesModifiable(points.get(4));
+        Boolean possibilites = tournee.getItinerairesModifiable(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
 
 
         tournee.ajouterLivraison(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
