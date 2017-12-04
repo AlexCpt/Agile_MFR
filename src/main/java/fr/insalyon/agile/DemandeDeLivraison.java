@@ -42,6 +42,10 @@ public class DemandeDeLivraison {
         return mFin;
     }
 
+    public List<Point> getLivraisons() {
+        return mLivraisons;
+    }
+
     public Tournee calculerTournee(){
 
         HashMap<Pair<Point, Point>, Itineraire> itineraireHashMap = new HashMap<>();
@@ -50,6 +54,10 @@ public class DemandeDeLivraison {
 
         int[][] couts = new int[nombreSommets][nombreSommets];
         int[] duree = new int[nombreSommets];
+
+        for (int i = 0; i < mLivraisons.size(); i++) {
+            duree[i+1] = (int)mLivraisons.get(i).getLivraison().getDureeLivraison().getSeconds();
+        }
 
         Point[] sommets = new Point[nombreSommets];
         sommets[0] = mEntrepot;

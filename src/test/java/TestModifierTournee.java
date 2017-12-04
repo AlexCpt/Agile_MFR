@@ -3,6 +3,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -43,8 +44,8 @@ public class TestModifierTournee {
     public final void TestTournee() {
 
         List<Point> livraisons = new ArrayList<>();
-        points.get(2).setLivraison(new Livraison(null, null, LocalTime.of(0,6)));
-        points.get(5).setLivraison(new Livraison(null, null, LocalTime.of(1,0)));
+        points.get(2).setLivraison(new Livraison(null, null, Duration.ofMinutes(6)));
+        points.get(5).setLivraison(new Livraison(null, null, Duration.ofHours(1)));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         Entrepot entrepot = new Entrepot();
@@ -66,27 +67,12 @@ public class TestModifierTournee {
     }
 
     @Test
-    public final void TestsumLocalTime()
-    {
-        Tournee t = new Tournee();
-        assertEquals(LocalTime.of(4,12), t.sumLocalTime(LocalTime.of(1,17), LocalTime.of(2,55)));
-    }
-
-
-    @Test
-    public final void TestgetDureeItineraire()
-    {
-        Tournee t = new Tournee();
-        assertEquals(LocalTime.of(4,12), t.sumLocalTime(LocalTime.of(1,17), LocalTime.of(2,55)));
-    }
-
-    @Test
     public final void TestGetItinerairesModifiable()
     {
         List<Point> livraisons = new ArrayList<>();
-        points.get(5).setLivraison(new Livraison(null, null, LocalTime.of(0,10)));
-        points.get(1).setLivraison(new Livraison(null, null, LocalTime.of(0,6)));
-        points.get(2).setLivraison(new Livraison(null, null, LocalTime.of(0,20)));
+        points.get(5).setLivraison(new Livraison(null, null, Duration.ofMinutes(10)));
+        points.get(1).setLivraison(new Livraison(null, null, Duration.ofMinutes(6)));
+        points.get(2).setLivraison(new Livraison(null, null, Duration.ofMinutes(20)));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         livraisons.add(points.get(1));
@@ -100,10 +86,10 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
-        Livraison livraison = new Livraison(null, null,  LocalTime.of(0,20));
+        Livraison livraison = new Livraison(null, null,  Duration.ofMinutes(20));
 
         points.get(4).setLivraison(livraison);
-        tournee.getItinerairesModifiable(points.get(4));
+        tournee.getItinerairesModifiable(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
 
         assertEquals(1, 1);
 
@@ -113,9 +99,9 @@ public class TestModifierTournee {
     public final void TestAjouterLivraisonTournee()
     {
         List<Point> livraisons = new ArrayList<>();
-        points.get(5).setLivraison(new Livraison(LocalTime.of(7,0), null, LocalTime.of(0,10)));
-        points.get(1).setLivraison(new Livraison(LocalTime.of(5,0), null, LocalTime.of(0,6)));
-        points.get(2).setLivraison(new Livraison(LocalTime.of(6,0), null, LocalTime.of(0,20)));
+        points.get(5).setLivraison(new Livraison(LocalTime.of(7,0), null, Duration.ofMinutes(10)));
+        points.get(1).setLivraison(new Livraison(LocalTime.of(5,0), null, Duration.ofMinutes(6)));
+        points.get(2).setLivraison(new Livraison(LocalTime.of(6,0), null, Duration.ofMinutes(20)));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         livraisons.add(points.get(1));
@@ -129,10 +115,10 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
-        Livraison livraison = new Livraison(LocalTime.of(8,0), null,  LocalTime.of(0,20));
+        Livraison livraison = new Livraison(LocalTime.of(8,0), null,  Duration.ofMinutes(20));
 
         points.get(4).setLivraison(livraison);
-        List<Boolean> possibilites = tournee.getItinerairesModifiable(points.get(4));
+        Boolean possibilites = tournee.getItinerairesModifiable(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
 
 
         tournee.ajouterLivraison(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
@@ -152,10 +138,10 @@ public class TestModifierTournee {
     public final void TestSupprimerLivraisonTournee()
     {
         List<Point> livraisons = new ArrayList<>();
-        points.get(5).setLivraison(new Livraison(null, null, LocalTime.of(0,10)));
-        points.get(1).setLivraison(new Livraison(null, null, LocalTime.of(0,6)));
-        points.get(2).setLivraison(new Livraison(null, null, LocalTime.of(0,20)));
-        points.get(4).setLivraison(new Livraison(null, null, LocalTime.of(0,20)));
+        points.get(5).setLivraison(new Livraison(null, null, Duration.ofMinutes(10)));
+        points.get(1).setLivraison(new Livraison(null, null, Duration.ofMinutes(6)));
+        points.get(2).setLivraison(new Livraison(null, null, Duration.ofMinutes(20)));
+        points.get(4).setLivraison(new Livraison(null, null, Duration.ofMinutes(20)));
 
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));

@@ -2,6 +2,7 @@ package fr.insalyon.agile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -120,6 +121,7 @@ public class ParserXML implements Parser {
             LocalTime depart = null;
             LocalTime debutPlage = null;
             LocalTime finPlage = null;
+            Duration duree = null;
             String idEntrepot;
             Point entrepot=new Point();
 
@@ -144,6 +146,9 @@ public class ParserXML implements Parser {
                         Point livraison=idMapToPoint.get(idLivraison);
                         livraisons.add(livraison);
 
+                        String dureeString = noeud.getAttribute("duree");
+                        duree = Duration.ofSeconds(Integer.parseInt(dureeString));
+
                         if (noeud.hasAttribute("debutPlage")) {
                             String debutPlageString = noeud.getAttribute("debutPlage");
                             debutPlage = LocalTime.parse(debutPlageString, formatter);
@@ -158,7 +163,7 @@ public class ParserXML implements Parser {
                             finPlage = null;
                         }
 
-                        livraison.setLivraison(new Livraison(debutPlage, finPlage, LocalTime.of(0,0)));
+                        livraison.setLivraison(new Livraison(debutPlage, finPlage, duree));
                     }
                 }
             }
