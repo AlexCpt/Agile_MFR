@@ -17,6 +17,7 @@ import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -419,11 +420,12 @@ public class MainWindow extends Application
 
         //bouton modifier
         Button modifierTimeline = new Button();
+        Button buttonAjout = null;
+
         if(modeModifier == false)
         {
             modifierTimeline.setText("Modifier");
             modifierTimeline.setOnAction(new EventHandler<ActionEvent>() {
-
                 @Override
                 public void handle(ActionEvent event) {
                     timeLineBuild(rightPane,tournee,mapPane,primaryStage,true);
@@ -432,6 +434,10 @@ public class MainWindow extends Application
         }
         else if (modeModifier == true){
             modifierTimeline.setText("Valider");
+            modifierTimeline.setMinWidth(63);
+            buttonAjout = new Button("Ajouter");
+            buttonAjout.setMinWidth(63);
+
             modifierTimeline.setOnAction(new EventHandler<ActionEvent>() {
 
                 @Override
@@ -441,9 +447,18 @@ public class MainWindow extends Application
             });
         }
 
+        //Hbox of Ajouter-Valider
+        HBox hBoxAjouterValider = new HBox();
+        if(buttonAjout != null) { hBoxAjouterValider.getChildren().add(buttonAjout); }
+        hBoxAjouterValider.getChildren().add(modifierTimeline);
+        hBoxAjouterValider.setAlignment(Pos.BOTTOM_CENTER);
+        hBoxAjouterValider.setSpacing(8);
+        hBoxAjouterValider.setPrefSize(bandeauWidth, bandeauHeigth);
+
+
         //Right vBox
         VBox rightVboxDown = new VBox();
-        rightVboxDown.getChildren().add(modifierTimeline);
+        rightVboxDown.getChildren().add(hBoxAjouterValider);
         rightVboxDown.setAlignment(Pos.BOTTOM_CENTER);
         rightVboxDown.setPadding(new Insets(35));
         rightVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);

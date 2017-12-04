@@ -13,14 +13,13 @@ import static fr.insalyon.agile.MainWindow.widthLabelTime;
 
 public class PointLivraisonUI {
 
-    private Circle mCircle;
-    private Point mPoint;
-    private Button mButton;
-    private Label mLabelHeure;
-    private Label mLabelNomLivraison;
-    private double m_xAffichage;
-    private double m_yAffichage;
-    private Type mType;
+    protected Circle mCircle;
+    protected Button mButton;
+    protected Label mLabelHeure;
+    protected Label mLabelNomLivraison;
+    protected double m_xAffichage;
+    protected double m_yAffichage;
+    protected Type mType;
 
     public enum Type {
         ENTREPOT_ARRIVEE,
@@ -28,11 +27,11 @@ public class PointLivraisonUI {
         ENTREPOT_DEPART
     };
 
-    final int radiusAffichageTimeline = 11;
-    final Color colorEntrepot = Color.rgb(244,39,70);
-    final Color colorLivraison = Color.rgb(56, 120, 244);
-    final  int decalageLabelLivraison = 25;
-    final String popOverButtonStyle = "-fx-background-radius: 5em; " +
+    protected final int radiusAffichageTimeline = 11;
+    protected final Color mColorEntrepot = Color.rgb(244,39,70);
+    protected final Color mColorLivraison = Color.rgb(56, 120, 244);
+    protected final  int decalageLabelLivraison = 25;
+    protected final String popOverButtonStyle = "-fx-background-radius: 5em; " +
             "-fx-min-width: " + radiusAffichageTimeline*2 + "px; " +
             "-fx-min-height: " + radiusAffichageTimeline*2 + "px; " +
             "-fx-max-width: " + radiusAffichageTimeline*2 + "px; " +
@@ -40,6 +39,10 @@ public class PointLivraisonUI {
             "-fx-background-color: transparent;" +
             "-fx-background-insets: 0px; " +
             "-fx-padding: 0px;";
+
+    public PointLivraisonUI(){
+
+    }
 
 
     public PointLivraisonUI(double xAffichage, double yAffichage, Type type, Label labelHeure, Label LabelNomLivraison){
@@ -53,10 +56,10 @@ public class PointLivraisonUI {
         //Circle
         mCircle = new Circle(radiusAffichageTimeline);
         if(mType == Type.ENTREPOT_DEPART || type == Type.ENTREPOT_ARRIVEE){
-            mCircle.setFill(colorEntrepot);
+            mCircle.setFill(mColorEntrepot);
         }
         else if (mType == Type.LIVRAISON){
-            mCircle.setFill(colorLivraison);
+            mCircle.setFill(mColorLivraison);
         }
         mCircle.relocate(m_xAffichage - radiusAffichageTimeline,m_yAffichage - radiusAffichageTimeline);
 
