@@ -18,13 +18,10 @@ import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
 import java.io.File;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -121,7 +118,6 @@ public class MainWindow extends Application
 
         // LeftVBox
         VBox leftVbox = new VBox();
-
 
         //Partie Plan du bandeau
         leftVbox.getChildren().add(lblTitlePlan);
@@ -296,7 +292,7 @@ public class MainWindow extends Application
         Pane accrochePointPane = new Pane();
         Pane labelPane = new Pane();
         Pane buttonPane = new Pane();
-
+        Pane mobilePane = new Pane();
 
         for (Itineraire itineraire: tournee.getItineraires()) {
 
@@ -342,20 +338,17 @@ public class MainWindow extends Application
             }
             compteurLivraison++;
 
+
             // FlecheDéplacement de Livraison
             if(modeModifier == true){
                 final String imageURI = new File("images/drag2.jpg").toURI().toString();
                 final Image image = makeTransparent(new Image(imageURI, dragAndDropWidth, dragAndDropHeight, false, true));
-                final ImageView imageView = new ImageView(image);
-                imageView.relocate(centreRightPane - dragAndDropWidth/2 - decalageXIconDragAndDropPoint,yRelocate   - image.getHeight()/2 - decalageYIconDragAndDropPoint);
-                accrochePointPane.getChildren().add(imageView);
+                ImageviewExtended imageViewArrow = new ImageviewExtended(pointLivraisonUI_oblong, image);
+                imageViewArrow.relocate(centreRightPane - dragAndDropWidth/2 - decalageXIconDragAndDropPoint, yRelocate + ((yRelocateLivraison-yRelocate)/2)  - image.getHeight()/2 - decalageYIconDragAndDropPoint);
+                mobilePane.getChildren().add(imageViewArrow);
 
-                imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-
-                    }
-                });
+                imageViewArrow.setOnMousePressed(deplacementLivraisonOnMousePressedEventHandler);
+                imageViewArrow.setOnMouseDragged(deplacementLivraisonOnMouseDraggedEventHandler);
             }
 
             //region <lignes - tronçons>
@@ -389,7 +382,6 @@ public class MainWindow extends Application
 
 
         //region <Voiture>
-        Pane voiturePane = new Pane();
         if(modeModifier == false){
             final String imageURI = new File("images/delivery-icon-fleche.png").toURI().toString();
             final Image image = new Image(imageURI, deliveryWidth, deliveryHeight, true, false);
@@ -399,12 +391,11 @@ public class MainWindow extends Application
             imageView.relocate(0,yFirstPoint - deliveryHeight/2);
             System.out.println(imageView.getY());
 
-            voiturePane.getChildren().add(imageView);
+            mobilePane.getChildren().add(imageView);
 
             imageView.setOnMousePressed(deliveryOnMousePressedEventHandler);
             imageView.setOnMouseDragged(deliveryOnMouseDraggedEventHandler);
         }
-
         //endregion
 
         //region <bouton modifier>
@@ -506,9 +497,7 @@ public class MainWindow extends Application
         rightPane.getChildren().add(accrochePointPane);
         rightPane.getChildren().add(pointPane);
         rightPane.getChildren().add(buttonPane);
-        rightPane.getChildren().add(voiturePane);
-
-
+        rightPane.getChildren().add(mobilePane);
         //endregion
 
         ExportTournee exportTournee = new ExportTournee(tournee);
@@ -566,6 +555,33 @@ public class MainWindow extends Application
                     }
 
                     ((ImageView)(t.getSource())).setTranslateY(newTranslateY);
+                }
+            };
+
+    EventHandler<MouseEvent> deplacementLivraisonOnMousePressedEventHandler =
+            new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    orgSceneY = t.getSceneY();
+                    orgTranslateY = ((ImageView)(t.getSource())).getTranslateY();
+                }
+            };
+
+    EventHandler<MouseEvent> deplacementLivraisonOnMouseDraggedEventHandler =
+            new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    double offsetY = t.getSceneY() - orgSceneY;
+                    double newTranslateY = ((ImageView)(t.getSource())).getTranslateY();
+                    if (t.getSceneY() >= yFirstPoint - deliveryHeight/2 && t.getSceneY() <= yLastPoint + deliveryHeight/2) {
+                        newTranslateY = orgTranslateY + offsetY;
+                    }
+
+                    ((ImageView)(t.getSource())).setTranslateY(newTranslateY);
+                    ImageviewExtended imageView = ((ImageviewExtended)(t.getSource()));
+                    imageView.getPointLivraisonUI_oblong().setTranslateY(newTranslateY);
                 }
             };
 
