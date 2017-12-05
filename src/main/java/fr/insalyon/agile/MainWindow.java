@@ -290,7 +290,7 @@ public class MainWindow extends Application
 
         //region <Point d'arrivée>
 
-        Label lblEntrepotArriveeHeure = new Label(heureFinTournee.toString());
+        Label lblEntrepotArriveeHeure = new Label(heureFinTournee.format(dtf));
         lblEntrepotArriveeHeure.setLayoutY(yLastPoint- heightLabelTime);
 
         Label lblEntrepotArrivee = new Label("Entrepôt");
@@ -373,7 +373,7 @@ public class MainWindow extends Application
             lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
 
             //Label Livraison machintruc
-            Label lblpointItiLivraison = new Label("Livraison " +compteurLivraison);
+            Label lblpointItiLivraison = new Label("Livraison " + compteurLivraison);
             lblpointItiLivraison.setLayoutY(yRelocateLivraison + (yRelocateDepart-yRelocateLivraison)/2 - heightLabelTime);
 
             //region <lignes - tronçons>
