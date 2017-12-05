@@ -277,13 +277,13 @@ public class MainWindow extends Application
         leftVbox.getChildren().add(buttonDDL);
         leftVbox.getChildren().add(btnCalculerTournee);
         leftVbox.getChildren().add(btnExportTournee);
-        leftVbox.getChildren().add(leftVboxDown);
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
         leftVbox.setAlignment(Pos.CENTER);
 
         //Left Pane
         Pane leftPane = new Pane();
         leftPane.getChildren().add(leftVbox);
+        leftPane.getChildren().add(leftVboxDown);
 
         BorderPane root = new BorderPane();
         root.setRight(rightPane);
