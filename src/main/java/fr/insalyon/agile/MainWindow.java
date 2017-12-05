@@ -1,5 +1,6 @@
 package fr.insalyon.agile;
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.controlsfx.control.PopOver;
 
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -429,8 +431,17 @@ public class MainWindow extends Application
             Label lblpointItiHeureDebutLivraison = new Label(heureLivraisonx.format(dtf));
             lblpointItiHeureDebutLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm");
+
+
             Label lblpointItiHeureFinLivraison = new Label(heureDepart.format(dtf));
-            lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
+
+            if (heureDepart.isBefore(heureLivraisonx.plus(Duration.ofMinutes(15)))) {
+                System.out.println("coucou");
+                lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
+                lblpointItiHeureFinLivraison.setVisible(false);
+            }
+
 
             //Label Livraison machintruc
             Label lblpointItiLivraison = new Label("Livraison " + compteurLivraison);
