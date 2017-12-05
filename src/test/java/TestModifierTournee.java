@@ -105,16 +105,16 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
-        points.get(4).setLivraison(new Livraison(null, null,  Duration.ofMinutes(20)));
-
-        tournee.ajouterLivraison(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
+        if(tournee.getItinerairesModifiable(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1))){
+            tournee.ajouterLivraison(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
+        }
 
         List<Itineraire> itineraires= new ArrayList<>();
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(0))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(4))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(6))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(8))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(10))));
+        itineraires.add(new Itineraire(Collections.singletonList(troncons.get(0))));
+        itineraires.add(new Itineraire(Collections.singletonList(troncons.get(4))));
+        itineraires.add(new Itineraire(Collections.singletonList(troncons.get(6))));
+        itineraires.add(new Itineraire(Collections.singletonList(troncons.get(8))));
+        itineraires.add(new Itineraire(Collections.singletonList(troncons.get(10))));
         assertEquals(itineraires, tournee.getItineraires());
         assertEquals(points.get(4).getLivraison().getDateArrivee(), LocalTime.of(4, 10, 2));
         assertEquals(points.get(4).getLivraison().getDateLivraison(), LocalTime.of(4,10,2));
@@ -137,9 +137,9 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
-        points.get(4).setLivraison(new Livraison(null, null,  Duration.ofMinutes(20)));
-
-        tournee.ajouterLivraison(points.get(4), tournee.getItineraires().get(0));
+        if(tournee.getItinerairesModifiable(points.get(4), tournee.getItineraires().get(0))){
+            tournee.ajouterLivraison(points.get(4), tournee.getItineraires().get(0));
+        }
 
         List<Itineraire> itineraires= new ArrayList<>();
         itineraires.add(new Itineraire(Arrays.asList(troncons.get(2), troncons.get(8))));
@@ -239,11 +239,6 @@ public class TestModifierTournee {
         assertEquals(itineraires, tournee.getItineraires());
         assertEquals(points.get(2).getLivraison().getDateArrivee(), LocalTime.of(1,4, 21));
         assertEquals(points.get(2).getLivraison().getDateLivraison(), LocalTime.of(3, 0));
-
     }
-
-
-
-
 
 }
