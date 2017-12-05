@@ -131,11 +131,8 @@ public class Tournee {
         livraisons.add(livraison);
     }
 
-    public void supprimerLivraison(Point livraison){
-        //Modifier la date d'arrivée du point qui suit la livraison à supprimer
-        if(!livraison.getType().equals(Point.Type.LIVRAISON)){
-            return;
-        }
+    public Itineraire supprimerLivraison(Point livraison){
+        Itineraire newItineraire = null;
 
         Itineraire itiAlle, itiRetour;
         for(Itineraire itineraire : mItineraires)
@@ -145,7 +142,7 @@ public class Tournee {
                 itiRetour = mItineraires.get(mItineraires.indexOf(itineraire)+1);
                 int index = mItineraires.indexOf(itiAlle);
                 //Ce dijkstra est déjà calcule peut etre pourrions nous avoir un cache des valeurs calculé par dijkstra
-                Itineraire newItineraire = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), itiAlle.getTroncons().get(0).getOrigine(), new Point[]{itiRetour.getTroncons().get(itiRetour.getTroncons().size()-1).getDestination()}).get(0);
+                newItineraire = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), itiAlle.getTroncons().get(0).getOrigine(), new Point[]{itiRetour.getTroncons().get(itiRetour.getTroncons().size()-1).getDestination()}).get(0);
                 mItineraires.remove(itiAlle);
                 mItineraires.remove(itiRetour);
                 mItineraires.add(index, newItineraire);
@@ -175,11 +172,13 @@ public class Tournee {
                     newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateLivraison);
                     newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateArrivee(dateArrivee);
                 }
-                 break;
+                break;
             }
         }
         livraisons.remove(livraison);
         livraison.setPoint();
+        return newItineraire;
+
     }
 
 }

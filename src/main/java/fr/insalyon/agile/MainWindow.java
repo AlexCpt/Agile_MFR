@@ -1,6 +1,5 @@
 package fr.insalyon.agile;
 
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -551,7 +550,7 @@ public class MainWindow extends Application
 
             //hover sur chaque livraison
             itineraire.getTroncons().get(0).getOrigine().printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
-                    lblpointItiLivraison.getText() + " - " + " - Heure d'Arrivée : " +
+                    lblpointItiLivraison.getText() + " - Heure d'Arrivée : " +
                             itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee().format(dtf),
                     pointLivraisonUI_oblong.getRectangle());
         }
