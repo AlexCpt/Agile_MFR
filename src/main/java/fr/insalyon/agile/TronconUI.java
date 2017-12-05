@@ -25,5 +25,15 @@ public class TronconUI {
         pane.getChildren().add(line);
     }
 
+    public Line getLine() {
+        return line;
+    }
 
+    public void setLine(Line line) {
+        this.line = line;
+    }
+
+    public void setLineColor(Color lineColor) {
+        this.lineColor = lineColor;
+    }
 }

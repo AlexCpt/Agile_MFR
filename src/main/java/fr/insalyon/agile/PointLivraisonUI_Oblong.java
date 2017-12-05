@@ -74,7 +74,6 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
         labelPane.getChildren().add(mLabelFin);
         labelPane.getChildren().add(mLabelArrivee);
         buttonPane.getChildren().add(mButton); // Mettre dans PLUI ?
-
         pointPane.getChildren().add(mRectangle);
     }
 }
