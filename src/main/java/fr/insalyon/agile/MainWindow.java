@@ -105,10 +105,16 @@ public class MainWindow extends Application
         // LeftVBox
         VBox leftVbox = new VBox();
 
+        Label fileLabelPlan = new Label("Aucun fichier chargé.");
+        fileLabelPlan.setWrapText(true);
+        leftVbox.getChildren().add(fileLabelPlan);
+
         //Partie Plan du bandeau
         buttonPlan.setOnAction(event -> {
+            fileChooser.setInitialDirectory(new File("fichiersXML/"));
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null) {
+                fileLabelPlan.setText(file.getName());
                 mapPane.getChildren().clear();
                 plan = parser.parsePlan(file.getAbsolutePath());
                 plan.print(mapPane);
@@ -116,12 +122,18 @@ public class MainWindow extends Application
         });
         leftVbox.getChildren().add(buttonPlan);
 
+        Label fileLabelDDL = new Label("Aucun fichier chargé.");
+        fileLabelDDL.setWrapText(true);
+        leftVbox.getChildren().add(fileLabelDDL);
 
         //Partie Demande Livraison du bandeau
+        buttonDDL.setWrapText(true);
         buttonDDL.setOnAction(event -> {
+            fileChooser.setInitialDirectory(new File("fichiersXML/"));
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null) {
                 fileName = file.getAbsolutePath();
+                fileLabelDDL.setText(file.getName());
                 plan.resetTypePoints();
                 ddl = parser.parseDemandeDeLivraison(fileName);
                 if (ddl == null) {
@@ -175,6 +187,7 @@ public class MainWindow extends Application
             public void handle(ActionEvent event) {
                 ExportTournee exportTournee = new ExportTournee(tournee);
                 try {
+                    fileChooser.setInitialDirectory(new File("exportTournee/"));
                     File file = fileChooser.showSaveDialog(primaryStage);
                     if (file != null) {
                         exportTournee.exportFile(file.getAbsolutePath());
