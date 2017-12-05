@@ -71,12 +71,15 @@ public class MainWindow extends Application
     ParserXML parser;
     Tournee tournee;
     DemandeDeLivraison ddl;
+    ListeDeCdes listeDeCdes;
 
     Pane mapPane;
 
     public MainWindow(){
         parser = new ParserXML();
         yPoints = new ArrayList<>();
+        listeDeCdes = new ListeDeCdes();
+        plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
     }
 
     public static void main(String[] args) {
@@ -135,7 +138,9 @@ public class MainWindow extends Application
                 fileName = file.getAbsolutePath();
                 fileLabelDDL.setText(file.getName());
                 plan.resetTypePoints();
+                tournee = null;
                 ddl = parser.parseDemandeDeLivraison(fileName);
+
                 if (ddl == null) {
                     return;
                 }
@@ -178,6 +183,62 @@ public class MainWindow extends Application
             }
         });
 
+        Button btnUndo = new Button();
+        btnUndo.setText("Undo");
+        leftVbox.setSpacing(20);
+        btnUndo.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                listeDeCdes.undo();
+                //Recalcul tournée
+                mapPane.getChildren().clear();
+                timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                plan.print(mapPane);
+                tournee.print(mapPane);
+
+                vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
+                vehicule.setVehicule();
+                vehicule.print(mapPane);
+            }
+        });
+
+        Button btnRedo = new Button();
+        btnRedo.setText("Redo");
+        leftVbox.setSpacing(20);
+        btnRedo.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                listeDeCdes.redo();
+                //Recalcul tournée
+                mapPane.getChildren().clear();
+                timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                plan.print(mapPane);
+                tournee.print(mapPane);
+
+                vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
+                vehicule.setVehicule();
+                vehicule.print(mapPane);
+            }
+        });
+
+        //Hbox of Ajouter-Valider
+        HBox hBoxAjouterValider = new HBox();
+        hBoxAjouterValider.getChildren().add(btnRedo);
+        hBoxAjouterValider.getChildren().add(btnUndo);
+        hBoxAjouterValider.setAlignment(Pos.BOTTOM_CENTER);
+        hBoxAjouterValider.setSpacing(8);
+        hBoxAjouterValider.setPrefSize(bandeauWidth, bandeauHeigth);
+
+        //Right vBox
+        VBox leftVboxDown = new VBox();
+        leftVboxDown.getChildren().add(hBoxAjouterValider);
+        leftVboxDown.setAlignment(Pos.BOTTOM_CENTER);
+        leftVboxDown.setPadding(new Insets(35));
+        leftVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
+
+
         Button btnExportTournee = new Button();
         btnExportTournee.setText("Exporter tournée");
         leftVbox.setSpacing(20);
@@ -216,6 +277,7 @@ public class MainWindow extends Application
         leftVbox.getChildren().add(buttonDDL);
         leftVbox.getChildren().add(btnCalculerTournee);
         leftVbox.getChildren().add(btnExportTournee);
+        leftVbox.getChildren().add(leftVboxDown);
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
         leftVbox.setAlignment(Pos.CENTER);
 
@@ -301,7 +363,7 @@ public class MainWindow extends Application
 
         //region <Point d'arrivée>
 
-        Label lblEntrepotArriveeHeure = new Label(heureFinTournee.toString());
+        Label lblEntrepotArriveeHeure = new Label(heureFinTournee.format(dtf));
         lblEntrepotArriveeHeure.setLayoutY(yLastPoint- heightLabelTime);
 
         Label lblEntrepotArrivee = new Label("Entrepôt");
@@ -384,7 +446,7 @@ public class MainWindow extends Application
             lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
 
             //Label Livraison machintruc
-            Label lblpointItiLivraison = new Label("Livraison " +compteurLivraison);
+            Label lblpointItiLivraison = new Label("Livraison " + compteurLivraison);
             lblpointItiLivraison.setLayoutY(yRelocateLivraison + (yRelocateDepart-yRelocateLivraison)/2 - heightLabelTime);
 
             //region <lignes - tronçons>
@@ -545,7 +607,9 @@ public class MainWindow extends Application
                                     break;
                                 }
                             }
-                            tournee.ajouterLivraison(pointSelectionne,itineraireSelectionne);
+                            if(itineraireSelectionne!=null){
+                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, itineraireSelectionne));
+                            }
 
                             //Recalcul tournée
                             mapPane.getChildren().clear();
