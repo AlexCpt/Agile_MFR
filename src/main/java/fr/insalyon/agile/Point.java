@@ -1,5 +1,6 @@
 package fr.insalyon.agile;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -135,15 +136,17 @@ public class Point {
 
     }
 
-    public void printHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String label){
+    public void printHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String stringLabel){
         PopOver popOver = new PopOver();
         popOver.setAutoHide(true);
         popOver.setDetachable(false);
-        popOver.setContentNode(new Label(label));
+        Label label = new Label(stringLabel);
+        label.setPadding(new Insets(6));
+        popOver.setContentNode(label);
         popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
 
-        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX());
-        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 10);
+        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX()-3);
+        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 13);
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
     }

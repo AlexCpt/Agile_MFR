@@ -377,7 +377,7 @@ public class MainWindow extends Application
 
             //Label Livraison machintruc
             Label lblpointItiLivraison = new Label("Livraison " +compteurLivraison);
-            lblpointItiLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
+            lblpointItiLivraison.setLayoutY(yRelocateLivraison + (yRelocateDepart-yRelocateLivraison)/2 - heightLabelTime);
 
             //region <lignes - tronçons>
 
@@ -390,6 +390,7 @@ public class MainWindow extends Application
 
             TronconUI tronconUI;
             TronconUI lastTronconUI=null;
+
             //Cas spécial dernier troncon
             if(Point.Type.ENTREPOT == itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getType()){
                 tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint ,yRelocateLivraison , marge, margeMax);
@@ -447,7 +448,7 @@ public class MainWindow extends Application
 
             //hover sur chaque livraison
             itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
-                    lblpointItiLivraison.getText() + " - " + itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee());
+                    lblpointItiLivraison.getText() + " - Heure d'Arrivée : " + itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee().format(dtf));
         }
 
         //endregion
