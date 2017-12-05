@@ -455,7 +455,6 @@ public class MainWindow extends Application
             Label lblpointItiHeureFinLivraison = new Label(heureDepart.format(dtf));
 
             if (heureDepart.isBefore(heureLivraisonx.plus(Duration.ofMinutes(15)))) {
-                System.out.println("coucou");
                 lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
                 lblpointItiHeureFinLivraison.setVisible(false);
             }
