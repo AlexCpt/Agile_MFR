@@ -577,7 +577,7 @@ public class MainWindow extends Application
         exportTournee.exportFile(fileName);
     }
 
-        public Image makeTransparent(Image inputImage) {
+    public Image makeTransparent(Image inputImage) {
         int W = (int) inputImage.getWidth();
         int H = (int) inputImage.getHeight();
         WritableImage outputImage = new WritableImage(W, H);
@@ -717,8 +717,8 @@ public class MainWindow extends Application
 
                 @Override
                 public void handle(MouseEvent t) {
-                    orgSceneY = t.getSceneY();
-                    orgTranslateY = ((ImageView)(t.getSource())).getTranslateY();
+                    orgSceneYLivraison = t.getSceneY();
+                    orgTranslateYLivraison = ((ImageView)(t.getSource())).getTranslateY();
 
                     ImageviewExtended imageView = ((ImageviewExtended)(t.getSource()));
                     haut = imageView.getTronconUIPrecedent().getLine().getStartY();
