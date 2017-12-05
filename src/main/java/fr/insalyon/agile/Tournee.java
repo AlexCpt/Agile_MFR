@@ -129,6 +129,7 @@ public class Tournee {
         mItineraires.add(index, dijkstraAllee);
         mItineraires.add(index+1, dijkstraRetour);
         livraisons.add(livraison);
+        calculMargesPointsLivraison();
     }
 
     public Itineraire supprimerLivraison(Point livraison){
@@ -177,6 +178,7 @@ public class Tournee {
         }
         livraisons.remove(livraison);
         livraison.setPoint();
+        calculMargesPointsLivraison();
         return newItineraire;
 
     }
