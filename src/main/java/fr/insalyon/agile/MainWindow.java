@@ -175,13 +175,16 @@ public class MainWindow extends Application
             public void handle(ActionEvent event) {
                 ExportTournee exportTournee = new ExportTournee(tournee);
                 try {
-                    exportTournee.exportFile(fileName);
+                    File file = fileChooser.showSaveDialog(primaryStage);
+                    if (file != null) {
+                        exportTournee.exportFile(file.getAbsolutePath());
 
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Export de la tournée");
-                    alert.setContentText("Le fichier a bien été exporté.");
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Export de la tournée");
+                        alert.setContentText("Le fichier a bien été exporté.");
 
-                    alert.showAndWait();
+                        alert.showAndWait();
+                    }
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Erreur");

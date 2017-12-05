@@ -92,7 +92,7 @@ public class ExportTournee {
             if (fileName == null) {
                 throw new IOException("Aucun fichier sélectionné");
             }
-            BufferedWriter writer = new BufferedWriter(new FileWriter("exportTournee/" + fileName));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
             String text = createFileText();
             writer.write(text);
 
