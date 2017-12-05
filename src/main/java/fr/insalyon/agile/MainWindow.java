@@ -10,10 +10,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -203,6 +200,33 @@ public class MainWindow extends Application
             }
         });
 
+        Button btnExportTournee = new Button();
+        btnExportTournee.setText("Exporter tournée");
+        leftVbox.setSpacing(20);
+        btnExportTournee.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                ExportTournee exportTournee = new ExportTournee(tournee);
+                try {
+                    exportTournee.exportFile(fileName);
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Export de la tournée");
+                    alert.setContentText("Le fichier a bien été exporté.");
+
+                    alert.showAndWait();
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Erreur");
+                    alert.setContentText("Erreur lors de l'export de la tournée : " + e.getMessage());
+
+                    alert.showAndWait();
+                }
+
+            }
+        });
+
 
         // --------------------------------
         //VBOX
@@ -210,6 +234,7 @@ public class MainWindow extends Application
         leftVbox.getChildren().add(lblTitleDL);
         leftVbox.getChildren().add(comboBoxDemandeLivraison);
         leftVbox.getChildren().add(btnCalculerTournee);
+        leftVbox.getChildren().add(btnExportTournee);
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
         leftVbox.setAlignment(Pos.CENTER);
 
@@ -613,11 +638,9 @@ public class MainWindow extends Application
         rightPane.getChildren().add(mobilePane);
         //endregion
 
-        ExportTournee exportTournee = new ExportTournee(tournee);
-        exportTournee.exportFile(fileName);
     }
 
-        public Image makeTransparent(Image inputImage) {
+    public Image makeTransparent(Image inputImage) {
         int W = (int) inputImage.getWidth();
         int H = (int) inputImage.getHeight();
         WritableImage outputImage = new WritableImage(W, H);
@@ -757,8 +780,8 @@ public class MainWindow extends Application
 
                 @Override
                 public void handle(MouseEvent t) {
-                    orgSceneY = t.getSceneY();
-                    orgTranslateY = ((ImageView)(t.getSource())).getTranslateY();
+                    orgSceneYLivraison = t.getSceneY();
+                    orgTranslateYLivraison = ((ImageView)(t.getSource())).getTranslateY();
 
                     ImageviewExtended imageView = ((ImageviewExtended)(t.getSource()));
                     haut = imageView.getTronconUIPrecedent().getLine().getStartY();
