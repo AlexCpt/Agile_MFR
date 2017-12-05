@@ -105,6 +105,8 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
+        VBox globalLeftBox = new VBox();
+
         // LeftVBox
         VBox leftVbox = new VBox();
 
@@ -280,10 +282,13 @@ public class MainWindow extends Application
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
         leftVbox.setAlignment(Pos.CENTER);
 
+
+        globalLeftBox.getChildren().add(leftVbox);
+        globalLeftBox.getChildren().add(leftVboxDown);
+        globalLeftBox.setPrefSize(bandeauWidth, bandeauHeigth);
         //Left Pane
         Pane leftPane = new Pane();
-        leftPane.getChildren().add(leftVbox);
-        leftPane.getChildren().add(leftVboxDown);
+        leftPane.getChildren().add(globalLeftBox);
 
         BorderPane root = new BorderPane();
         root.setRight(rightPane);
