@@ -41,6 +41,10 @@ public class Tournee {
         return mItineraires;
     }
 
+    public LocalTime getDateArrivee() {
+        return mDateArrivee;
+    }
+
     public Map<Point, Duration> getMargesLivraison() {
         if(margesLivraison.isEmpty())
         {
@@ -75,11 +79,11 @@ public class Tournee {
 
         for(Point point : livraisons)
         {
-            Duration marge = Duration.between(point.getLivraison().getDateLivraison(), point.getLivraison().getDateArrivee());
+            Duration marge = Duration.between(point.getLivraison().getDateArrivee(), point.getLivraison().getDateLivraison());
             margesLivraison.put(point, marge);
         }
         Point derniereLivraison =  mItineraires.get(mItineraires.size()-1).getTroncons().get(0).getOrigine();
-        Duration marge = Duration.between(mDemandeDeLivraison.getFin(), derniereLivraison.getLivraison().getDateLivraison().plus(derniereLivraison.getLivraison().getDureeLivraison()).plus(mItineraires.get(mItineraires.size()-1).getDuree()));
+        Duration marge = Duration.between(derniereLivraison.getLivraison().getDateLivraison().plus(derniereLivraison.getLivraison().getDureeLivraison()).plus(mItineraires.get(mItineraires.size()-1).getDuree()), mDemandeDeLivraison.getFin());
 
         margesLivraison.put(mDemandeDeLivraison.getEntrepot(), marge);
     }
@@ -105,23 +109,26 @@ public class Tournee {
     }
     //Test si entrepot
 
-    public void ajouterLivraison(Point livraison, Itineraire itineraire){
+    public Boolean ajouterLivraison(Point livraison, Itineraire itineraire){
         if(getItinerairesModifiable(livraison, itineraire)){
             int index = mItineraires.indexOf(itineraire);
             mItineraires.remove(itineraire);
-            LocalTime dateArrive = dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(dijkstraAllee.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(dijkstraAllee.getDuree());
-            livraison.getLivraison().setDateArrivee(dateArrive);
-            livraison.getLivraison().setDateLivraison(dateArrive);
-            if(livraison.getLivraison().getDebutPlage() !=null){
-                if(dateArrive.isBefore(livraison.getLivraison().getDebutPlage()))
-                {
-                    livraison.getLivraison().setDateLivraison(livraison.getLivraison().getDebutPlage());
-                }
+            LocalTime dateArrivee;
+            if(itineraire.getTroncons().get(0).getOrigine().getType().equals(Point.Type.ENTREPOT)){
+                dateArrivee= mDemandeDeLivraison.getDepart().plus(dijkstraAllee.getDuree());
             }
+            else
+            {
+                dateArrivee=itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().plus(itineraire.getDuree()));
+            }
+            livraison.getLivraison().setDateArrivee(dateArrivee);
+            livraison.getLivraison().setDateLivraison(dateArrivee);
             mItineraires.add(index, dijkstraAllee);
             mItineraires.add(index+1, dijkstraRetour);
             livraisons.add(livraison);
+            return true;
         }
+        return false;
     }
 
     public void supprimerLivraison(Point livraison){
@@ -147,7 +154,7 @@ public class Tournee {
 
 
                 if(newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getType().equals(Point.Type.ENTREPOT)){
-                    this.setDateArrivee(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()));
+                    this.setDateArrivee(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(newItineraire.getDuree()));
                 }else
                 {
                     if(newItineraire.getTroncons().get(0).getOrigine().getType().equals(Point.Type.ENTREPOT)){
@@ -166,7 +173,7 @@ public class Tournee {
                         }
                     }
                     newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateLivraison);
-                    newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateArrivee);
+                    newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateArrivee(dateArrivee);
                 }
 
                  break;
