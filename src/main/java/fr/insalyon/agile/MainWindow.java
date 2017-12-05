@@ -54,6 +54,8 @@ public class MainWindow extends Application
 
     double orgSceneY;
     double orgTranslateY;
+    double orgSceneYLivraison;
+    double orgTranslateYLivraison;
 
 
     ObservableList<String> planOptions =
@@ -690,8 +692,8 @@ public class MainWindow extends Application
 
                 @Override
                 public void handle(MouseEvent t) {
-                    orgSceneY = t.getSceneY();
-                    orgTranslateY = ((ImageView)(t.getSource())).getTranslateY();
+                    orgSceneYLivraison = t.getSceneY();
+                    orgTranslateYLivraison = ((ImageView)(t.getSource())).getTranslateY();
                 }
             };
 
@@ -700,10 +702,10 @@ public class MainWindow extends Application
 
                 @Override
                 public void handle(MouseEvent t) {
-                    double offsetY = t.getSceneY() - orgSceneY;
+                    double offsetY = t.getSceneY() - orgSceneYLivraison;
                     double newTranslateY = ((ImageView)(t.getSource())).getTranslateY();
                     if (t.getSceneY() >= yFirstPoint - deliveryHeight/2 && t.getSceneY() <= yLastPoint + deliveryHeight/2) {
-                        newTranslateY = orgTranslateY + offsetY;
+                        newTranslateY = orgTranslateYLivraison + offsetY;
                     }
 
                     ((ImageView)(t.getSource())).setTranslateY(newTranslateY);
