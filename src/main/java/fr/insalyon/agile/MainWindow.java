@@ -15,6 +15,7 @@ import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.controlsfx.control.PopOver;
@@ -61,31 +62,9 @@ public class MainWindow extends Application
     double haut;
     double bas;
 
-
-    ObservableList<String> planOptions =
-            FXCollections.observableArrayList(
-                    "planLyonPetit",
-                    "planLyonMoyen",
-                    "planLyonGrand"
-            );
-    final ComboBox comboBoxPlan = new ComboBox(planOptions);
-
-    ObservableList<String> DLOptions =
-            FXCollections.observableArrayList(
-                    "Choisir une DL",
-                    "DLgrand10",
-                    "DLgrand10TW2",
-                    "DLgrand20",
-                    "DLgrand20TW2",
-                    "DLmoyen5",
-                    "DLmoyen5TW1",
-                    "DLmoyen5TW4",
-                    "DLmoyen10",
-                    "DLmoyen10TW3",
-                    "DLpetit3",
-                    "DLpetit5"
-            );
-    final ComboBox comboBoxDemandeLivraison = new ComboBox(DLOptions);
+    final Button buttonPlan = new Button("Charger Plan...");
+    final Button buttonDDL = new Button("Charger Demande de Livraison...");
+    final FileChooser fileChooser = new FileChooser();
 
     Plan plan;
     Point vehicule;
@@ -98,8 +77,6 @@ public class MainWindow extends Application
     public MainWindow(){
         parser = new ParserXML();
         yPoints = new ArrayList<>();
-
-        plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
     }
 
     public static void main(String[] args) {
@@ -125,39 +102,28 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
-        //Label
-        Label lblTitlePlan = new Label("Plan");
-        Label lblTitleDL = new Label("Demande Livraison");
-
         // LeftVBox
         VBox leftVbox = new VBox();
 
         //Partie Plan du bandeau
-        leftVbox.getChildren().add(lblTitlePlan);
-        comboBoxPlan.setPromptText("planLyonPetit");
-        leftVbox.getChildren().add(comboBoxPlan);
-        comboBoxPlan.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
+        buttonPlan.setOnAction(event -> {
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null) {
                 mapPane.getChildren().clear();
-                plan = parser.parsePlan("fichiersXML/"+ t1 +".xml");
+                plan = parser.parsePlan(file.getAbsolutePath());
                 plan.print(mapPane);
             }
         });
+        leftVbox.getChildren().add(buttonPlan);
+
 
         //Partie Demande Livraison du bandeau
-        comboBoxDemandeLivraison.setPromptText("Choisir une DL");
-        comboBoxDemandeLivraison.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                if(t1.equals(DLOptions.get(0)))
-                {
-                    mapPane.getChildren().clear();
-                    plan.print(mapPane);
-                    return;
-                }
-
-                fileName = t1;
+        buttonDDL.setOnAction(event -> {
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null) {
+                fileName = file.getAbsolutePath();
                 plan.resetTypePoints();
-                ddl = parser.parseDemandeDeLivraison("fichiersXML/"+t1+".xml");
+                ddl = parser.parseDemandeDeLivraison(fileName);
                 if (ddl == null) {
                     return;
                 }
@@ -231,8 +197,7 @@ public class MainWindow extends Application
         // --------------------------------
         //VBOX
 
-        leftVbox.getChildren().add(lblTitleDL);
-        leftVbox.getChildren().add(comboBoxDemandeLivraison);
+        leftVbox.getChildren().add(buttonDDL);
         leftVbox.getChildren().add(btnCalculerTournee);
         leftVbox.getChildren().add(btnExportTournee);
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
@@ -241,8 +206,6 @@ public class MainWindow extends Application
         //Left Pane
         Pane leftPane = new Pane();
         leftPane.getChildren().add(leftVbox);
-
-        plan.print(mapPane);
 
         BorderPane root = new BorderPane();
         root.setRight(rightPane);
