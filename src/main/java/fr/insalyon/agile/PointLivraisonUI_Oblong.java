@@ -1,5 +1,6 @@
 package fr.insalyon.agile;
 
+
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -17,6 +18,8 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
     private Rectangle mRectangle;
     private Label mLabelFin;
     private Label mLabelArrivee;
+
+
 
     protected String transparentButtonStyle = "-fx-background-color: transparent;";
 
@@ -49,6 +52,7 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
         mRectangle.setFill(mColorLivraison);
         mRectangle.setWidth(2*radiusAffichageTimeline);
 
+
         //Button
         mButton = new Button();
         mButton.setStyle(transparentButtonStyle);
@@ -58,13 +62,16 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
 
     public Button getButton(){ return mButton; }
 
+    public Rectangle getRectangle() {
+        return mRectangle;
+    }
+
     public void print (Pane pointPane, Pane labelPane, Pane buttonPane){
         super.print(pointPane, labelPane, buttonPane);
         pointPane.getChildren().add(mCircle2);
         labelPane.getChildren().add(mLabelFin);
         labelPane.getChildren().add(mLabelArrivee);
         buttonPane.getChildren().add(mButton); // Mettre dans PLUI ?
-
         pointPane.getChildren().add(mRectangle);
     }
 }

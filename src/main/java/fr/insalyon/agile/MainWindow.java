@@ -14,10 +14,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
@@ -330,18 +332,36 @@ public class MainWindow extends Application
 
              PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateLivraison, yRelocate, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureDebutLivraison,lblpointItiHeureFinLivraison,lblpointItiLivraison);
             pointLivraisonUI_oblong.print(pointPane,labelPane,buttonPane);
+
             //endregion
 
-            //button sur chaque point de livraison pour la suppression
+            //button SUPPRIMER sur chaque point de livraison pour la suppression
             if (modeModifier == true) {
-                //TODO: le faire (méthode printSupressButton ?)
-                Button btnSupress = new Button();
-                btnSupress.relocate(xPoint - radiusAffichageTimeline*2, yRelocateLivraison - radiusAffichageTimeline*2);
-                btnSupress.setStyle(popOverButtonStyle);
-                itineraire.getTroncons().get(0).getOrigine().printSuppressButton(mapPane,primaryStage,btnSupress);
-            }
-            compteurLivraison++;
+                //boutton supprimer
 
+                Button boutonSuppr = new Button("Supprimer");
+               // boutonSuppr.setFocusTraversable(false);
+                boutonSuppr.setMaxHeight(60);
+                boutonSuppr.setStyle("-fx-background-color: transparent;"
+                        );
+
+                itineraire.getTroncons().get(0).getOrigine().printSuppressButton(mapPane,
+                        primaryStage, pointLivraisonUI_oblong.getButton(), boutonSuppr);
+                PopOver supprPopover = itineraire.getTroncons().get(0).getOrigine().getSupprPopover();
+                boutonSuppr.setOnAction(
+                        new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                tournee.supprimerLivraison(itineraire.getTroncons().get(0).getOrigine());
+                                timeLineBuild(rightPane, tournee, mapPane, primaryStage, false);
+                                mapPane.getChildren().clear();
+                                plan.print(mapPane);
+                                tournee.print(mapPane);
+                                supprPopover.hide();
+                            }
+                        });
+                compteurLivraison++;
+            }
             // FlecheDéplacement de Livraison
             if(modeModifier == true){
                 final String imageURI = new File("images/drag2.jpg").toURI().toString();
@@ -357,6 +377,8 @@ public class MainWindow extends Application
                     }
                 });
             }
+
+
 
             //region <lignes - tronçons>
 
@@ -382,8 +404,8 @@ public class MainWindow extends Application
             //endregion
 
             //hover sur chaque livraison
-            itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
-                    lblpointItiLivraison.getText() + " - " + "TODO");
+            itineraire.getTroncons().get(0).getOrigine().printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
+                    lblpointItiLivraison.getText() + " - " + "TODO", pointLivraisonUI_oblong.getRectangle());
         }
         //endregion
 

@@ -1,8 +1,7 @@
 package fr.insalyon.agile;
 
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.util.Pair;
+
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -180,7 +179,7 @@ public class Tournee {
             }
         }
         livraisons.remove(livraison);
-
+        livraison.setPoint();
     }
 
     public List<Point> getLivraisons() {
