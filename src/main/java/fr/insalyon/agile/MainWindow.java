@@ -176,15 +176,24 @@ public class MainWindow extends Application
 
             @Override
             public void handle(ActionEvent event) {
-                tournee = ddl.calculerTournee();
-                mapPane.getChildren().clear();
-                timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
-                plan.print(mapPane);
-                tournee.print(mapPane);
+                if (ddl != null) {
+                    tournee = ddl.calculerTournee();
+                    mapPane.getChildren().clear();
+                    timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                    plan.print(mapPane);
+                    tournee.print(mapPane);
 
-                vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
-                vehicule.setVehicule();
-                vehicule.print(mapPane);
+                    vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
+                    vehicule.setVehicule();
+                    vehicule.print(mapPane);
+                }
+                else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Erreur");
+                    alert.setContentText("Aucune demande de livraison chargée.");
+
+                    alert.showAndWait();
+                }
             }
         });
 
@@ -335,12 +344,12 @@ public class MainWindow extends Application
 
         String popOverButtonStyle = //"-fx-background-radius: 5em; " +
                 "-fx-min-width: " + radiusAffichageTimeline*10 + "px; " +
-                "-fx-min-height: " + radiusAffichageTimeline*6 + "px; " +
-                "-fx-max-width: " + radiusAffichageTimeline*10 + "px; " +
-                "-fx-max-height: " + radiusAffichageTimeline*6 + "px; " +
-                "-fx-background-color: transparent;" +
-                "-fx-background-insets: 0px; " +
-                "-fx-padding: 0px;";
+                        "-fx-min-height: " + radiusAffichageTimeline*6 + "px; " +
+                        "-fx-max-width: " + radiusAffichageTimeline*10 + "px; " +
+                        "-fx-max-height: " + radiusAffichageTimeline*6 + "px; " +
+                        "-fx-background-color: transparent;" +
+                        "-fx-background-insets: 0px; " +
+                        "-fx-padding: 0px;";
 
         //region <Titre>
         //Titre
@@ -446,7 +455,7 @@ public class MainWindow extends Application
             btnPopover.setStyle(popOverButtonStyle);
 
             //region <Point Oblong>
-                //Label arrivée
+            //Label arrivée
             Label lblpointItiHeureDebutLivraison = new Label(heureLivraisonx.format(dtf));
             lblpointItiHeureDebutLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
 
@@ -498,10 +507,10 @@ public class MainWindow extends Application
                 //boutton supprimer
 
                 Button boutonSuppr = new Button("Supprimer");
-               // boutonSuppr.setFocusTraversable(false);
+                // boutonSuppr.setFocusTraversable(false);
                 boutonSuppr.setMaxHeight(60);
                 boutonSuppr.setStyle("-fx-background-color: transparent;"
-                        );
+                );
 
                 itineraire.getTroncons().get(0).getOrigine().printSuppressButton(mapPane,
                         primaryStage, pointLivraisonUI_oblong.getButton(), boutonSuppr);
@@ -529,19 +538,15 @@ public class MainWindow extends Application
                 imageViewArrowActu = new ImageviewExtended(pointLivraisonUI_oblong, image);
                 imageViewArrowActu.relocate(centreRightPane - dragAndDropWidth/2 - decalageXIconDragAndDropPoint, yRelocateLivraison + ((yRelocateDepart-yRelocateLivraison)/2)  - image.getHeight()/2 - decalageYIconDragAndDropPoint);
                 mobilePane.getChildren().add(imageViewArrowActu);
-
                 imageViewArrowActu.setOnMousePressed(deplacementLivraisonOnMousePressedEventHandler);
                 imageViewArrowActu.setOnMouseDragged(deplacementLivraisonOnMouseDraggedEventHandler);
             }
-
-
                 if(Point.Type.ENTREPOT == itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getType()){
                   //  imageViewArrowActu.setTronconUISuivant(lastTronconUI);
                 }
                 if (compteurLivraison != 2) {
                    // imageViewArrowPrecedent.setTronconUISuivant(tronconUI);
                 }
-
                /* imageViewArrowActu.setTronconUIPrecedent(tronconUI);
                 imageViewArrowActu.setOnMousePressed(deplacementLivraisonOnMousePressedEventHandler);
                 imageViewArrowActu.setOnMouseDragged(deplacementLivraisonOnMouseDraggedEventHandler);
