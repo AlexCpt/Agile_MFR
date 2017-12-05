@@ -196,6 +196,18 @@ public class MainWindow extends Application
             }
         });
 
+        Button btnExportTournee = new Button();
+        btnExportTournee.setText("Exporter tournée");
+        leftVbox.setSpacing(20);
+        btnExportTournee.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                ExportTournee exportTournee = new ExportTournee(tournee);
+                exportTournee.exportFile(fileName);
+            }
+        });
+
 
         // --------------------------------
         //VBOX
@@ -203,6 +215,7 @@ public class MainWindow extends Application
         leftVbox.getChildren().add(lblTitleDL);
         leftVbox.getChildren().add(comboBoxDemandeLivraison);
         leftVbox.getChildren().add(btnCalculerTournee);
+        leftVbox.getChildren().add(btnExportTournee);
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
         leftVbox.setAlignment(Pos.CENTER);
 
@@ -561,8 +574,6 @@ public class MainWindow extends Application
         rightPane.getChildren().add(mobilePane);
         //endregion
 
-        ExportTournee exportTournee = new ExportTournee(tournee);
-        exportTournee.exportFile(fileName);
     }
 
         public Image makeTransparent(Image inputImage) {
