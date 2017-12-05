@@ -646,7 +646,7 @@ public class MainWindow extends Application
                 public void handle(MouseEvent t) {
                     double offsetY = t.getSceneY() - orgSceneY;
                     double newTranslateY;
-                    if (t.getSceneY() < yFirstPoint) {
+                    if (t.getSceneY() <= yFirstPoint) {
                         newTranslateY = 0;
                     } else if (t.getSceneY() > yLastPoint) {
                         newTranslateY = yLastPoint - yFirstPoint;
@@ -674,7 +674,9 @@ public class MainWindow extends Application
 
                     if (yPos <= yPoints.get(0).getValue()) {
                         double progress = (yPos - yFirstPoint) / (yPoints.get(0).getValue() - yFirstPoint);
-                        troncon.setLongueurParcourue(mapPane,troncon.getLongueur() * progress);
+                        if (troncon != null) {
+                            troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                        }
                         double newX = tournee.getDemandeDeLivraison().getEntrepot().getX() + progress * (yPoints.get(0).getKey().getX() - tournee.getDemandeDeLivraison().getEntrepot().getX());
                         double newY = tournee.getDemandeDeLivraison().getEntrepot().getY() + progress * (yPoints.get(0).getKey().getY() - tournee.getDemandeDeLivraison().getEntrepot().getY());
 
@@ -697,7 +699,9 @@ public class MainWindow extends Application
 
                         if (yPos <= yPoints.get(i).getValue()) {
                             double progress = (yPos - yPoints.get(i-1).getValue()) / (yPoints.get(i).getValue() - yPoints.get(i-1).getValue());
-                            troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                            if (troncon != null) {
+                                troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                            }
                             double newX = yPoints.get(i-1).getKey().getX() + progress * (yPoints.get(i).getKey().getX() - yPoints.get(i-1).getKey().getX());
                             double newY = yPoints.get(i-1).getKey().getY() + progress * (yPoints.get(i).getKey().getY() - yPoints.get(i-1).getKey().getY());
 
@@ -720,7 +724,9 @@ public class MainWindow extends Application
 
                     if (yPos >= yPoints.get(yPoints.size()-1).getValue()) {
                         double progress = (yPos - yPoints.get(yPoints.size()-1).getValue()) / (yLastPoint - yPoints.get(yPoints.size()-1).getValue());
-                        troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                        if (troncon != null) {
+                            troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                        }
                         double newX = yPoints.get(yPoints.size()-1).getKey().getX() + progress * (tournee.getDemandeDeLivraison().getEntrepot().getX() - yPoints.get(yPoints.size()-1).getKey().getX());
                         double newY = yPoints.get(yPoints.size()-1).getKey().getY() + progress * (tournee.getDemandeDeLivraison().getEntrepot().getY() - yPoints.get(yPoints.size()-1).getKey().getY());
 
