@@ -107,7 +107,7 @@ public class DemandeDeLivraison {
                 sommets[indexPoint2].getLivraison().setDateLivraison(tempsActuel);
             }
 
-            tempsActuel = tempsActuel.plus(Duration.ofSeconds(duree[indexPoint2]));
+            tempsActuel = tempsActuel.plusSeconds(duree[indexPoint2]);
         }
 
         listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[tsp.getMeilleureSolution(nombreSommets - 1)], sommets[tsp.getMeilleureSolution(0)])));

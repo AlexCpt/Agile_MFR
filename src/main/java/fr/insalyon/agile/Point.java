@@ -17,11 +17,13 @@ public class Point {
     private double coordX;
     private double coordY;
     public String mAdresse;
+    private Circle circle;
 
     public enum Type {
         POINT,
         LIVRAISON,
-        ENTREPOT
+        ENTREPOT,
+        VEHICULE
     };
 
     private Type mType;
@@ -38,6 +40,12 @@ public class Point {
         mType = Type.LIVRAISON;
         mEntrepot = null;
         mLivraison = livraison;
+    }
+
+    public void setVehicule() {
+        mType = Type.VEHICULE;
+        mEntrepot = null;
+        mLivraison = null;
     }
 
     public void setPoint() {
@@ -74,6 +82,14 @@ public class Point {
         return mY;
     }
 
+    public void setX(int mX) {
+        this.mX = mX;
+    }
+
+    public void setY(int mY) {
+        this.mY = mY;
+    }
+
     @Override
     public String toString() {
         return "P{" +
@@ -99,18 +115,21 @@ public class Point {
     }
 
     public void print(Pane mapPane) {
+        double radius = mType == Type.VEHICULE ? (radiusAffichage * 2) : radiusAffichage;
 
-        Circle circle = new Circle(radiusAffichage);
+        circle = new Circle(radius);
         coordX = ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth();
         coordY = ((mY - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin) * mapPane.getPrefHeight());
-        circle.relocate(coordX - radiusAffichage, coordY - radiusAffichage);
+        circle.relocate(coordX - radius, coordY - radius);
 
         if (mType == Type.ENTREPOT) {
             circle.setFill(Color.RED);
             mapPane.getChildren().add(circle);
-
         } else if (mType == Type.LIVRAISON) {
             circle.setFill(Color.BLUE);
+            mapPane.getChildren().add(circle);
+        } else if (mType == Type.VEHICULE) {
+            circle.setFill(Color.GREEN);
             mapPane.getChildren().add(circle);
         }
 
@@ -127,6 +146,14 @@ public class Point {
         popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 10);
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
+    }
+
+    public void move(Pane mapPane) {
+        double radius = mType == Type.VEHICULE ? (radiusAffichage * 2) : radiusAffichage;
+
+        coordX = ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth();
+        coordY = ((mY - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin) * mapPane.getPrefHeight());
+        circle.relocate(coordX - radius, coordY - radius);
     }
 
     public String getAdresse() {
