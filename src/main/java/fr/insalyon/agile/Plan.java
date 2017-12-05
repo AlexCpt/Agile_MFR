@@ -89,7 +89,7 @@ public class Plan {
     public void print(Pane mapPane) {
 
         for (Troncon troncon: mTroncons) {
-            troncon.print(mapPane, Color.WHITE, 1);
+            troncon.print(mapPane, Color.WHITE, Color.GREEN, 1);
         }
 
         for (Point point: mPoints) {

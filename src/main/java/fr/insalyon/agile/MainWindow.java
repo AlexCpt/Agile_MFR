@@ -13,21 +13,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import org.controlsfx.control.PopOver;
 
 import java.io.File;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 
 public class MainWindow extends Application
@@ -40,21 +38,24 @@ public class MainWindow extends Application
     final static double mapWidth = 800;
     final static double mapHeight = sceneHeight;
     final static double sceneWidth = mapWidth+bandeauWidth ;
-    final static int radiusAffichageTimeline = 11;
+    final static int radiusAffichageTimeline = 7;
     String fileName;
 
     // RightPane
     static double  centreRightPane = rightPaneWidth/2;
     double  xPoint =  centreRightPane;
     double yFirstPoint = 50;
+    ArrayList<Pair<Point, Double>> yPoints;
     double yLastPoint = rightPaneHeigth - 100;
     static  double widthLabelTime = 75;
     double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
-    double deliveryWidth = 40.0;
-    double deliveryHeight = 40.0;
+    double deliveryWidth = 100.0;
+    double deliveryHeight = 70.0;
 
     double orgSceneY;
     double orgTranslateY;
+    double orgSceneYLivraison;
+    double orgTranslateYLivraison;
 
 
     ObservableList<String> planOptions =
@@ -83,12 +84,16 @@ public class MainWindow extends Application
     final ComboBox comboBoxDemandeLivraison = new ComboBox(DLOptions);
 
     Plan plan;
+    Point vehicule;
     ParserXML parser;
     Tournee tournee;
     DemandeDeLivraison ddl;
 
+    Pane mapPane;
+
     public MainWindow(){
         parser = new ParserXML();
+        yPoints = new ArrayList<>();
 
         plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
     }
@@ -106,7 +111,7 @@ public class MainWindow extends Application
         primaryStage.setMinWidth(sceneWidth);
 
         //MapPane
-        Pane mapPane = new Pane();
+        mapPane = new Pane();
         mapPane.setStyle("-fx-background-color: #cccbc1;");
         mapPane.setPrefSize(mapWidth,mapHeight);
         mapPane.setMinSize(mapWidth,mapHeight);
@@ -122,7 +127,6 @@ public class MainWindow extends Application
 
         // LeftVBox
         VBox leftVbox = new VBox();
-
 
         //Partie Plan du bandeau
         leftVbox.getChildren().add(lblTitlePlan);
@@ -185,6 +189,10 @@ public class MainWindow extends Application
                 timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
                 plan.print(mapPane);
                 tournee.print(mapPane);
+
+                vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
+                vehicule.setVehicule();
+                vehicule.print(mapPane);
             }
         });
 
@@ -214,7 +222,15 @@ public class MainWindow extends Application
         primaryStage.show();
     }
 
+    private double computeY(LocalTime heure, LocalTime heureDebut, LocalTime heureFin) {
+        return ((localTimeToSecond(heure) -  localTimeToSecond(heureDebut)) / (localTimeToSecond(heureFin) - localTimeToSecond(heureDebut)))
+                * (yLastPoint - yFirstPoint)
+                + yFirstPoint;
+    }
+
     public void timeLineBuild(Pane rightPane, Tournee tournee, Pane mapPane, Stage primaryStage, boolean modeModifier){
+        yPoints.clear();
+
 
         rightPane.getChildren().clear();
 
@@ -232,6 +248,8 @@ public class MainWindow extends Application
 
         final int decalageXIconDragAndDropPoint = 20;
         final int decalageYIconDragAndDropPoint = 0;
+        final int decalage_x_PopoverAjouterLivraison = -25;
+        final int decalage_y_PopoverAjouterLivraison = -7;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
 
 
@@ -244,6 +262,7 @@ public class MainWindow extends Application
                 "-fx-background-insets: 0px; " +
                 "-fx-padding: 0px;";
 
+        //region <Titre>
         //Titre
         Label lblTimeline = new Label("Timeline");
         lblTimeline.setPadding(new Insets(10));
@@ -252,7 +271,9 @@ public class MainWindow extends Application
         rightVbox.getChildren().add(lblTimeline);
         rightVbox.setAlignment(Pos.TOP_CENTER);
         rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
+//endregion
 
+        //region <Entrepot Départ>
 
         //Point de départ et label -------------------------------------
         Label lblEntrepotDepartHeure = new Label(heureDebutTournee.toString());
@@ -266,9 +287,10 @@ public class MainWindow extends Application
 
         tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,pointEntrepotDepart.getButton(),
                 "Entrepot - Depart : "+ heureDebutTournee.toString() );
+//endregion
 
+        //region <Point d'arrivée>
 
-        //Point d'arrivée -------------------------------------
         Label lblEntrepotArriveeHeure = new Label(heureFinTournee.toString());
         lblEntrepotArriveeHeure.setLayoutY(yLastPoint- heightLabelTime);
 
@@ -280,94 +302,105 @@ public class MainWindow extends Application
 
         tournee.getDemandeDeLivraison().getEntrepot().printHover(mapPane,primaryStage,pointEntrepotArrivee.getButton(),
                 "Entrepot - Arrivee : "+ heureFinTournee.toString() );
+//endregion
 
+        //region <Livraisons intermédiaires>
 
-        // Livraisons intermédiaires -------------------------------------
         int compteurLivraison = 1;
         double yRelocateFromLastPoint = yFirstPoint;
         Pane pointPane = new Pane();
         Pane linePane = new Pane();
         Pane accrochePointPane = new Pane();
         Pane labelPane = new Pane();
-
+        Pane buttonPane = new Pane();
+        Pane mobilePane = new Pane();
 
         for (Itineraire itineraire: tournee.getItineraires()) {
 
-            if(itineraire.getTroncons().get(0).getOrigine().getType() != Point.Type.LIVRAISON){
+            if(itineraire.getTroncons().get(0).getOrigine().getType() == Point.Type.ENTREPOT){
+                LocalTime heureDepart = tournee.getDemandeDeLivraison().getDepart();
+                for (int i = 1; i < itineraire.getTroncons().size(); i++) {
+                    heureDepart = heureDepart.plusSeconds((long)(((itineraire.getTroncons().get(i-1).getLongueur() * 3600) / 1000) / 15));
+                    double yPosition = computeY(heureDepart, heureDebutTournee, heureFinTournee);
+
+                    yPoints.add(new Pair<>(itineraire.getTroncons().get(i).getOrigine(), yPosition));
+                }
                 continue;
             }
 
+            //Points
             LocalTime heurex = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee();
-            double yRelocate = ((localTimeToSecond(heurex) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
-                    * (yLastPoint - yFirstPoint)
-                    + yFirstPoint;
+            double yRelocate = computeY(heurex, heureDebutTournee, heureFinTournee);
+
+            yPoints.add(new Pair<>(itineraire.getTroncons().get(0).getOrigine(), yRelocate));
 
             LocalTime heureLivraisonx = itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison();
-            double yRelocateLivraison = ((localTimeToSecond(heureLivraisonx) -  localTimeToSecond(heureDebutTournee)) / (localTimeToSecond(heureFinTournee) - localTimeToSecond(heureDebutTournee)))
-                    * (yLastPoint - yFirstPoint)
-                    + yFirstPoint;
+            double yRelocateLivraison = computeY(heureLivraisonx, heureDebutTournee, heureFinTournee);
 
-            if (heurex != heureLivraisonx) { //Point oblong
+            if (heurex != heureLivraisonx) {
+                yPoints.add(new Pair<>(itineraire.getTroncons().get(0).getOrigine(), yRelocateLivraison));
+            }
 
-                Rectangle rectangle = new Rectangle(radiusAffichageTimeline * 2, yRelocateLivraison - yRelocate);
-                rectangle.relocate(xPoint - radiusAffichageTimeline, yRelocate);
+            LocalTime heureDepart = heureLivraisonx.plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison());
+            double yRelocateDepart = computeY(heureDepart, heureDebutTournee, heureFinTournee);
 
-                //Label arrivée
-                Label lblpointItiHeureArrivee = new Label(heurex.format(dtf));
-                lblpointItiHeureArrivee.setLayoutY(yRelocate - heightLabelTime);
+            yPoints.add(new Pair<>(itineraire.getTroncons().get(0).getOrigine(), yRelocateDepart));
 
-                //Label Livraison machintruc
-                Label lblpointItiArrivee = new Label("Arrivée " +compteurLivraison);
-                lblpointItiArrivee.setLayoutY(yRelocate - heightLabelTime);
+            LocalTime iterateurHeure = heureDepart;
+            for (int i = 1; i < itineraire.getTroncons().size(); i++) {
+                iterateurHeure = iterateurHeure.plusSeconds((long)(((itineraire.getTroncons().get(i-1).getLongueur() * 3600) / 1000) / 15));
+                double yPosition = computeY(iterateurHeure, heureDebutTournee, heureFinTournee);
 
-                PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateLivraison, yRelocate,  rectangle, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureArrivee,lblpointItiArrivee);
-                pointLivraisonUI_oblong.print(pointPane,labelPane);
+                yPoints.add(new Pair<>(itineraire.getTroncons().get(i).getOrigine(), yPosition));
             }
 
             //button sur chaque point de livraison
+
             Button btnPopover = new Button();
             btnPopover.relocate(xPoint - radiusAffichageTimeline*2, yRelocateLivraison - radiusAffichageTimeline*2);
             btnPopover.setStyle(popOverButtonStyle);
-            itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,btnPopover,
-                    "Livraison " +compteurLivraison + " - Heure : " + heurex.format(dtf));
 
-            //button sur chaque point de livraison pour la suppression
-            if (modeModifier == true) {
-                //TODO: le faire (méthode printSupressButton ?)
-                Button btnSupress = new Button();
-                btnSupress.relocate(xPoint - radiusAffichageTimeline*2, yRelocateLivraison - radiusAffichageTimeline*2);
-                btnSupress.setStyle(popOverButtonStyle);
-                itineraire.getTroncons().get(0).getOrigine().printSuppressButton(mapPane,primaryStage,btnSupress);
-            }
+            //region <Point Oblong>
+                //Label arrivée
+            Label lblpointItiHeureDebutLivraison = new Label(heureLivraisonx.format(dtf));
+            lblpointItiHeureDebutLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
 
-
-            //Label heure
-            Label lblpointItiHeure = new Label(heureLivraisonx.format(dtf));
-            lblpointItiHeure.setLayoutY(yRelocateLivraison - heightLabelTime);
+            Label lblpointItiHeureFinLivraison = new Label(heureDepart.format(dtf));
+            lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
 
             //Label Livraison machintruc
             Label lblpointItiLivraison = new Label("Livraison " +compteurLivraison);
             lblpointItiLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
 
+             PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateDepart, yRelocateLivraison, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureDebutLivraison,lblpointItiHeureFinLivraison,lblpointItiLivraison);
+            pointLivraisonUI_oblong.print(pointPane,labelPane,buttonPane);
+            //endregion
+
+            //button sur chaque point de livraison pour la suppression
+            if (modeModifier == true) {
+                //TODO: le faire (méthode printSupressButton ?)
+                Button btnSupress = new Button();
+                btnSupress.relocate(xPoint - radiusAffichageTimeline*2, yRelocateDepart - radiusAffichageTimeline*2);
+                btnSupress.setStyle(popOverButtonStyle);
+                itineraire.getTroncons().get(0).getOrigine().printSuppressButton(mapPane,primaryStage,btnSupress);
+            }
             compteurLivraison++;
 
-            // 3lignes d'accroche
+
+            // FlecheDéplacement de Livraison
             if(modeModifier == true){
                 final String imageURI = new File("images/drag2.jpg").toURI().toString();
                 final Image image = makeTransparent(new Image(imageURI, dragAndDropWidth, dragAndDropHeight, false, true));
-                final ImageView imageView = new ImageView(image);
-                imageView.relocate(centreRightPane - dragAndDropWidth/2 - decalageXIconDragAndDropPoint,yRelocate - image.getHeight()/2 - decalageYIconDragAndDropPoint);
-                accrochePointPane.getChildren().add(imageView);
+                ImageviewExtended imageViewArrow = new ImageviewExtended(pointLivraisonUI_oblong, image);
+                imageViewArrow.relocate(centreRightPane - dragAndDropWidth/2 - decalageXIconDragAndDropPoint, yRelocateLivraison + ((yRelocateDepart-yRelocateLivraison)/2)  - image.getHeight()/2 - decalageYIconDragAndDropPoint);
+                mobilePane.getChildren().add(imageViewArrow);
 
-                imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-
-                    }
-                });
+                imageViewArrow.setOnMousePressed(deplacementLivraisonOnMousePressedEventHandler);
+                imageViewArrow.setOnMouseDragged(deplacementLivraisonOnMouseDraggedEventHandler);
             }
 
-            //lignes
+            //region <lignes - tronçons>
+
             double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
             double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
 
@@ -381,44 +414,39 @@ public class MainWindow extends Application
                 tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint,yLastPoint , marge, margeMax);
             }
             else{
-                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocate, marge, margeMax);
+                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocateLivraison, marge, margeMax);
             }
             tronconUI.print(linePane);
 
-            yRelocateFromLastPoint = yRelocateLivraison;
+            yRelocateFromLastPoint = yRelocateDepart;
 
-            //PointUI
-            PointLivraisonUI pointLivraisonUI = new PointLivraisonUI(xPoint,yRelocate, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeure, lblpointItiLivraison);
-            pointLivraisonUI.print(pointPane, labelPane);
+            //endregion
 
-            //Affichage
-            //pointPane.getChildren().add(pointIti);
-            rightPane.getChildren().add(lblpointItiHeure);
-            rightPane.getChildren().add(lblpointItiLivraison);
-            pointPane.getChildren().add(btnPopover);
+            //hover sur chaque livraison
+            itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
+                    lblpointItiLivraison.getText() + " - " + "TODO");
         }
+        //endregion
 
-        //--------------------------- Fin for timeline
 
-        //Voiture
-        Pane voiturePane = new Pane();
+        //region <Voiture>
         if(modeModifier == false){
-            final String imageURI = new File("images/delivery-icon.jpg").toURI().toString();
-            final Image image = makeTransparent(new Image(imageURI, deliveryWidth, deliveryHeight, true, false));
+            final String imageURI = new File("images/delivery-icon-fleche.png").toURI().toString();
+            final Image image = new Image(imageURI, deliveryWidth, deliveryHeight, true, false);
             deliveryHeight = image.getHeight();
             deliveryWidth = image.getWidth();
             ImageView imageView = new ImageView(image);
-            imageView.relocate(centreRightPane - deliveryWidth/2,yFirstPoint - deliveryHeight/2);
-            System.out.println(imageView.getY());
 
-            voiturePane.getChildren().add(imageView);
+            imageView.relocate(0, yFirstPoint - deliveryHeight/2);
+
+            mobilePane.getChildren().add(imageView);
 
             imageView.setOnMousePressed(deliveryOnMousePressedEventHandler);
             imageView.setOnMouseDragged(deliveryOnMouseDraggedEventHandler);
         }
+        //endregion
 
-
-        //bouton modifier
+        //region <bouton modifier>
         Button modifierTimeline = new Button();
         Button buttonAjout = null;
 
@@ -438,6 +466,47 @@ public class MainWindow extends Application
             buttonAjout = new Button("Ajouter");
             buttonAjout.setMinWidth(63);
 
+            buttonAjout.setOnAction(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent event) {
+                    HBox hBoxAjoutInPopover = new HBox();
+                    Label lblAjoutInPopover = new Label("Position de la Livraison : ");
+                    TextField txtFieldInPopover = new TextField();
+                    txtFieldInPopover.setPrefWidth(60);
+                    hBoxAjoutInPopover.getChildren().add(lblAjoutInPopover);
+                    hBoxAjoutInPopover.getChildren().add(txtFieldInPopover);
+                    hBoxAjoutInPopover.setAlignment(Pos.CENTER);
+                    hBoxAjoutInPopover.setPadding(new Insets(20, 20,10,20));
+
+                    VBox vBoxAjoutInPopover = new VBox();
+                    vBoxAjoutInPopover.getChildren().add(hBoxAjoutInPopover);
+                    Button buttonAjoutInPopover = new Button("Valider");
+                    buttonAjoutInPopover.setOnAction(new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent event) {
+                            //mettre truc de louise
+                        }});
+
+                    vBoxAjoutInPopover.getChildren().add(buttonAjoutInPopover);
+                    vBoxAjoutInPopover.setAlignment(Pos.CENTER);
+
+                    Pane panePopOver = new Pane();
+                    panePopOver.getChildren().add(vBoxAjoutInPopover);
+                    panePopOver.setPadding(new Insets(5));
+
+                    PopOver popOver = new PopOver();
+                    popOver.setAutoHide(true);
+                    popOver.setContentNode(panePopOver);
+                    popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+
+
+                    popOver.show(modifierTimeline);
+                    popOver.setX(popOver.getX() + decalage_x_PopoverAjouterLivraison);
+                    popOver.setY(popOver.getY() + decalage_y_PopoverAjouterLivraison);
+                }
+            });
             modifierTimeline.setOnAction(new EventHandler<ActionEvent>() {
 
                 @Override
@@ -463,18 +532,21 @@ public class MainWindow extends Application
         rightVboxDown.setPadding(new Insets(35));
         rightVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
 
-        //Affichage
-        pointEntrepotDepart.print(pointPane, labelPane);
-        pointEntrepotArrivee.print(pointPane, labelPane);
+        //endregion
+
+        //region <Affichage>
+        pointEntrepotDepart.print(pointPane, labelPane, buttonPane);
+        pointEntrepotArrivee.print(pointPane, labelPane, buttonPane);
 
         rightPane.getChildren().add(rightVbox);
         rightPane.getChildren().add(rightVboxDown);
         rightPane.getChildren().add(linePane);
         rightPane.getChildren().add(labelPane);
         rightPane.getChildren().add(accrochePointPane);
-        rightPane.getChildren().add(voiturePane);
         rightPane.getChildren().add(pointPane);
-
+        rightPane.getChildren().add(buttonPane);
+        rightPane.getChildren().add(mobilePane);
+        //endregion
 
         ExportTournee exportTournee = new ExportTournee(tournee);
         exportTournee.exportFile(fileName);
@@ -525,20 +597,129 @@ public class MainWindow extends Application
                 @Override
                 public void handle(MouseEvent t) {
                     double offsetY = t.getSceneY() - orgSceneY;
-                    double newTranslateY = ((ImageView)(t.getSource())).getTranslateY();
-                    if (t.getSceneY() >= yFirstPoint - deliveryHeight/2 && t.getSceneY() <= yLastPoint + deliveryHeight/2) {
+                    double newTranslateY;
+                    if (t.getSceneY() < yFirstPoint) {
+                        newTranslateY = 0;
+                    } else if (t.getSceneY() > yLastPoint) {
+                        newTranslateY = yLastPoint - yFirstPoint;
+                    } else {
                         newTranslateY = orgTranslateY + offsetY;
                     }
 
                     ((ImageView)(t.getSource())).setTranslateY(newTranslateY);
+
+                    double yPos = newTranslateY + orgSceneY - orgTranslateY;
+
+                    for (Itineraire it : tournee.getItineraires()) {
+                        for (Troncon tr : it.getTroncons()) {
+                            tr.setLongueurParcourue(mapPane,0);
+                        }
+                    }
+
+                    Troncon troncon = null;
+
+                    for (Troncon tr : plan.getGraph().get(tournee.getDemandeDeLivraison().getEntrepot())) {
+                        if (tr.getDestination() == yPoints.get(0).getKey()) {
+                            troncon = tr;
+                        }
+                    }
+
+                    if (yPos <= yPoints.get(0).getValue()) {
+                        double progress = (yPos - yFirstPoint) / (yPoints.get(0).getValue() - yFirstPoint);
+                        troncon.setLongueurParcourue(mapPane,troncon.getLongueur() * progress);
+                        double newX = tournee.getDemandeDeLivraison().getEntrepot().getX() + progress * (yPoints.get(0).getKey().getX() - tournee.getDemandeDeLivraison().getEntrepot().getX());
+                        double newY = tournee.getDemandeDeLivraison().getEntrepot().getY() + progress * (yPoints.get(0).getKey().getY() - tournee.getDemandeDeLivraison().getEntrepot().getY());
+
+                        vehicule.setX((int)newX);
+                        vehicule.setY((int)newY);
+
+                        vehicule.move(mapPane);
+                        return;
+                    } else if (troncon != null) {
+                        troncon.setLongueurParcourue(mapPane, troncon.getLongueur());
+                    }
+
+                    for (int i = 1; i < yPoints.size(); i++) {
+                        troncon = null;
+                        for (Troncon tr : plan.getGraph().get(yPoints.get(i-1).getKey())) {
+                            if (tr.getDestination() == yPoints.get(i).getKey()) {
+                                troncon = tr;
+                            }
+                        }
+
+                        if (yPos <= yPoints.get(i).getValue()) {
+                            double progress = (yPos - yPoints.get(i-1).getValue()) / (yPoints.get(i).getValue() - yPoints.get(i-1).getValue());
+                            troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                            double newX = yPoints.get(i-1).getKey().getX() + progress * (yPoints.get(i).getKey().getX() - yPoints.get(i-1).getKey().getX());
+                            double newY = yPoints.get(i-1).getKey().getY() + progress * (yPoints.get(i).getKey().getY() - yPoints.get(i-1).getKey().getY());
+
+                            vehicule.setX((int)newX);
+                            vehicule.setY((int)newY);
+
+                            vehicule.move(mapPane);
+                            return;
+                        } else if (troncon != null) {
+                            troncon.setLongueurParcourue(mapPane, troncon.getLongueur());
+                        }
+                    }
+
+                    troncon = null;
+                    for (Troncon tr : plan.getGraph().get(yPoints.get(yPoints.size()-1).getKey())) {
+                        if (tr.getDestination() == tournee.getDemandeDeLivraison().getEntrepot()) {
+                            troncon = tr;
+                        }
+                    }
+
+                    if (yPos >= yPoints.get(yPoints.size()-1).getValue()) {
+                        double progress = (yPos - yPoints.get(yPoints.size()-1).getValue()) / (yLastPoint - yPoints.get(yPoints.size()-1).getValue());
+                        troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                        double newX = yPoints.get(yPoints.size()-1).getKey().getX() + progress * (tournee.getDemandeDeLivraison().getEntrepot().getX() - yPoints.get(yPoints.size()-1).getKey().getX());
+                        double newY = yPoints.get(yPoints.size()-1).getKey().getY() + progress * (tournee.getDemandeDeLivraison().getEntrepot().getY() - yPoints.get(yPoints.size()-1).getKey().getY());
+
+                        vehicule.setX((int)newX);
+                        vehicule.setY((int)newY);
+
+                        vehicule.move(mapPane);
+                        return;
+                    } else if (troncon != null) {
+                        troncon.setLongueurParcourue(mapPane, troncon.getLongueur());
+                    }
+                }
+            };
+
+    EventHandler<MouseEvent> deplacementLivraisonOnMousePressedEventHandler =
+            new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    orgSceneYLivraison = t.getSceneY();
+                    orgTranslateYLivraison = ((ImageView)(t.getSource())).getTranslateY();
+                }
+            };
+
+    EventHandler<MouseEvent> deplacementLivraisonOnMouseDraggedEventHandler =
+            new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    double offsetY = t.getSceneY() - orgSceneYLivraison;
+                    double newTranslateY = ((ImageView)(t.getSource())).getTranslateY();
+                    if (t.getSceneY() >= yFirstPoint - deliveryHeight/2 && t.getSceneY() <= yLastPoint + deliveryHeight/2) {
+                        newTranslateY = orgTranslateYLivraison + offsetY;
+                    }
+
+                    ((ImageView)(t.getSource())).setTranslateY(newTranslateY);
+                    ImageviewExtended imageView = ((ImageviewExtended)(t.getSource()));
+                    imageView.getPointLivraisonUI_oblong().setTranslateY(newTranslateY);
                 }
             };
 
 
-    private double localTimeToMinute(LocalTime time){
-        return (time.getHour()*60 + time.getMinute());
-    }
     private double localTimeToSecond(LocalTime time){
         return (time.getHour()*60*60 + time.getMinute()*60 + time.getSecond());
+    }
+
+    public void pointerTronconPourValidationAjout(int numeroTroncon){
+
     }
 }

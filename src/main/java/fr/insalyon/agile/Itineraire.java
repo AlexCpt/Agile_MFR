@@ -56,7 +56,7 @@ public class Itineraire {
 
     public void print(Pane mapPane){
         for (Troncon troncon: mTroncons) {
-            troncon.print(mapPane, Color.YELLOW,2);
+            troncon.print(mapPane, Color.YELLOW, Color.GREEN, 2);
         }
     }
 }

@@ -178,5 +178,6 @@ public class Tournee {
         livraisons.remove(livraison);
         livraison.setPoint();
         return newItineraire;
+
     }
 }

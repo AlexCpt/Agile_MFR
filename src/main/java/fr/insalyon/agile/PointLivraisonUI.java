@@ -27,23 +27,21 @@ public class PointLivraisonUI {
         ENTREPOT_DEPART
     };
 
-    protected final int radiusAffichageTimeline = 11;
+    protected final int radiusAffichageTimeline = 6;
     protected final Color mColorEntrepot = Color.rgb(244,39,70);
     protected final Color mColorLivraison = Color.rgb(56, 120, 244);
     protected final  int decalageLabelLivraison = 25;
-    protected final String popOverButtonStyle = "-fx-background-radius: 5em; " +
-            "-fx-min-width: " + radiusAffichageTimeline*2 + "px; " +
-            "-fx-min-height: " + radiusAffichageTimeline*2 + "px; " +
-            "-fx-max-width: " + radiusAffichageTimeline*2 + "px; " +
-            "-fx-max-height: " + radiusAffichageTimeline*2 + "px; " +
+    protected final String popOverButtonStyle =
+            "-fx-min-width: " + radiusAffichageTimeline*9 + "px; " +
+            "-fx-min-height: " + radiusAffichageTimeline*4 + "px; " +
+            "-fx-max-width: " + radiusAffichageTimeline*9 + "px; " +
+            "-fx-max-height: " + radiusAffichageTimeline*4 + "px; " +
             "-fx-background-color: transparent;" +
             "-fx-background-insets: 0px; " +
             "-fx-padding: 0px;";
 
     public PointLivraisonUI(){
-
     }
-
 
     public PointLivraisonUI(double xAffichage, double yAffichage, Type type, Label labelHeure, Label LabelNomLivraison){
 
@@ -78,13 +76,12 @@ public class PointLivraisonUI {
 
     public Button getButton(){ return mButton; }
 
-    public void print (Pane pointPane, Pane labelPane){
+    public void print (Pane pointPane, Pane labelPane, Pane ButtonPane){
         pointPane.getChildren().add(mCircle);
 
         labelPane.getChildren().add(mLabelHeure);
         labelPane.getChildren().add(mLabelNomLivraison);
         pointPane.getChildren().add(mButton);
-
     }
 
 

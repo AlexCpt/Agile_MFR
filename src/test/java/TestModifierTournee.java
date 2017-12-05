@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class TestModifierTournee {
     private List<Point> points;
     private List<Troncon> troncons;
+    private Plan plan;
 
     @Before
     public void before() throws Exception {
@@ -38,6 +39,10 @@ public class TestModifierTournee {
                 new Troncon(points.get(4), points.get(0),1, "a"),
                 new Troncon(points.get(5), points.get(0),200, "a")
         );
+
+        points.get(0).setEntrepot(new Entrepot());
+
+        plan = new Plan(points, troncons);
     }
 
     @Test
@@ -48,11 +53,6 @@ public class TestModifierTournee {
         points.get(5).setLivraison(new Livraison(LocalTime.of(3,0), LocalTime.of(3,30), Duration.ofHours(1)));
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
-        Entrepot entrepot = new Entrepot();
-
-        points.get(0).setEntrepot(entrepot);
-
-        Plan plan = new Plan(points, troncons);
 
         DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(1,4));
 
@@ -76,11 +76,6 @@ public class TestModifierTournee {
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         livraisons.add(points.get(1));
-        Entrepot entrepot = new Entrepot();
-
-        points.get(0).setEntrepot(entrepot);
-
-        Plan plan = new Plan(points, troncons);
 
         DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(1,4));
 
@@ -102,15 +97,9 @@ public class TestModifierTournee {
         points.get(5).setLivraison(new Livraison(LocalTime.of(4,0), LocalTime.of(4,30), Duration.ofMinutes(10)));
         points.get(1).setLivraison(new Livraison(LocalTime.of(2,0), LocalTime.of(2,30), Duration.ofMinutes(6)));
         points.get(2).setLivraison(new Livraison(LocalTime.of(3,0), LocalTime.of(3, 30), Duration.ofMinutes(20)));
-
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         livraisons.add(points.get(1));
-        Entrepot entrepot = new Entrepot();
-
-        points.get(0).setEntrepot(entrepot);
-
-        Plan plan = new Plan(points, troncons);
 
         DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(1,4));
 
@@ -139,15 +128,10 @@ public class TestModifierTournee {
         points.get(5).setLivraison(new Livraison(LocalTime.of(4,0), LocalTime.of(4,30), Duration.ofMinutes(10)));
         points.get(1).setLivraison(new Livraison(LocalTime.of(2,0), LocalTime.of(2,30), Duration.ofMinutes(6)));
         points.get(2).setLivraison(new Livraison(LocalTime.of(3,0), LocalTime.of(3, 30), Duration.ofMinutes(20)));
-
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         livraisons.add(points.get(1));
-        Entrepot entrepot = new Entrepot();
 
-        points.get(0).setEntrepot(entrepot);
-
-        Plan plan = new Plan(points, troncons);
 
         DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(1,4));
 
@@ -177,16 +161,10 @@ public class TestModifierTournee {
         points.get(1).setLivraison(new Livraison(LocalTime.of(2,0), LocalTime.of(2,30), Duration.ofMinutes(6)));
         points.get(2).setLivraison(new Livraison(LocalTime.of(3,0), LocalTime.of(3, 30), Duration.ofMinutes(20)));
         points.get(4).setLivraison(new Livraison(LocalTime.of(5,0), LocalTime.of(5,30), Duration.ofMinutes(20)));
-
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         livraisons.add(points.get(1));
         livraisons.add(points.get(4));
-        Entrepot entrepot = new Entrepot();
-
-        points.get(0).setEntrepot(entrepot);
-
-        Plan plan = new Plan(points, troncons);
 
         DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(1,4));
 
@@ -212,16 +190,10 @@ public class TestModifierTournee {
         points.get(1).setLivraison(new Livraison(LocalTime.of(2,0), LocalTime.of(2,30), Duration.ofMinutes(6)));
         points.get(2).setLivraison(new Livraison(LocalTime.of(3,0), LocalTime.of(3, 30), Duration.ofMinutes(20)));
         points.get(4).setLivraison(new Livraison(LocalTime.of(5,0), LocalTime.of(5,30), Duration.ofMinutes(20)));
-
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         livraisons.add(points.get(1));
         livraisons.add(points.get(4));
-        Entrepot entrepot = new Entrepot();
-
-        points.get(0).setEntrepot(entrepot);
-
-        Plan plan = new Plan(points, troncons);
 
         DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(1,4));
 
@@ -248,16 +220,10 @@ public class TestModifierTournee {
         points.get(1).setLivraison(new Livraison(LocalTime.of(2,0), LocalTime.of(2,30), Duration.ofMinutes(6)));
         points.get(2).setLivraison(new Livraison(LocalTime.of(3,0), LocalTime.of(3, 30), Duration.ofMinutes(20)));
         points.get(4).setLivraison(new Livraison(LocalTime.of(5,0), LocalTime.of(5,30), Duration.ofMinutes(20)));
-
         livraisons.add(points.get(2));
         livraisons.add(points.get(5));
         livraisons.add(points.get(1));
         livraisons.add(points.get(4));
-        Entrepot entrepot = new Entrepot();
-
-        points.get(0).setEntrepot(entrepot);
-
-        Plan plan = new Plan(points, troncons);
 
         DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(1,4));
 
