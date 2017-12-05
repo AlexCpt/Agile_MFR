@@ -153,6 +153,7 @@ public class MainWindow extends Application
 
                 fileName = t1;
                 plan.resetTypePoints();
+                tournee = null;
                 ddl = parser.parseDemandeDeLivraison("fichiersXML/"+t1+".xml");
                 if (ddl == null) {
                     return;
