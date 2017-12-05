@@ -510,7 +510,8 @@ public class MainWindow extends Application
                         new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
-                                tournee.supprimerLivraison(itineraire.getTroncons().get(0).getOrigine());
+                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine()));
+                                //tournee.supprimerLivraison(itineraire.getTroncons().get(0).getOrigine());
                                 timeLineBuild(rightPane, tournee, mapPane, primaryStage, false);
                                 mapPane.getChildren().clear();
                                 plan.print(mapPane);
@@ -518,8 +519,9 @@ public class MainWindow extends Application
                                 supprPopover.hide();
                             }
                         });
-                compteurLivraison++;
             }
+            compteurLivraison++;
+
             // FlecheDéplacement de Livraison
             /*if(modeModifier == true){
                 final String imageURI = new File("images/drag2.jpg").toURI().toString();
