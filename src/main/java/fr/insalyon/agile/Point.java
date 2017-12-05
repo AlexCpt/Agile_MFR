@@ -1,5 +1,6 @@
 package fr.insalyon.agile;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -20,11 +21,13 @@ public class Point {
     private double coordY;
     private PopOver suppPopover;
     public String mAdresse;
+    private Circle circle;
 
     public enum Type {
         POINT,
         LIVRAISON,
-        ENTREPOT
+        ENTREPOT,
+        VEHICULE
     };
 
     private Type mType;
@@ -41,6 +44,12 @@ public class Point {
         mType = Type.LIVRAISON;
         mEntrepot = null;
         mLivraison = livraison;
+    }
+
+    public void setVehicule() {
+        mType = Type.VEHICULE;
+        mEntrepot = null;
+        mLivraison = null;
     }
 
     public void setPoint() {
@@ -77,6 +86,14 @@ public class Point {
         return mY;
     }
 
+    public void setX(int mX) {
+        this.mX = mX;
+    }
+
+    public void setY(int mY) {
+        this.mY = mY;
+    }
+
     @Override
     public String toString() {
         return "P{" +
@@ -102,33 +119,37 @@ public class Point {
     }
 
     public void print(Pane mapPane) {
+        double radius = mType == Type.VEHICULE ? (radiusAffichage * 2) : radiusAffichage;
 
-        Circle circle = new Circle(radiusAffichage);
+        circle = new Circle(radius);
         coordX = ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth();
         coordY = ((mY - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin) * mapPane.getPrefHeight());
-        circle.relocate(coordX - radiusAffichage, coordY - radiusAffichage);
+        circle.relocate(coordX - radius, coordY - radius);
 
         if (mType == Type.ENTREPOT) {
             circle.setFill(Color.RED);
             mapPane.getChildren().add(circle);
-
         } else if (mType == Type.LIVRAISON) {
             circle.setFill(Color.BLUE);
+            mapPane.getChildren().add(circle);
+        } else if (mType == Type.VEHICULE) {
+            circle.setFill(Color.GREEN);
             mapPane.getChildren().add(circle);
         }
 
     }
 
-    public void printHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String label){
+    public void printHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String stringLabel){
         PopOver popOver = new PopOver();
         popOver.setAutoHide(true);
         popOver.setDetachable(false);
-        popOver.setContentNode(new Label(label));
+        Label label = new Label(stringLabel);
+        label.setPadding(new Insets(6));
+        popOver.setContentNode(label);
         popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
 
-        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX());
-        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 10);
-
+        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX()-3);
+        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 13);
         rndBtnPopover.setOnMouseEntered(e -> popOver.show(primaryStage));
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
     }
@@ -139,9 +160,8 @@ public class Point {
        popOver.setDetachable(false);
        popOver.setContentNode(new Label(label));
        popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
-
-       popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX());
-       popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 10);
+       popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX()- 3);
+       popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 13);
 
        DropShadow borderGlow = new DropShadow();
        borderGlow.setColor(Color.BLUE);
@@ -158,6 +178,14 @@ public class Point {
        });
 
    }
+
+    public void move(Pane mapPane) {
+        double radius = mType == Type.VEHICULE ? (radiusAffichage * 2) : radiusAffichage;
+
+        coordX = ((mX - Plan.mPointXmin) / (double) (Plan.mPointXmax - Plan.mPointXmin)) * mapPane.getPrefWidth();
+        coordY = ((mY - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin) * mapPane.getPrefHeight());
+        circle.relocate(coordX - radius, coordY - radius);
+    }
 
 
     public void printSuppressButton(Pane mapPane, Stage primaryStage, Button btnSupprPopover, Button btnSupprValidate) {

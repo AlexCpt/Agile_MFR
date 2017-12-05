@@ -1,6 +1,5 @@
 package fr.insalyon.agile;
 
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -17,9 +16,6 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
     private double m_yAffichage_Relocate;
     private Rectangle mRectangle;
     private Label mLabelFin;
-    private Label mLabelArrivee;
-
-
 
     protected String transparentButtonStyle = "-fx-background-color: transparent;";
 
@@ -39,10 +35,6 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
         }
         mCircle2.relocate(m_xAffichage - radiusAffichageTimeline,m_yAffichage_Relocate - radiusAffichageTimeline);
 
-        mLabelArrivee = new Label(mLabelNomLivraison.getText());
-        mLabelArrivee.setTextFill(Color.grayRgb(96));
-        mLabelArrivee.relocate(centreRightPane + decalageLabelLivraison,m_yAffichage - radiusAffichageTimeline);
-
         mLabelFin.setTextFill(Color.grayRgb(96));
         mLabelFin.relocate(centreRightPane - widthLabelTime, m_yAffichage - radiusAffichageTimeline);
 
@@ -51,7 +43,6 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
         mRectangle.relocate(m_xAffichage - radiusAffichageTimeline, m_yAffichage_Relocate);
         mRectangle.setFill(mColorLivraison);
         mRectangle.setWidth(2*radiusAffichageTimeline);
-
 
         //Button
         mButton = new Button();
@@ -66,11 +57,19 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
         return mRectangle;
     }
 
+    public void setTranslateY(double y){
+        mCircle.setTranslateY(y);
+        mCircle2.setTranslateY(y);
+        mRectangle.setTranslateY(y);
+        mLabelFin.setTranslateY(y);
+        mLabelHeure.setTranslateY(y);
+        mLabelNomLivraison.setTranslateY(y);
+    }
+
     public void print (Pane pointPane, Pane labelPane, Pane buttonPane){
         super.print(pointPane, labelPane, buttonPane);
         pointPane.getChildren().add(mCircle2);
         labelPane.getChildren().add(mLabelFin);
-        labelPane.getChildren().add(mLabelArrivee);
         buttonPane.getChildren().add(mButton); // Mettre dans PLUI ?
         pointPane.getChildren().add(mRectangle);
     }

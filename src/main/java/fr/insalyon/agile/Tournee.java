@@ -1,7 +1,8 @@
 package fr.insalyon.agile;
 
 import javafx.scene.layout.Pane;
-
+import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -17,8 +18,6 @@ public class Tournee {
 
     private List<Point> livraisons;
     private Map<Point, Duration> margesLivraison;
-    private Itineraire dijkstraAllee;
-    private Itineraire dijkstraRetour;
 
     public Tournee(){
 
@@ -42,6 +41,10 @@ public class Tournee {
 
     public LocalTime getDateArrivee() {
         return mDateArrivee;
+    }
+
+    public List<Point> getLivraisons() {
+        return livraisons;
     }
 
     public Map<Point, Duration> getMargesLivraison() {
@@ -94,11 +97,11 @@ public class Tournee {
         Point origineItineraire = itineraire.getTroncons().get(0).getOrigine();
         Point arriveeItineraire = itineraire.getTroncons().get(itineraire.getTroncons().size()-1).getDestination();
         Duration tempsActuel = margesLivraison.get(arriveeItineraire).plus(itineraire.getDuree());
-        dijkstraAllee = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), origineItineraire, new Point[]{livraison} ).get(0);
+        Itineraire dijkstraAllee = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), origineItineraire, new Point[]{livraison} ).get(0);
         Duration dureeAllee = dijkstraAllee.getDuree();
-        dijkstraRetour = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), livraison, new Point[]{arriveeItineraire}).get(0);
+        Itineraire dijkstraRetour = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), livraison, new Point[]{arriveeItineraire}).get(0);
         Duration dureeRetour = dijkstraRetour.getDuree();
-        Duration nouvTemps = dureeAllee.plus(livraison.getLivraison().getDureeLivraison()).plus(dureeRetour);
+        Duration nouvTemps = dureeAllee.plus(dureeRetour);
         if(nouvTemps.compareTo(tempsActuel) < 0)
         {
             return true;
@@ -106,28 +109,26 @@ public class Tournee {
 
         return false;
     }
-    //Test si entrepot
 
-    public Boolean ajouterLivraison(Point livraison, Itineraire itineraire){
-        if(getItinerairesModifiable(livraison, itineraire)){
-            int index = mItineraires.indexOf(itineraire);
-            mItineraires.remove(itineraire);
-            LocalTime dateArrivee;
-            if(itineraire.getTroncons().get(0).getOrigine().getType().equals(Point.Type.ENTREPOT)){
-                dateArrivee= mDemandeDeLivraison.getDepart().plus(dijkstraAllee.getDuree());
-            }
-            else
-            {
-                dateArrivee=itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().plus(itineraire.getDuree()));
-            }
-            livraison.getLivraison().setDateArrivee(dateArrivee);
-            livraison.getLivraison().setDateLivraison(dateArrivee);
-            mItineraires.add(index, dijkstraAllee);
-            mItineraires.add(index+1, dijkstraRetour);
-            livraisons.add(livraison);
-            return true;
+    public void ajouterLivraison(Point livraison, Itineraire itineraire){
+        livraison.setLivraison(new Livraison(null, null, Duration.ZERO));
+        Itineraire dijkstraAllee = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), itineraire.getTroncons().get(0).getOrigine(), new Point[]{livraison} ).get(0);
+        Itineraire dijkstraRetour = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), livraison, new Point[]{itineraire.getTroncons().get(itineraire.getTroncons().size()-1).getDestination()}).get(0);
+        int index = mItineraires.indexOf(itineraire);
+        mItineraires.remove(itineraire);
+        LocalTime dateArrivee;
+        if(itineraire.getTroncons().get(0).getOrigine().getType().equals(Point.Type.ENTREPOT)){
+            dateArrivee= mDemandeDeLivraison.getDepart().plus(dijkstraAllee.getDuree());
         }
-        return false;
+        else
+        {
+            dateArrivee=itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison().plus(itineraire.getDuree()));
+        }
+        livraison.getLivraison().setDateArrivee(dateArrivee);
+        livraison.getLivraison().setDateLivraison(dateArrivee);
+        mItineraires.add(index, dijkstraAllee);
+        mItineraires.add(index+1, dijkstraRetour);
+        livraisons.add(livraison);
     }
 
     public void supprimerLivraison(Point livraison){
@@ -174,7 +175,6 @@ public class Tournee {
                     newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateLivraison);
                     newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateArrivee(dateArrivee);
                 }
-
                  break;
             }
         }
@@ -182,7 +182,4 @@ public class Tournee {
         livraison.setPoint();
     }
 
-    public List<Point> getLivraisons() {
-        return livraisons;
-    }
 }
