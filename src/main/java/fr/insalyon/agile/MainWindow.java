@@ -308,12 +308,16 @@ public class MainWindow extends Application
 
         int compteurLivraison = 1;
         double yRelocateFromLastPoint = yFirstPoint;
+        TronconUI tronconUI;
+        TronconUI lasTronconUI= null;
+
         Pane pointPane = new Pane();
         Pane linePane = new Pane();
         Pane accrochePointPane = new Pane();
         Pane labelPane = new Pane();
         Pane buttonPane = new Pane();
         Pane mobilePane = new Pane();
+
 
         for (Itineraire itineraire: tournee.getItineraires()) {
 
@@ -372,6 +376,33 @@ public class MainWindow extends Application
             Label lblpointItiLivraison = new Label("Livraison " +compteurLivraison);
             lblpointItiLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
 
+
+
+
+
+            double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
+            double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
+
+            if (marge > margeMax){
+                marge = margeMax;
+            }
+
+            //Cas spécial dernier troncon
+            if(Point.Type.ENTREPOT == itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getType()){
+                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint,yRelocate , marge, margeMax);
+                lasTronconUI = new TronconUI(xPoint, yRelocateLivraison, yLastPoint,marge,margeMax);
+                lasTronconUI.print(linePane);
+            }
+            else{
+                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocateLivraison, marge, margeMax);
+            }
+            tronconUI.print(linePane);
+
+
+
+
+
+
              PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateDepart, yRelocateLivraison, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureDebutLivraison,lblpointItiHeureFinLivraison,lblpointItiLivraison);
             pointLivraisonUI_oblong.print(pointPane,labelPane,buttonPane);
             //endregion
@@ -399,28 +430,10 @@ public class MainWindow extends Application
                 imageViewArrow.setOnMouseDragged(deplacementLivraisonOnMouseDraggedEventHandler);
             }
 
-            //region <lignes - tronçons>
 
-            double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
-            double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
 
-            if (marge > margeMax){
-                marge = margeMax;
-            }
-
-            TronconUI tronconUI;
-            //Cas spécial dernier troncon
-            if(Point.Type.ENTREPOT == itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getType()){
-                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint,yLastPoint , marge, margeMax);
-            }
-            else{
-                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocateLivraison, marge, margeMax);
-            }
-            tronconUI.print(linePane);
 
             yRelocateFromLastPoint = yRelocateDepart;
-
-            //endregion
 
             //hover sur chaque livraison
             itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
