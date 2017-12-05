@@ -15,9 +15,14 @@ import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.controlsfx.control.PopOver;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import java.io.File;
 import java.time.LocalTime;
@@ -57,31 +62,9 @@ public class MainWindow extends Application
     double haut;
     double bas;
 
-
-    ObservableList<String> planOptions =
-            FXCollections.observableArrayList(
-                    "planLyonPetit",
-                    "planLyonMoyen",
-                    "planLyonGrand"
-            );
-    final ComboBox comboBoxPlan = new ComboBox(planOptions);
-
-    ObservableList<String> DLOptions =
-            FXCollections.observableArrayList(
-                    "Choisir une DL",
-                    "DLgrand10",
-                    "DLgrand10TW2",
-                    "DLgrand20",
-                    "DLgrand20TW2",
-                    "DLmoyen5",
-                    "DLmoyen5TW1",
-                    "DLmoyen5TW4",
-                    "DLmoyen10",
-                    "DLmoyen10TW3",
-                    "DLpetit3",
-                    "DLpetit5"
-            );
-    final ComboBox comboBoxDemandeLivraison = new ComboBox(DLOptions);
+    final Button buttonPlan = new Button("Charger Plan...");
+    final Button buttonDDL = new Button("Charger Demande de Livraison...");
+    final FileChooser fileChooser = new FileChooser();
 
     Plan plan;
     Point vehicule;
@@ -94,8 +77,6 @@ public class MainWindow extends Application
     public MainWindow(){
         parser = new ParserXML();
         yPoints = new ArrayList<>();
-
-        plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
     }
 
     public static void main(String[] args) {
@@ -121,40 +102,30 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
-        //Label
-        Label lblTitlePlan = new Label("Plan");
-        Label lblTitleDL = new Label("Demande Livraison");
-
         // LeftVBox
         VBox leftVbox = new VBox();
 
         //Partie Plan du bandeau
-        leftVbox.getChildren().add(lblTitlePlan);
-        comboBoxPlan.setPromptText("planLyonPetit");
-        leftVbox.getChildren().add(comboBoxPlan);
-        comboBoxPlan.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
+        buttonPlan.setOnAction(event -> {
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null) {
                 mapPane.getChildren().clear();
-                plan = parser.parsePlan("fichiersXML/"+ t1 +".xml");
+                plan = parser.parsePlan(file.getAbsolutePath());
                 plan.print(mapPane);
             }
         });
+        leftVbox.getChildren().add(buttonPlan);
+
 
         //Partie Demande Livraison du bandeau
-        comboBoxDemandeLivraison.setPromptText("Choisir une DL");
-        comboBoxDemandeLivraison.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                if(t1.equals(DLOptions.get(0)))
-                {
-                    mapPane.getChildren().clear();
-                    plan.print(mapPane);
-                    return;
-                }
-
-                fileName = t1;
+        buttonDDL.setOnAction(event -> {
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null) {
+                fileName = file.getAbsolutePath();
                 plan.resetTypePoints();
                 tournee = null;
-                ddl = parser.parseDemandeDeLivraison("fichiersXML/"+t1+".xml");
+                ddl = parser.parseDemandeDeLivraison(fileName);
+
                 if (ddl == null) {
                     return;
                 }
@@ -206,13 +177,16 @@ public class MainWindow extends Application
             public void handle(ActionEvent event) {
                 ExportTournee exportTournee = new ExportTournee(tournee);
                 try {
-                    exportTournee.exportFile(fileName);
+                    File file = fileChooser.showSaveDialog(primaryStage);
+                    if (file != null) {
+                        exportTournee.exportFile(file.getAbsolutePath());
 
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Export de la tournée");
-                    alert.setContentText("Le fichier a bien été exporté.");
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Export de la tournée");
+                        alert.setContentText("Le fichier a bien été exporté.");
 
-                    alert.showAndWait();
+                        alert.showAndWait();
+                    }
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Erreur");
@@ -228,8 +202,7 @@ public class MainWindow extends Application
         // --------------------------------
         //VBOX
 
-        leftVbox.getChildren().add(lblTitleDL);
-        leftVbox.getChildren().add(comboBoxDemandeLivraison);
+        leftVbox.getChildren().add(buttonDDL);
         leftVbox.getChildren().add(btnCalculerTournee);
         leftVbox.getChildren().add(btnExportTournee);
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
@@ -238,8 +211,6 @@ public class MainWindow extends Application
         //Left Pane
         Pane leftPane = new Pane();
         leftPane.getChildren().add(leftVbox);
-
-        plan.print(mapPane);
 
         BorderPane root = new BorderPane();
         root.setRight(rightPane);
@@ -407,7 +378,7 @@ public class MainWindow extends Application
 
             //region <lignes - tronçons>
 
-            double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
+            double marge = 100;//tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
             double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
 
             if (marge > margeMax){
@@ -533,11 +504,47 @@ public class MainWindow extends Application
                     VBox vBoxAjoutInPopover = new VBox();
                     vBoxAjoutInPopover.getChildren().add(hBoxAjoutInPopover);
                     Button buttonAjoutInPopover = new Button("Valider");
+
                     buttonAjoutInPopover.setOnAction(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent event) {
-                            //mettre truc de louise
+                            Point pointSelectionne = null;
+                            Itineraire itineraireSelectionne = null;
+
+
+                            for (Point point : plan.getPoints()) {
+                                if(point.getId().equals(txtFieldInPopover.getText()))
+                                {
+                                    pointSelectionne = point;
+                                    break;
+                                }
+                            }
+                            if(pointSelectionne == null)
+                                return;
+
+                            Iterator<Itineraire> iterator = tournee.getItineraires().iterator();
+                            while (iterator.hasNext()){
+                                //Todo : si temps, donner le choix où ajouter
+
+                                Itineraire itineraire = iterator.next();
+
+                                if(tournee.getItinerairesModifiable(pointSelectionne, itineraire)){
+                                    itineraireSelectionne = itineraire;
+                                    break;
+                                }
+                            }
+                            tournee.ajouterLivraison(pointSelectionne,itineraireSelectionne);
+
+                            //Recalcul tournée
+                            mapPane.getChildren().clear();
+                            timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                            plan.print(mapPane);
+                            tournee.print(mapPane);
+
+                            vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
+                            vehicule.setVehicule();
+                            vehicule.print(mapPane);
                         }});
 
                     vBoxAjoutInPopover.getChildren().add(buttonAjoutInPopover);
@@ -601,7 +608,7 @@ public class MainWindow extends Application
 
     }
 
-        public Image makeTransparent(Image inputImage) {
+    public Image makeTransparent(Image inputImage) {
         int W = (int) inputImage.getWidth();
         int H = (int) inputImage.getHeight();
         WritableImage outputImage = new WritableImage(W, H);
@@ -647,7 +654,7 @@ public class MainWindow extends Application
                 public void handle(MouseEvent t) {
                     double offsetY = t.getSceneY() - orgSceneY;
                     double newTranslateY;
-                    if (t.getSceneY() < yFirstPoint) {
+                    if (t.getSceneY() <= yFirstPoint) {
                         newTranslateY = 0;
                     } else if (t.getSceneY() > yLastPoint) {
                         newTranslateY = yLastPoint - yFirstPoint;
@@ -675,7 +682,9 @@ public class MainWindow extends Application
 
                     if (yPos <= yPoints.get(0).getValue()) {
                         double progress = (yPos - yFirstPoint) / (yPoints.get(0).getValue() - yFirstPoint);
-                        troncon.setLongueurParcourue(mapPane,troncon.getLongueur() * progress);
+                        if (troncon != null) {
+                            troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                        }
                         double newX = tournee.getDemandeDeLivraison().getEntrepot().getX() + progress * (yPoints.get(0).getKey().getX() - tournee.getDemandeDeLivraison().getEntrepot().getX());
                         double newY = tournee.getDemandeDeLivraison().getEntrepot().getY() + progress * (yPoints.get(0).getKey().getY() - tournee.getDemandeDeLivraison().getEntrepot().getY());
 
@@ -698,7 +707,9 @@ public class MainWindow extends Application
 
                         if (yPos <= yPoints.get(i).getValue()) {
                             double progress = (yPos - yPoints.get(i-1).getValue()) / (yPoints.get(i).getValue() - yPoints.get(i-1).getValue());
-                            troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                            if (troncon != null) {
+                                troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                            }
                             double newX = yPoints.get(i-1).getKey().getX() + progress * (yPoints.get(i).getKey().getX() - yPoints.get(i-1).getKey().getX());
                             double newY = yPoints.get(i-1).getKey().getY() + progress * (yPoints.get(i).getKey().getY() - yPoints.get(i-1).getKey().getY());
 
@@ -721,7 +732,9 @@ public class MainWindow extends Application
 
                     if (yPos >= yPoints.get(yPoints.size()-1).getValue()) {
                         double progress = (yPos - yPoints.get(yPoints.size()-1).getValue()) / (yLastPoint - yPoints.get(yPoints.size()-1).getValue());
-                        troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                        if (troncon != null) {
+                            troncon.setLongueurParcourue(mapPane, troncon.getLongueur() * progress);
+                        }
                         double newX = yPoints.get(yPoints.size()-1).getKey().getX() + progress * (tournee.getDemandeDeLivraison().getEntrepot().getX() - yPoints.get(yPoints.size()-1).getKey().getX());
                         double newY = yPoints.get(yPoints.size()-1).getKey().getY() + progress * (tournee.getDemandeDeLivraison().getEntrepot().getY() - yPoints.get(yPoints.size()-1).getKey().getY());
 
@@ -741,8 +754,8 @@ public class MainWindow extends Application
 
                 @Override
                 public void handle(MouseEvent t) {
-                    orgSceneY = t.getSceneY();
-                    orgTranslateY = ((ImageView)(t.getSource())).getTranslateY();
+                    orgSceneYLivraison = t.getSceneY();
+                    orgTranslateYLivraison = ((ImageView)(t.getSource())).getTranslateY();
 
                     ImageviewExtended imageView = ((ImageviewExtended)(t.getSource()));
                     haut = imageView.getTronconUIPrecedent().getLine().getStartY();
@@ -784,9 +797,5 @@ public class MainWindow extends Application
 
     private double localTimeToSecond(LocalTime time){
         return (time.getHour()*60*60 + time.getMinute()*60 + time.getSecond());
-    }
-
-    public void pointerTronconPourValidationAjout(int numeroTroncon){
-
     }
 }
