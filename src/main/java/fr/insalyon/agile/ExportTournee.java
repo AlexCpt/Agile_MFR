@@ -2,6 +2,7 @@ package fr.insalyon.agile;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -86,15 +87,18 @@ public class ExportTournee {
         return text;
     }
 
-    public void exportFile (String fileName) {
+    public void exportFile (String fileName) throws Exception {
         try {
+            if (fileName == null) {
+                throw new IOException("Aucun fichier sélectionné");
+            }
             BufferedWriter writer = new BufferedWriter(new FileWriter("exportTournee/" + fileName));
             String text = createFileText();
             writer.write(text);
 
             writer.close();
         } catch (Exception e) {
-            System.out.println(e);
+            throw e;
         }
 
     }

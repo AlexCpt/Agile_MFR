@@ -10,10 +10,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -207,7 +204,22 @@ public class MainWindow extends Application
             @Override
             public void handle(ActionEvent event) {
                 ExportTournee exportTournee = new ExportTournee(tournee);
-                exportTournee.exportFile(fileName);
+                try {
+                    exportTournee.exportFile(fileName);
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Export de la tournée");
+                    alert.setContentText("Le fichier a bien été exporté.");
+
+                    alert.showAndWait();
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Erreur");
+                    alert.setContentText("Erreur lors de l'export de la tournée : " + e.getMessage());
+
+                    alert.showAndWait();
+                }
+
             }
         });
 
