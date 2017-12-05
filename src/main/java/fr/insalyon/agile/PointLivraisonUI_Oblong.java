@@ -58,6 +58,16 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
 
     public Button getButton(){ return mButton; }
 
+    public void setTranslateY(double y){
+        mCircle.setTranslateY(y);
+        mCircle2.setTranslateY(y);
+        mRectangle.setTranslateY(y);
+        mLabelFin.setTranslateY(y);
+        mLabelArrivee.setTranslateY(y);
+        mLabelHeure.setTranslateY(y);
+        mLabelNomLivraison.setTranslateY(y);
+    }
+
     public void print (Pane pointPane, Pane labelPane, Pane buttonPane){
         super.print(pointPane, labelPane, buttonPane);
         pointPane.getChildren().add(mCircle2);
