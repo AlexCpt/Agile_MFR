@@ -176,15 +176,24 @@ public class MainWindow extends Application
 
             @Override
             public void handle(ActionEvent event) {
-                tournee = ddl.calculerTournee();
-                mapPane.getChildren().clear();
-                timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
-                plan.print(mapPane);
-                tournee.print(mapPane);
+                if (ddl != null) {
+                    tournee = ddl.calculerTournee();
+                    mapPane.getChildren().clear();
+                    timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                    plan.print(mapPane);
+                    tournee.print(mapPane);
 
-                vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
-                vehicule.setVehicule();
-                vehicule.print(mapPane);
+                    vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
+                    vehicule.setVehicule();
+                    vehicule.print(mapPane);
+                }
+                else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Erreur");
+                    alert.setContentText("Aucune demande de livraison chargée.");
+
+                    alert.showAndWait();
+                }
             }
         });
 
