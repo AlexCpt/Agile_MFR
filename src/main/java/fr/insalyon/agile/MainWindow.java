@@ -19,6 +19,10 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.controlsfx.control.PopOver;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import java.io.File;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -406,7 +410,7 @@ public class MainWindow extends Application
 
             //region <lignes - tronçons>
 
-            double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
+            double marge = 100;//tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
             double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
 
             if (marge > margeMax){
@@ -532,11 +536,47 @@ public class MainWindow extends Application
                     VBox vBoxAjoutInPopover = new VBox();
                     vBoxAjoutInPopover.getChildren().add(hBoxAjoutInPopover);
                     Button buttonAjoutInPopover = new Button("Valider");
+
                     buttonAjoutInPopover.setOnAction(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent event) {
-                            //mettre truc de louise
+                            Point pointSelectionne = null;
+                            Itineraire itineraireSelectionne = null;
+
+
+                            for (Point point : plan.getPoints()) {
+                                if(point.getId().equals(txtFieldInPopover.getText()))
+                                {
+                                    pointSelectionne = point;
+                                    break;
+                                }
+                            }
+                            if(pointSelectionne == null)
+                                return;
+
+                            Iterator<Itineraire> iterator = tournee.getItineraires().iterator();
+                            while (iterator.hasNext()){
+                                //Todo : si temps, donner le choix où ajouter
+
+                                Itineraire itineraire = iterator.next();
+
+                                if(tournee.getItinerairesModifiable(pointSelectionne, itineraire)){
+                                    itineraireSelectionne = itineraire;
+                                    break;
+                                }
+                            }
+                            tournee.ajouterLivraison(pointSelectionne,itineraireSelectionne);
+
+                            //Recalcul tournée
+                            mapPane.getChildren().clear();
+                            timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                            plan.print(mapPane);
+                            tournee.print(mapPane);
+
+                            vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
+                            vehicule.setVehicule();
+                            vehicule.print(mapPane);
                         }});
 
                     vBoxAjoutInPopover.getChildren().add(buttonAjoutInPopover);
@@ -789,9 +829,5 @@ public class MainWindow extends Application
 
     private double localTimeToSecond(LocalTime time){
         return (time.getHour()*60*60 + time.getMinute()*60 + time.getSecond());
-    }
-
-    public void pointerTronconPourValidationAjout(int numeroTroncon){
-
     }
 }
