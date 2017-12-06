@@ -53,7 +53,7 @@ public class MainWindow extends Application
     ArrayList<Pair<Point, Double>> yPoints;
     double yLastPoint = rightPaneHeigth - 100;
     static  double widthLabelTime = 75;
-    double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
+    double heightLabelTime = 9;
     double deliveryWidth = 100.0;
     double deliveryHeight = 70.0;
 
