@@ -464,7 +464,7 @@ public class MainWindow extends Application
 
             Label lblpointItiHeureFinLivraison = new Label(heureDepart.format(dtf));
 
-            if (heureDepart.isBefore(heureLivraisonx.plus(Duration.ofMinutes(15)))) {
+            if (heureDepart.isBefore(heureLivraisonx.plus(Duration.ofMinutes(2)))) {
                 lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
                 lblpointItiHeureFinLivraison.setVisible(false);
             }
@@ -476,7 +476,7 @@ public class MainWindow extends Application
 
             //region <lignes - tronçons>
 
-            double marge = 100;//tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
+            double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
             double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
 
             if (marge > margeMax){
