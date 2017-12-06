@@ -706,13 +706,21 @@ public class MainWindow extends Application
                                     timeLineItineraires.get(itineraire).setLineColor(Color.RED);
                                 }
                             }
+
+                            long duree;
+                            try {
+                                duree = Long.parseLong(txtFieldDuree.getText());
+                            } catch (NumberFormatException e) {
+                                duree = 0;
+                            }
+
                             if(itineraireSelectionne!=null){
-                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofMinutes(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne, mapPane));
+                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofMinutes(duree), itineraireSelectionne, mapPane));
                             }
 
                             //Recalcul tournée
                             mapPane.getChildren().clear();
-                            //timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                            timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
                             plan.print(mapPane);
                             tournee.print(mapPane);
 
