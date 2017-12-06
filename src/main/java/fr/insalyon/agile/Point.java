@@ -192,13 +192,13 @@ public class Point {
 
         suppPopover = new PopOver();
 
-        suppPopover.setAutoHide(false);
+        suppPopover.setAutoHide(true);
         suppPopover.setDetachable(false);
         suppPopover.setContentNode(btnSupprValidate);
         suppPopover.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
 
-        suppPopover.setX(mapPane.getBoundsInParent().getMaxX() + btnSupprPopover.getBoundsInParent().getMinX() + btnSupprPopover.getLayoutX());
-        suppPopover.setY(mapPane.getBoundsInParent().getMinY() + btnSupprPopover.getBoundsInParent().getMinY() + btnSupprPopover.getMaxHeight() / 2);
+        suppPopover.setX(mapPane.getBoundsInParent().getMaxX() + btnSupprPopover.getBoundsInParent().getMinX() + btnSupprPopover.getLayoutX() -35);
+        suppPopover.setY(mapPane.getBoundsInParent().getMinY() + btnSupprPopover.getBoundsInParent().getMinY() + btnSupprPopover.getMaxHeight() / 2 + 30);
         btnSupprPopover.setOnMouseClicked(e -> {
             if (suppPopover.isShowing()) suppPopover.hide();
             else
