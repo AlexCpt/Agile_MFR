@@ -580,6 +580,7 @@ public class MainWindow extends Application
             yRelocateFromLastPoint = yRelocateDepart;
 
             Point origineLivraison = itineraire.getTroncons().get(0).getOrigine();
+            long secondsMarge = tournee.getMargesLivraison().get(origineLivraison).getSeconds();
 
             //hover sur chaque livraison
             origineLivraison.printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
@@ -595,7 +596,9 @@ public class MainWindow extends Application
                                     origineLivraison.getLivraison().getDateArrivee().format(dtf) +
                                     "\nDurée livraison : " +
                                     origineLivraison.getLivraison().getDureeLivraison().toMinutes() +
-                                    " min"),
+                                    " min\n" +
+                                    "Marge : " +
+                                    String.format("%d h %02d min", secondsMarge/ 3600, (secondsMarge % 3600) / 60, (secondsMarge % 60))),
                     pointLivraisonUI_oblong.getRectangle());
         }
 
@@ -691,14 +694,12 @@ public class MainWindow extends Application
 
                                 if(tournee.getItinerairesModifiable(pointSelectionne, itineraire)){
                                     itineraireSelectionne = itineraire;
-                                    timeLineItineraires.get(itineraire).setLineColor(Color.GREEN);
-                                    System.out.println("true");
-                                    //break;
+                                    break;
                                 }
-                                else{
-                                    System.out.println("false");
-                                    timeLineItineraires.get(itineraire).setLineColor(Color.RED);
-                                }
+                                /*else{
+                                    timeLineItineraires.get(itineraire).getLine().setStrokeWidth(6);
+                                    //timeLineItineraires.get(itineraire).getLine().getStrokeDashArray().addAll(4d);
+                                }*/
                             }
                             if(itineraireSelectionne!=null){
                                 listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofSeconds(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne));
@@ -706,7 +707,7 @@ public class MainWindow extends Application
 
                             //Recalcul tournée
                             mapPane.getChildren().clear();
-                            //timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                            timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
                             plan.print(mapPane);
                             tournee.print(mapPane);
 
