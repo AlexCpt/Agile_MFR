@@ -23,14 +23,12 @@ import javafx.util.Pair;
 import org.controlsfx.control.PopOver;
 
 import java.time.Duration;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import java.io.File;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 
 public class MainWindow extends Application
@@ -75,13 +73,14 @@ public class MainWindow extends Application
     Tournee tournee;
     DemandeDeLivraison ddl;
     ListeDeCdes listeDeCdes;
-
+    Map<Itineraire, TronconUI> timeLineItineraires;
     Pane mapPane;
 
     public MainWindow(){
         parser = new ParserXML();
         yPoints = new ArrayList<>();
         listeDeCdes = new ListeDeCdes();
+        timeLineItineraires = new HashMap<>();
         plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
     }
 
@@ -406,8 +405,9 @@ public class MainWindow extends Application
         ImageviewExtended imageViewArrowActu = null;
         ImageviewExtended imageViewArrowPrecedent = null;
 
-
         for (Itineraire itineraire: tournee.getItineraires()) {
+            TronconUI tronconUI;
+            TronconUI lastTronconUI=null;
 
             if(itineraire.getTroncons().get(0).getOrigine().getType() == Point.Type.ENTREPOT){
                 LocalTime heureDepart = tournee.getDemandeDeLivraison().getDepart();
@@ -420,6 +420,18 @@ public class MainWindow extends Application
                     yPoints.add(new Pair<>(itineraire.getTroncons().get(i).getOrigine(), yPosition));
                 }
                 //endregion
+
+                double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
+                double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
+
+                if (marge > margeMax){
+                    marge = margeMax;
+                }
+
+                double yFinTronconUI = computeY(itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getLivraison().getDateLivraison(), heureDebutTournee, heureFinTournee);
+                tronconUI = new TronconUI(xPoint, yFirstPoint, yFinTronconUI, marge, margeMax);
+                tronconUI.print(linePane);
+                timeLineItineraires.put(itineraire, tronconUI);
 
                 continue;
             }
@@ -483,9 +495,6 @@ public class MainWindow extends Application
                 marge = margeMax;
             }
 
-            TronconUI tronconUI;
-            TronconUI lastTronconUI=null;
-
             //Cas spécial dernier troncon
             if(Point.Type.ENTREPOT == itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getType()){
                 tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint ,yRelocateLivraison , marge, margeMax);
@@ -496,6 +505,7 @@ public class MainWindow extends Application
                 tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocateLivraison, marge, margeMax);
             }
             tronconUI.print(linePane);
+            timeLineItineraires.put(itineraire, tronconUI);
             //endregion
 
             PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateDepart, yRelocateLivraison, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureDebutLivraison,lblpointItiHeureFinLivraison,lblpointItiLivraison);
@@ -644,7 +654,13 @@ public class MainWindow extends Application
 
                                 if(tournee.getItinerairesModifiable(pointSelectionne, itineraire)){
                                     itineraireSelectionne = itineraire;
-                                    break;
+                                    timeLineItineraires.get(itineraire).setLineColor(Color.GREEN);
+                                    System.out.println("true");
+                                    //break;
+                                }
+                                else{
+                                    System.out.println("false");
+                                    timeLineItineraires.get(itineraire).setLineColor(Color.RED);
                                 }
                             }
                             if(itineraireSelectionne!=null){
@@ -653,7 +669,7 @@ public class MainWindow extends Application
 
                             //Recalcul tournée
                             mapPane.getChildren().clear();
-                            timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                            //timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
                             plan.print(mapPane);
                             tournee.print(mapPane);
 
