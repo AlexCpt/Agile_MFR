@@ -670,7 +670,7 @@ public class MainWindow extends Application
                                 }
                             }
                             if(itineraireSelectionne!=null){
-                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofSeconds(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne));
+                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofMinutes(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne));
                             }
 
                             //Recalcul tournée
