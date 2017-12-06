@@ -430,11 +430,11 @@ public class MainWindow extends Application
             LocalTime heureDepart = heureLivraisonx.plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison());
             LocalTime iterateurHeure = heureDepart;
 
+            double yRelocateArrivee = computeY(heurex, heureDebutTournee, heureFinTournee);
             double yRelocateLivraison = computeY(heureLivraisonx, heureDebutTournee, heureFinTournee);
-            double yRelocate = computeY(heurex, heureDebutTournee, heureFinTournee);
             double yRelocateDepart = computeY(heureDepart, heureDebutTournee, heureFinTournee);
 
-            yPoints.add(new Pair<>(itineraire.getTroncons().get(0).getOrigine(), yRelocate));
+            yPoints.add(new Pair<>(itineraire.getTroncons().get(0).getOrigine(), yRelocateArrivee));
 
 
             if (heurex != heureLivraisonx) {
@@ -493,7 +493,7 @@ public class MainWindow extends Application
                 lastTronconUI.print(linePane);
             }
             else{
-                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocate, marge, margeMax);
+                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocateLivraison, marge, margeMax);
             }
             tronconUI.print(linePane);
             //endregion
