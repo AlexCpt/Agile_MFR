@@ -53,7 +53,7 @@ public class MainWindow extends Application
     ArrayList<Pair<Point, Double>> yPoints;
     double yLastPoint = rightPaneHeigth - 100;
     static  double widthLabelTime = 75;
-    double heightLabelTime = 9; //Todo : L'avoir dynamiquement ? ça a l'air chiant
+    double heightLabelTime = 9;
     double deliveryWidth = 100.0;
     double deliveryHeight = 70.0;
 
@@ -238,16 +238,16 @@ public class MainWindow extends Application
         });
 
         //Hbox of Ajouter-Valider
-        HBox hBoxAjouterValider = new HBox();
-        hBoxAjouterValider.getChildren().add(btnRedo);
-        hBoxAjouterValider.getChildren().add(btnUndo);
-        hBoxAjouterValider.setAlignment(Pos.BOTTOM_CENTER);
-        hBoxAjouterValider.setSpacing(8);
-        hBoxAjouterValider.setPrefSize(bandeauWidth, bandeauHeigth);
+        HBox hBoxUndoRedo = new HBox();
+        hBoxUndoRedo.getChildren().add(btnRedo);
+        hBoxUndoRedo.getChildren().add(btnUndo);
+        hBoxUndoRedo.setAlignment(Pos.BOTTOM_CENTER);
+        hBoxUndoRedo.setSpacing(8);
+        hBoxUndoRedo.setPrefSize(bandeauWidth, bandeauHeigth);
 
         //Right vBox
         VBox leftVboxDown = new VBox();
-        leftVboxDown.getChildren().add(hBoxAjouterValider);
+        leftVboxDown.getChildren().add(hBoxUndoRedo);
         leftVboxDown.setAlignment(Pos.BOTTOM_CENTER);
         leftVboxDown.setPadding(new Insets(35));
         leftVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
@@ -430,11 +430,11 @@ public class MainWindow extends Application
             LocalTime heureDepart = heureLivraisonx.plus(itineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison());
             LocalTime iterateurHeure = heureDepart;
 
+            double yRelocateArrivee = computeY(heurex, heureDebutTournee, heureFinTournee);
             double yRelocateLivraison = computeY(heureLivraisonx, heureDebutTournee, heureFinTournee);
-            double yRelocate = computeY(heurex, heureDebutTournee, heureFinTournee);
             double yRelocateDepart = computeY(heureDepart, heureDebutTournee, heureFinTournee);
 
-            yPoints.add(new Pair<>(itineraire.getTroncons().get(0).getOrigine(), yRelocate));
+            yPoints.add(new Pair<>(itineraire.getTroncons().get(0).getOrigine(), yRelocateArrivee));
 
 
             if (heurex != heureLivraisonx) {
@@ -464,7 +464,7 @@ public class MainWindow extends Application
 
             Label lblpointItiHeureFinLivraison = new Label(heureDepart.format(dtf));
 
-            if (heureDepart.isBefore(heureLivraisonx.plus(Duration.ofMinutes(15)))) {
+            if (heureDepart.isBefore(heureLivraisonx.plus(Duration.ofMinutes(2)))) {
                 lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
                 lblpointItiHeureFinLivraison.setVisible(false);
             }
@@ -476,7 +476,7 @@ public class MainWindow extends Application
 
             //region <lignes - tronçons>
 
-            double marge = 100;//tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
+            double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
             double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
 
             if (marge > margeMax){
@@ -493,7 +493,7 @@ public class MainWindow extends Application
                 lastTronconUI.print(linePane);
             }
             else{
-                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocate, marge, margeMax);
+                tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocateLivraison, marge, margeMax);
             }
             tronconUI.print(linePane);
             //endregion
@@ -570,7 +570,6 @@ public class MainWindow extends Application
             final String imageURI = new File("images/delivery-icon-fleche.png").toURI().toString();
             final Image image = new Image(imageURI, deliveryWidth, deliveryHeight, true, false);
             deliveryHeight = image.getHeight();
-            deliveryWidth = image.getWidth();
             ImageView imageView = new ImageView(image);
 
             imageView.relocate(0, yFirstPoint - deliveryHeight/2);
