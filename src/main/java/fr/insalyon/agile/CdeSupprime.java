@@ -31,8 +31,7 @@ public class CdeSupprime implements  Commande{
     @Override
     public void undoCde() {
         point.setLivraison(new Livraison(debPlage, finPlage, dureeLivraison));
-        tournee.ajouterLivraison(point,itineraire);
-
+        tournee.ajouterLivraison(point, dureeLivraison, itineraire);
     }
 
 
