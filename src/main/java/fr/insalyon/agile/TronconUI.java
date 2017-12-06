@@ -9,8 +9,7 @@ public class TronconUI {
     private Color lineColor;
 
     public TronconUI (double x, double startY, double endY, double marge, double margeMax){
-        lineColor = Color.BLACK;
-        //.interpolate(Color.GREEN, marge / margeMax);
+        lineColor = Color.RED.interpolate(Color.GREEN, marge / margeMax);
 
         line = new Line();
         line.setStroke(lineColor);
