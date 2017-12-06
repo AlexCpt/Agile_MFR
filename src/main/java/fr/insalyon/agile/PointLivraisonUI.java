@@ -28,7 +28,7 @@ public class PointLivraisonUI {
     };
 
     protected final int radiusAffichageTimeline = 6;
-    protected final Color mColorEntrepot = Color.rgb(0,0,0);
+    protected final Color mColorEntrepot = Color.RED;
     protected final Color mColorLivraison = Color.rgb(56, 120, 244);
     protected final  int decalageLabelLivraison = 25;
     protected final String popOverButtonStyle =
