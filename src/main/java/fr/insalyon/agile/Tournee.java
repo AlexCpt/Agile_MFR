@@ -91,7 +91,7 @@ public class Tournee {
     }
 
 
-    public Boolean getItinerairesModifiable (Point livraison, Itineraire itineraire)
+    public Boolean getItinerairesModifiable (Point livraison, Duration duree, Itineraire itineraire)
     {
         this.calculMargesPointsLivraison();
         Point origineItineraire = itineraire.getTroncons().get(0).getOrigine();
@@ -101,7 +101,7 @@ public class Tournee {
         Duration dureeAllee = dijkstraAllee.getDuree();
         Itineraire dijkstraRetour = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), livraison, new Point[]{arriveeItineraire}).get(0);
         Duration dureeRetour = dijkstraRetour.getDuree();
-        Duration nouvTemps = dureeAllee.plus(dureeRetour);
+        Duration nouvTemps = dureeAllee.plus(dureeRetour).plus(duree);
         if(nouvTemps.compareTo(tempsActuel) < 0)
         {
             return true;

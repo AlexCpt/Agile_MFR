@@ -690,11 +690,18 @@ public class MainWindow extends Application
                             if(pointSelectionne == null)
                                 return;
 
+                            long duree;
+                            try {
+                                duree = Long.parseLong(txtFieldDuree.getText());
+                            } catch (NumberFormatException e) {
+                                duree = 0;
+                            }
+
                             Iterator<Itineraire> iterator = tournee.getItineraires().iterator();
                             while (iterator.hasNext()){
                                 Itineraire itineraire = iterator.next();
 
-                                if(tournee.getItinerairesModifiable(pointSelectionne, itineraire)){
+                                if(tournee.getItinerairesModifiable(pointSelectionne,  Duration.ofMinutes(duree),  itineraire)){
                                     itineraireSelectionne = itineraire;
                                     break;
                                 }
@@ -702,13 +709,6 @@ public class MainWindow extends Application
                                     timeLineItineraires.get(itineraire).getLine().setStrokeWidth(6);
                                     //timeLineItineraires.get(itineraire).getLine().getStrokeDashArray().addAll(4d);
                                 }*/
-                            }
-
-                            long duree;
-                            try {
-                                duree = Long.parseLong(txtFieldDuree.getText());
-                            } catch (NumberFormatException e) {
-                                duree = 0;
                             }
 
                             if(itineraireSelectionne!=null){
