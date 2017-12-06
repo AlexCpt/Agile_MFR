@@ -108,8 +108,6 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
-
-
         // LeftVBox
         VBox leftVbox = new VBox();
         VBox globalLeftBox = new VBox();
@@ -118,8 +116,6 @@ public class MainWindow extends Application
         ImageView logoView = new ImageView(logo);
         logoView.setLayoutX(bandeauWidth/2 - 85);
         logoView.setLayoutY(30);
-
-
 
         Label fileLabelPlan = new Label("Aucun fichier chargé.");
         fileLabelPlan.setWrapText(true);
@@ -543,8 +539,7 @@ public class MainWindow extends Application
                         new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
-                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine()));
-                                //tournee.supprimerLivraison(itineraire.getTroncons().get(0).getOrigine());
+                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine(), mapPane));
                                 timeLineBuild(rightPane, tournee, mapPane, primaryStage, false);
                                 mapPane.getChildren().clear();
                                 plan.print(mapPane);
@@ -701,7 +696,7 @@ public class MainWindow extends Application
                                 }
                             }
                             if(itineraireSelectionne!=null){
-                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofSeconds(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne));
+                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofSeconds(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne, mapPane));
                             }
 
                             //Recalcul tournée
