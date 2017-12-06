@@ -24,14 +24,12 @@ import javafx.util.Pair;
 import org.controlsfx.control.PopOver;
 
 import java.time.Duration;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import java.io.File;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 
 public class MainWindow extends Application
@@ -76,13 +74,14 @@ public class MainWindow extends Application
     Tournee tournee;
     DemandeDeLivraison ddl;
     ListeDeCdes listeDeCdes;
-
+    Map<Itineraire, TronconUI> timeLineItineraires;
     Pane mapPane;
 
     public MainWindow(){
         parser = new ParserXML();
         yPoints = new ArrayList<>();
         listeDeCdes = new ListeDeCdes();
+        timeLineItineraires = new HashMap<>();
         plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
     }
 
@@ -109,17 +108,14 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
-        VBox globalLeftBox = new VBox();
-
         // LeftVBox
         VBox leftVbox = new VBox();
-
+        VBox globalLeftBox = new VBox();
         final String imageURI = new File("images/logo.png").toURI().toString();
         final Image logo = makeTransparent(new Image(imageURI, 250, 50, true, true));
         ImageView logoView = new ImageView(logo);
-
-
-        leftVbox.getChildren().add(logoView);
+        logoView.setLayoutX(bandeauWidth/2 - 85);
+        logoView.setLayoutY(30);
 
         Label fileLabelPlan = new Label("Aucun fichier chargé.");
         fileLabelPlan.setWrapText(true);
@@ -177,7 +173,6 @@ public class MainWindow extends Application
         //Right Pane
         Pane rightPane = new Pane();
         rightPane.getChildren().add(rightVbox);
-
 
         Button btnCalculerTournee = new Button();
         btnCalculerTournee.setText("Calculer tournée");
@@ -255,12 +250,14 @@ public class MainWindow extends Application
         hBoxUndoRedo.setSpacing(8);
         hBoxUndoRedo.setPrefSize(bandeauWidth, bandeauHeigth);
 
-        //Right vBox
+        VBox leftVboxTop = new VBox();
+
+
         VBox leftVboxDown = new VBox();
         leftVboxDown.getChildren().add(hBoxUndoRedo);
         leftVboxDown.setAlignment(Pos.BOTTOM_CENTER);
         leftVboxDown.setPadding(new Insets(35));
-        leftVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
+        leftVboxDown.setPrefSize(bandeauWidth, 50);
 
 
         Button btnExportTournee = new Button();
@@ -310,6 +307,8 @@ public class MainWindow extends Application
         globalLeftBox.setPrefSize(bandeauWidth, bandeauHeigth);
         //Left Pane
         Pane leftPane = new Pane();
+        leftPane.getChildren().add(logoView);
+
         leftPane.getChildren().add(globalLeftBox);
 
         BorderPane root = new BorderPane();
@@ -416,8 +415,9 @@ public class MainWindow extends Application
         ImageviewExtended imageViewArrowActu = null;
         ImageviewExtended imageViewArrowPrecedent = null;
 
-
         for (Itineraire itineraire: tournee.getItineraires()) {
+            TronconUI tronconUI;
+            TronconUI lastTronconUI=null;
 
             if(itineraire.getTroncons().get(0).getOrigine().getType() == Point.Type.ENTREPOT){
                 LocalTime heureDepart = tournee.getDemandeDeLivraison().getDepart();
@@ -430,6 +430,18 @@ public class MainWindow extends Application
                     yPoints.add(new Pair<>(itineraire.getTroncons().get(i).getOrigine(), yPosition));
                 }
                 //endregion
+
+                double marge = tournee.getMargesLivraison().get(itineraire.getTroncons().get(0).getOrigine()).getSeconds();
+                double margeMax = localTimeToSecond(LocalTime.of(0,30)); //Tout vert
+
+                if (marge > margeMax){
+                    marge = margeMax;
+                }
+
+                double yFinTronconUI = computeY(itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getLivraison().getDateLivraison(), heureDebutTournee, heureFinTournee);
+                tronconUI = new TronconUI(xPoint, yFirstPoint, yFinTronconUI, marge, margeMax);
+                tronconUI.print(linePane);
+                timeLineItineraires.put(itineraire, tronconUI);
 
                 continue;
             }
@@ -493,9 +505,6 @@ public class MainWindow extends Application
                 marge = margeMax;
             }
 
-            TronconUI tronconUI;
-            TronconUI lastTronconUI=null;
-
             //Cas spécial dernier troncon
             if(Point.Type.ENTREPOT == itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getType()){
                 tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint ,yRelocateLivraison , marge, margeMax);
@@ -506,6 +515,7 @@ public class MainWindow extends Application
                 tronconUI = new TronconUI(xPoint, yRelocateFromLastPoint, yRelocateLivraison, marge, margeMax);
             }
             tronconUI.print(linePane);
+            timeLineItineraires.put(itineraire, tronconUI);
             //endregion
 
             PointLivraisonUI_Oblong pointLivraisonUI_oblong = new PointLivraisonUI_Oblong(xPoint, yRelocateDepart, yRelocateLivraison, PointLivraisonUI.Type.LIVRAISON,lblpointItiHeureDebutLivraison,lblpointItiHeureFinLivraison,lblpointItiLivraison);
@@ -529,8 +539,7 @@ public class MainWindow extends Application
                         new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
-                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine()));
-                                //tournee.supprimerLivraison(itineraire.getTroncons().get(0).getOrigine());
+                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine(), mapPane));
                                 timeLineBuild(rightPane, tournee, mapPane, primaryStage, false);
                                 mapPane.getChildren().clear();
                                 plan.print(mapPane);
@@ -565,10 +574,23 @@ public class MainWindow extends Application
 
             yRelocateFromLastPoint = yRelocateDepart;
 
+            Point origineLivraison = itineraire.getTroncons().get(0).getOrigine();
+
             //hover sur chaque livraison
-            itineraire.getTroncons().get(0).getOrigine().printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
-                    lblpointItiLivraison.getText() + " - Heure d'Arrivée : " +
-                            itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee().format(dtf),
+            origineLivraison.printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
+                    String.format(
+                            lblpointItiLivraison.getText() +
+                                    " - "+
+                                    itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getId()+
+                                    " "+
+                                    itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getNomRue()+
+                                    "\nHeure de début : "+
+                                    origineLivraison.getLivraison().getDateLivraison().format(dtf)+
+                                    "\nHeure d'Arrivée : "+
+                                    origineLivraison.getLivraison().getDateArrivee().format(dtf) +
+                                    "\nDurée livraison : " +
+                                    origineLivraison.getLivraison().getDureeLivraison().toMinutes() +
+                                    " min"),
                     pointLivraisonUI_oblong.getRectangle());
         }
 
@@ -660,22 +682,26 @@ public class MainWindow extends Application
 
                             Iterator<Itineraire> iterator = tournee.getItineraires().iterator();
                             while (iterator.hasNext()){
-                                //Todo : si temps, donner le choix où ajouter
-
                                 Itineraire itineraire = iterator.next();
 
                                 if(tournee.getItinerairesModifiable(pointSelectionne, itineraire)){
                                     itineraireSelectionne = itineraire;
-                                    break;
+                                    timeLineItineraires.get(itineraire).setLineColor(Color.GREEN);
+                                    System.out.println("true");
+                                    //break;
+                                }
+                                else{
+                                    System.out.println("false");
+                                    timeLineItineraires.get(itineraire).setLineColor(Color.RED);
                                 }
                             }
                             if(itineraireSelectionne!=null){
-                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofMinutes(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne));
+                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofMinutes(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne, mapPane));
                             }
 
                             //Recalcul tournée
                             mapPane.getChildren().clear();
-                            timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                            //timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
                             plan.print(mapPane);
                             tournee.print(mapPane);
 
@@ -719,14 +745,12 @@ public class MainWindow extends Application
         hBoxAjouterValider.setSpacing(8);
         hBoxAjouterValider.setPrefSize(bandeauWidth, bandeauHeigth);
 
-
         //Right vBox
         VBox rightVboxDown = new VBox();
         rightVboxDown.getChildren().add(hBoxAjouterValider);
         rightVboxDown.setAlignment(Pos.BOTTOM_CENTER);
         rightVboxDown.setPadding(new Insets(35));
         rightVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
-
         //endregion
 
         //region <Affichage>

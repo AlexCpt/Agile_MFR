@@ -1,5 +1,7 @@
 package fr.insalyon.agile;
 
+import javafx.scene.layout.Pane;
+
 import java.time.Duration;
 
 public class CdeAjout implements  Commande{
@@ -8,13 +10,15 @@ public class CdeAjout implements  Commande{
     private Point point;
     private Itineraire itineraire;
     private Duration dureeLivraison;
+    private Pane mapPane;
 
 
-    public CdeAjout(Tournee tournee, Point point, Duration dureeLivraison, Itineraire itineraire) {
+    public CdeAjout(Tournee tournee, Point point, Duration dureeLivraison, Itineraire itineraire, Pane mapPane) {
         this.tournee = tournee;
         this.point = point;
         this.itineraire = itineraire;
         this.dureeLivraison = dureeLivraison;
+        this.mapPane = mapPane;
     }
 
     @Override
@@ -26,7 +30,7 @@ public class CdeAjout implements  Commande{
     @Override
     public void undoCde() {
 
-        tournee.supprimerLivraison(point);
+        tournee.supprimerLivraison(point, mapPane);
 
     }
 

@@ -59,13 +59,27 @@ public class ExportTournee {
             text += "Itinéraire à suivre : \n";
 
             int longueurTroncon = 0;
-            for (Troncon troncon : itineraire.getTroncons()) {
-
-                if (itineraire.getTroncons().indexOf(troncon) != itineraire.getTroncons().size() - 1) {
-                    Troncon nextTroncon = itineraire.getTroncons().get(itineraire.getTroncons().indexOf(troncon)+1);
+            for (int i = 0; i < itineraire.getTroncons().size(); i++) {
+                Troncon troncon = itineraire.getTroncons().get(i);
+                if (i != (itineraire.getTroncons().size() - 1)) {
+                    Troncon nextTroncon = itineraire.getTroncons().get(i + 1);
                     if (!troncon.getNomRue().equals(nextTroncon.getNomRue())) {
                         longueurTroncon += troncon.getLongueur();
                         text += "\tPrendre " + troncon.getNomRue() + " sur " + longueurTroncon + "m\n";
+                        text += "\t - Puis ";
+
+                        double angle = Math.toDegrees(troncon.angleWith(nextTroncon));
+                        if (angle == 0) {
+                            text += "faire demi-tour";
+                        } else if (angle > 0 && angle < 160) {
+                            text += "tourner à droite";
+                        } else if (angle >= 160 || angle <= -160) {
+                            text += "continuer tout droit";
+                        } else if (angle > -160 && angle < 0) {
+                            text += "tourner à gauche";
+                        }
+                        text += "\n";
+
                         longueurTroncon = 0;
                     }
                     else {
