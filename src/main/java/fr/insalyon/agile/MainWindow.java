@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -112,6 +113,13 @@ public class MainWindow extends Application
         // LeftVBox
         VBox leftVbox = new VBox();
 
+        final String imageURI = new File("images/logo.png").toURI().toString();
+        final Image logo = makeTransparent(new Image(imageURI, 250, 50, true, true));
+        ImageView logoView = new ImageView(logo);
+
+
+        leftVbox.getChildren().add(logoView);
+
         Label fileLabelPlan = new Label("Aucun fichier chargé.");
         fileLabelPlan.setWrapText(true);
         leftVbox.getChildren().add(fileLabelPlan);
@@ -135,6 +143,8 @@ public class MainWindow extends Application
 
         //Partie Demande Livraison du bandeau
         buttonDDL.setWrapText(true);
+        buttonDDL.setTextAlignment(TextAlignment.CENTER);
+        buttonDDL.setMaxWidth(120);
         buttonDDL.setOnAction(event -> {
             fileChooser.setInitialDirectory(new File("fichiersXML/"));
             File file = fileChooser.showOpenDialog(primaryStage);
@@ -619,13 +629,25 @@ public class MainWindow extends Application
                     Label lblAjoutInPopover = new Label("Position de la Livraison : ");
                     TextField txtFieldInPopover = new TextField();
                     txtFieldInPopover.setPrefWidth(60);
+
                     hBoxAjoutInPopover.getChildren().add(lblAjoutInPopover);
                     hBoxAjoutInPopover.getChildren().add(txtFieldInPopover);
                     hBoxAjoutInPopover.setAlignment(Pos.CENTER);
-                    hBoxAjoutInPopover.setPadding(new Insets(20, 20,10,20));
+                    hBoxAjoutInPopover.setPadding(new Insets(20, 20,5,20));
+
+                    HBox hBoxDuree = new HBox();
+                    Label lblDureeInPopover = new Label("Durée de la Livraison : ");
+                    TextField txtFieldDuree = new TextField();
+                    txtFieldDuree.setPrefWidth(60);
+
+                    hBoxDuree.getChildren().add(lblDureeInPopover);
+                    hBoxDuree.getChildren().add(txtFieldDuree);
+                    hBoxDuree.setAlignment(Pos.CENTER);
+                    hBoxDuree.setPadding(new Insets(5, 20,10,20));
 
                     VBox vBoxAjoutInPopover = new VBox();
                     vBoxAjoutInPopover.getChildren().add(hBoxAjoutInPopover);
+                    vBoxAjoutInPopover.getChildren().add(hBoxDuree);
                     Button buttonAjoutInPopover = new Button("Valider");
 
                     buttonAjoutInPopover.setOnAction(new EventHandler<ActionEvent>() {
@@ -664,7 +686,7 @@ public class MainWindow extends Application
                                 }
                             }
                             if(itineraireSelectionne!=null){
-                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, itineraireSelectionne));
+                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofSeconds(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne));
                             }
 
                             //Recalcul tournée
