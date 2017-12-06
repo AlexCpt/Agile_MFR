@@ -695,7 +695,7 @@ public class MainWindow extends Application
                                     itineraireSelectionne = itineraire;
                                     timeLineItineraires.get(itineraire).setLineColor(Color.GREEN);
                                     System.out.println("true");
-                                    //break;
+                                    break;
                                 }
                                 else{
                                     System.out.println("false");
