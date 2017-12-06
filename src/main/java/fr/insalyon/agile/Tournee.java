@@ -110,8 +110,8 @@ public class Tournee {
         return false;
     }
 
-    public void ajouterLivraison(Point livraison, Itineraire itineraire){
-        livraison.setLivraison(new Livraison(null, null, Duration.ZERO));
+    public void ajouterLivraison(Point livraison, Duration dureeLivraison, Itineraire itineraire){
+        livraison.setLivraison(new Livraison(null, null, dureeLivraison));
         Itineraire dijkstraAllee = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), itineraire.getTroncons().get(0).getOrigine(), new Point[]{livraison} ).get(0);
         Itineraire dijkstraRetour = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), livraison, new Point[]{itineraire.getTroncons().get(itineraire.getTroncons().size()-1).getDestination()}).get(0);
         int index = mItineraires.indexOf(itineraire);

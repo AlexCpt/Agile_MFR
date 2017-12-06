@@ -22,7 +22,7 @@ public class CdeSupprime implements  Commande{
     @Override
     public void undoCde() {
 
-        tournee.ajouterLivraison(point,itineraire);
+        tournee.ajouterLivraison(point, point.getLivraison().getDureeLivraison(), itineraire);
 
     }
 
