@@ -78,7 +78,7 @@ public class Tournee {
     }
 
     public void calculMargesPointsLivraison(){
-
+        margesLivraison.clear();
         for(Point point : livraisons)
         {
             Duration marge = Duration.between(point.getLivraison().getDateArrivee(), point.getLivraison().getDateLivraison());
@@ -111,7 +111,9 @@ public class Tournee {
     }
 
     public void ajouterLivraison(Point livraison, Itineraire itineraire){
-        livraison.setLivraison(new Livraison(null, null, Duration.ZERO));
+        if(!livraison.getType().equals(Point.Type.LIVRAISON)){
+            livraison.setLivraison(new Livraison(null, null, Duration.ZERO));
+        }
         Itineraire dijkstraAllee = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), itineraire.getTroncons().get(0).getOrigine(), new Point[]{livraison} ).get(0);
         Itineraire dijkstraRetour = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), livraison, new Point[]{itineraire.getTroncons().get(itineraire.getTroncons().size()-1).getDestination()}).get(0);
         int index = mItineraires.indexOf(itineraire);
@@ -142,37 +144,10 @@ public class Tournee {
                 itiAlle = itineraire;
                 itiRetour = mItineraires.get(mItineraires.indexOf(itineraire)+1);
                 int index = mItineraires.indexOf(itiAlle);
-                //Ce dijkstra est déjà calcule peut etre pourrions nous avoir un cache des valeurs calculé par dijkstra
                 newItineraire = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), itiAlle.getTroncons().get(0).getOrigine(), new Point[]{itiRetour.getTroncons().get(itiRetour.getTroncons().size()-1).getDestination()}).get(0);
                 mItineraires.remove(itiAlle);
                 mItineraires.remove(itiRetour);
                 mItineraires.add(index, newItineraire);
-                LocalTime dateArrivee;
-                LocalTime dateLivraison;
-
-
-                if(newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getType().equals(Point.Type.ENTREPOT)){
-                    this.setDateArrivee(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(newItineraire.getDuree()));
-                }else
-                {
-                    if(newItineraire.getTroncons().get(0).getOrigine().getType().equals(Point.Type.ENTREPOT)){
-                        dateArrivee = mDemandeDeLivraison.getDepart().plus(newItineraire.getDuree());
-
-                    }else
-                    {
-                        dateArrivee = newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDateLivraison().plus(newItineraire.getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison()).plus(newItineraire.getDuree());
-
-                    }
-                    LocalTime dateDebPlage = newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().getDebutPlage();
-                    dateLivraison = dateArrivee;
-                    if(dateDebPlage!=null){
-                        if(dateArrivee.isBefore(dateDebPlage)){
-                            dateLivraison=dateDebPlage;
-                        }
-                    }
-                    newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateLivraison);
-                    newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateArrivee(dateArrivee);
-                }
                 break;
             }
         }

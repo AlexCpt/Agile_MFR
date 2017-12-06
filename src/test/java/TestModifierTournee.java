@@ -154,66 +154,7 @@ public class TestModifierTournee {
     }
 
     @Test
-    public final void TestSupprimerLivraisonFinTournee()
-    {
-        List<Point> livraisons = new ArrayList<>();
-        points.get(5).setLivraison(new Livraison(LocalTime.of(4,0), LocalTime.of(4,30), Duration.ofMinutes(10)));
-        points.get(1).setLivraison(new Livraison(LocalTime.of(2,0), LocalTime.of(2,30), Duration.ofMinutes(6)));
-        points.get(2).setLivraison(new Livraison(LocalTime.of(3,0), LocalTime.of(3, 30), Duration.ofMinutes(20)));
-        points.get(4).setLivraison(new Livraison(LocalTime.of(5,0), LocalTime.of(5,30), Duration.ofMinutes(20)));
-        livraisons.add(points.get(2));
-        livraisons.add(points.get(5));
-        livraisons.add(points.get(1));
-        livraisons.add(points.get(4));
-
-        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(1,4));
-
-        Tournee tournee = demandeDeLivraison.calculerTournee();
-
-        tournee.supprimerLivraison(points.get(4));
-
-        List<Itineraire> itineraires= new ArrayList<>();
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(0))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(4))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(6))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(8), troncons.get(10))));
-        assertEquals(itineraires, tournee.getItineraires());
-        assertEquals(tournee.getDateArrivee(), LocalTime.of(4, 10, 2));
-
-    }
-
-    @Test
-    public final void TestSupprimerLivraisonMilieuTournee()
-    {
-        List<Point> livraisons = new ArrayList<>();
-        points.get(5).setLivraison(new Livraison(LocalTime.of(4,0), LocalTime.of(4,30), Duration.ofMinutes(10)));
-        points.get(1).setLivraison(new Livraison(LocalTime.of(2,0), LocalTime.of(2,30), Duration.ofMinutes(6)));
-        points.get(2).setLivraison(new Livraison(LocalTime.of(3,0), LocalTime.of(3, 30), Duration.ofMinutes(20)));
-        points.get(4).setLivraison(new Livraison(LocalTime.of(5,0), LocalTime.of(5,30), Duration.ofMinutes(20)));
-        livraisons.add(points.get(2));
-        livraisons.add(points.get(5));
-        livraisons.add(points.get(1));
-        livraisons.add(points.get(4));
-
-        DemandeDeLivraison demandeDeLivraison = new DemandeDeLivraison(plan, livraisons, points.get(0), LocalTime.of(1,4));
-
-        Tournee tournee = demandeDeLivraison.calculerTournee();
-
-        tournee.supprimerLivraison(points.get(2));
-
-        List<Itineraire> itineraires= new ArrayList<>();
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(0))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(5), troncons.get(3), troncons.get(2))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(8))));
-        itineraires.add(new Itineraire(Arrays.asList(troncons.get(10))));
-        assertEquals(itineraires, tournee.getItineraires());
-        assertEquals(points.get(5).getLivraison().getDateArrivee(), LocalTime.of(2,6, 27));
-        assertEquals(points.get(5).getLivraison().getDateLivraison(), LocalTime.of(4, 0));
-
-    }
-
-    @Test
-    public final void TestSupprimerLivraisonDebutTournee()
+    public final void TestSupprimerLivraisonTournee()
     {
         List<Point> livraisons = new ArrayList<>();
         points.get(5).setLivraison(new Livraison(LocalTime.of(4,0), LocalTime.of(4,30), Duration.ofMinutes(10)));
@@ -237,8 +178,6 @@ public class TestModifierTournee {
         itineraires.add(new Itineraire(Arrays.asList(troncons.get(8))));
         itineraires.add(new Itineraire(Arrays.asList(troncons.get(10))));
         assertEquals(itineraires, tournee.getItineraires());
-        assertEquals(points.get(2).getLivraison().getDateArrivee(), LocalTime.of(1,4, 21));
-        assertEquals(points.get(2).getLivraison().getDateLivraison(), LocalTime.of(3, 0));
     }
 
 }
