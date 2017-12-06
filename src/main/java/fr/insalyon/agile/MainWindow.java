@@ -149,6 +149,16 @@ public class MainWindow extends Application
         buttonDDL.setTextAlignment(TextAlignment.CENTER);
         buttonDDL.setMaxWidth(120);
         buttonDDL.setOnAction(event -> {
+
+            if(tournee != null){
+                for (Itineraire it : tournee.getItineraires()) {
+                    for (Troncon tr : it.getTroncons()) {
+                        tr.setLongueurParcourue(mapPane,0);
+                    }
+                }
+            }
+
+
             fileChooser.setInitialDirectory(new File("fichiersXML/"));
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null) {
@@ -164,6 +174,9 @@ public class MainWindow extends Application
 
                 rightPane.getChildren().clear();
                 buildTimelineTitle(rightPane);
+
+
+
                 mapPane.getChildren().clear();
                 plan.print(mapPane);
             }
