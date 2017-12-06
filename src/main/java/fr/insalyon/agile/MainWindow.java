@@ -108,8 +108,6 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
-
-
         // LeftVBox
         VBox leftVbox = new VBox();
         VBox globalLeftBox = new VBox();
@@ -118,8 +116,6 @@ public class MainWindow extends Application
         ImageView logoView = new ImageView(logo);
         logoView.setLayoutX(bandeauWidth/2 - 85);
         logoView.setLayoutY(30);
-
-
 
         Label fileLabelPlan = new Label("Aucun fichier chargé.");
         fileLabelPlan.setWrapText(true);
@@ -207,7 +203,8 @@ public class MainWindow extends Application
         });
 
         Button btnUndo = new Button();
-        btnUndo.setText("Undo");
+        btnUndo.setText("Annuler");
+        btnUndo.setMinWidth(80);
         leftVbox.setSpacing(20);
         btnUndo.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -227,7 +224,8 @@ public class MainWindow extends Application
         });
 
         Button btnRedo = new Button();
-        btnRedo.setText("Redo");
+        btnRedo.setText("Rétablir");
+        btnRedo.setMinWidth(80);
         leftVbox.setSpacing(20);
         btnRedo.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -248,8 +246,8 @@ public class MainWindow extends Application
 
         //Hbox of Ajouter-Valider
         HBox hBoxUndoRedo = new HBox();
-        hBoxUndoRedo.getChildren().add(btnRedo);
         hBoxUndoRedo.getChildren().add(btnUndo);
+        hBoxUndoRedo.getChildren().add(btnRedo);
         hBoxUndoRedo.setAlignment(Pos.BOTTOM_CENTER);
         hBoxUndoRedo.setSpacing(8);
         hBoxUndoRedo.setPrefSize(bandeauWidth, bandeauHeigth);
@@ -542,8 +540,7 @@ public class MainWindow extends Application
                         new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
-                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine()));
-                                //tournee.supprimerLivraison(itineraire.getTroncons().get(0).getOrigine());
+                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine(), mapPane));
                                 timeLineBuild(rightPane, tournee, mapPane, primaryStage, false);
                                 mapPane.getChildren().clear();
                                 plan.print(mapPane);
@@ -578,10 +575,23 @@ public class MainWindow extends Application
 
             yRelocateFromLastPoint = yRelocateDepart;
 
+            Point origineLivraison = itineraire.getTroncons().get(0).getOrigine();
+
             //hover sur chaque livraison
-            itineraire.getTroncons().get(0).getOrigine().printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
-                    lblpointItiLivraison.getText() + " - Heure d'Arrivée : " +
-                            itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee().format(dtf),
+            origineLivraison.printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
+                    String.format(
+                            lblpointItiLivraison.getText() +
+                                    " - "+
+                                    itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getId()+
+                                    " "+
+                                    itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getNomRue()+
+                                    "\nHeure d'Arrivée : "+
+                                    origineLivraison.getLivraison().getDateArrivee().format(dtf) +
+                                    "\nHeure de début : "+
+                                    origineLivraison.getLivraison().getDateLivraison().format(dtf)+
+                                    "\nDurée livraison : " +
+                                    origineLivraison.getLivraison().getDureeLivraison().toMinutes() +
+                                    " min"),
                     pointLivraisonUI_oblong.getRectangle());
         }
 
@@ -697,7 +707,7 @@ public class MainWindow extends Application
                                 }
                             }
                             if(itineraireSelectionne!=null){
-                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofSeconds(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne));
+                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofMinutes(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne, mapPane));
                             }
 
                             //Recalcul tournée

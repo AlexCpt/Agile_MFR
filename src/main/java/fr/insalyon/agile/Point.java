@@ -169,11 +169,13 @@ public class Point {
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
     }
 
-   public void printGlowHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String label, Rectangle rectangle){
+   public void printGlowHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String stringLabel, Rectangle rectangle){
        PopOver popOver = new PopOver();
        popOver.setAutoHide(true);
        popOver.setDetachable(false);
-       popOver.setContentNode(new Label(label));
+       Label label = new Label(stringLabel);
+       popOver.setContentNode(label);
+       label.setPadding(new Insets(6));
        popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX()- 3);
        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 13);
