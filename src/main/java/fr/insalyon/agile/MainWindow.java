@@ -584,10 +584,10 @@ public class MainWindow extends Application
                                     itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getId()+
                                     " "+
                                     itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getNomRue()+
-                                    "\nHeure de début : "+
-                                    origineLivraison.getLivraison().getDateLivraison().format(dtf)+
                                     "\nHeure d'Arrivée : "+
                                     origineLivraison.getLivraison().getDateArrivee().format(dtf) +
+                                    "\nHeure de début : "+
+                                    origineLivraison.getLivraison().getDateLivraison().format(dtf)+
                                     "\nDurée livraison : " +
                                     origineLivraison.getLivraison().getDureeLivraison().toMinutes() +
                                     " min"),
