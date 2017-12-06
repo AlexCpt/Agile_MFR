@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -136,6 +137,8 @@ public class MainWindow extends Application
 
         //Partie Demande Livraison du bandeau
         buttonDDL.setWrapText(true);
+        buttonDDL.setTextAlignment(TextAlignment.CENTER);
+        buttonDDL.setMaxWidth(120);
         buttonDDL.setOnAction(event -> {
             fileChooser.setInitialDirectory(new File("fichiersXML/"));
             File file = fileChooser.showOpenDialog(primaryStage);
@@ -238,16 +241,16 @@ public class MainWindow extends Application
         });
 
         //Hbox of Ajouter-Valider
-        HBox hBoxAjouterValider = new HBox();
-        hBoxAjouterValider.getChildren().add(btnRedo);
-        hBoxAjouterValider.getChildren().add(btnUndo);
-        hBoxAjouterValider.setAlignment(Pos.BOTTOM_CENTER);
-        hBoxAjouterValider.setSpacing(8);
-        hBoxAjouterValider.setPrefSize(bandeauWidth, bandeauHeigth);
+        HBox hBoxUndoRedo = new HBox();
+        hBoxUndoRedo.getChildren().add(btnRedo);
+        hBoxUndoRedo.getChildren().add(btnUndo);
+        hBoxUndoRedo.setAlignment(Pos.BOTTOM_CENTER);
+        hBoxUndoRedo.setSpacing(8);
+        hBoxUndoRedo.setPrefSize(bandeauWidth, bandeauHeigth);
 
         //Right vBox
         VBox leftVboxDown = new VBox();
-        leftVboxDown.getChildren().add(hBoxAjouterValider);
+        leftVboxDown.getChildren().add(hBoxUndoRedo);
         leftVboxDown.setAlignment(Pos.BOTTOM_CENTER);
         leftVboxDown.setPadding(new Insets(35));
         leftVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
@@ -570,7 +573,6 @@ public class MainWindow extends Application
             final String imageURI = new File("images/delivery-icon-fleche.png").toURI().toString();
             final Image image = new Image(imageURI, deliveryWidth, deliveryHeight, true, false);
             deliveryHeight = image.getHeight();
-            deliveryWidth = image.getWidth();
             ImageView imageView = new ImageView(image);
 
             imageView.relocate(0, yFirstPoint - deliveryHeight/2);
