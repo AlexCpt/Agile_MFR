@@ -619,13 +619,25 @@ public class MainWindow extends Application
                     Label lblAjoutInPopover = new Label("Position de la Livraison : ");
                     TextField txtFieldInPopover = new TextField();
                     txtFieldInPopover.setPrefWidth(60);
+
                     hBoxAjoutInPopover.getChildren().add(lblAjoutInPopover);
                     hBoxAjoutInPopover.getChildren().add(txtFieldInPopover);
                     hBoxAjoutInPopover.setAlignment(Pos.CENTER);
-                    hBoxAjoutInPopover.setPadding(new Insets(20, 20,10,20));
+                    hBoxAjoutInPopover.setPadding(new Insets(20, 20,5,20));
+
+                    HBox hBoxDuree = new HBox();
+                    Label lblDureeInPopover = new Label("Durée de la Livraison : ");
+                    TextField txtFieldDuree = new TextField();
+                    txtFieldDuree.setPrefWidth(60);
+
+                    hBoxDuree.getChildren().add(lblDureeInPopover);
+                    hBoxDuree.getChildren().add(txtFieldDuree);
+                    hBoxDuree.setAlignment(Pos.CENTER);
+                    hBoxDuree.setPadding(new Insets(5, 20,10,20));
 
                     VBox vBoxAjoutInPopover = new VBox();
                     vBoxAjoutInPopover.getChildren().add(hBoxAjoutInPopover);
+                    vBoxAjoutInPopover.getChildren().add(hBoxDuree);
                     Button buttonAjoutInPopover = new Button("Valider");
 
                     buttonAjoutInPopover.setOnAction(new EventHandler<ActionEvent>() {
@@ -658,7 +670,7 @@ public class MainWindow extends Application
                                 }
                             }
                             if(itineraireSelectionne!=null){
-                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, itineraireSelectionne));
+                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofSeconds(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne));
                             }
 
                             //Recalcul tournée
