@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -136,6 +137,8 @@ public class MainWindow extends Application
 
         //Partie Demande Livraison du bandeau
         buttonDDL.setWrapText(true);
+        buttonDDL.setTextAlignment(TextAlignment.CENTER);
+        buttonDDL.setMaxWidth(120);
         buttonDDL.setOnAction(event -> {
             fileChooser.setInitialDirectory(new File("fichiersXML/"));
             File file = fileChooser.showOpenDialog(primaryStage);
