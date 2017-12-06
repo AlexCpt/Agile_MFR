@@ -108,6 +108,9 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
+        Pane rightPane = new Pane();
+
+
         // LeftVBox
         VBox leftVbox = new VBox();
         VBox globalLeftBox = new VBox();
@@ -128,6 +131,9 @@ public class MainWindow extends Application
             if (file != null) {
                 fileLabelPlan.setText(file.getName());
                 mapPane.getChildren().clear();
+                rightPane.getChildren().clear();
+                buildTimelineTitle(rightPane);
+
                 plan = parser.parsePlan(file.getAbsolutePath());
                 plan.print(mapPane);
             }
@@ -156,23 +162,14 @@ public class MainWindow extends Application
                     return;
                 }
 
+                rightPane.getChildren().clear();
+                buildTimelineTitle(rightPane);
                 mapPane.getChildren().clear();
                 plan.print(mapPane);
             }
         });
 
-        //Titre
-        Label lblTimeline = new Label("Timeline");
-        lblTimeline.setPadding(new Insets(10));
-        //Right vBox
-        VBox rightVbox = new VBox();
-        rightVbox.getChildren().add(lblTimeline);
-        rightVbox.setAlignment(Pos.TOP_CENTER);
-        rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
-
-        //Right Pane
-        Pane rightPane = new Pane();
-        rightPane.getChildren().add(rightVbox);
+        buildTimelineTitle(rightPane);
 
         Button btnCalculerTournee = new Button();
         btnCalculerTournee.setText("Calculer tournée");
@@ -302,7 +299,6 @@ public class MainWindow extends Application
         leftVbox.getChildren().add(btnExportTournee);
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
         leftVbox.setAlignment(Pos.CENTER);
-
 
         globalLeftBox.getChildren().add(leftVbox);
         globalLeftBox.getChildren().add(leftVboxDown);
@@ -977,5 +973,19 @@ public class MainWindow extends Application
 
     private double localTimeToSecond(LocalTime time){
         return (time.getHour()*60*60 + time.getMinute()*60 + time.getSecond());
+    }
+
+    private void buildTimelineTitle(Pane rightPane){
+        //Titre
+        Label lblTimeline = new Label("Timeline");
+        lblTimeline.setPadding(new Insets(10));
+        //Right vBox
+        VBox rightVbox = new VBox();
+        rightVbox.getChildren().add(lblTimeline);
+        rightVbox.setAlignment(Pos.TOP_CENTER);
+        rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
+
+        //Right Pane
+        rightPane.getChildren().add(rightVbox);
     }
 }
