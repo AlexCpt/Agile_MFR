@@ -15,11 +15,14 @@ import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.controlsfx.control.PopOver;
 
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -105,13 +108,21 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
+        VBox globalLeftBox = new VBox();
+
         // LeftVBox
         VBox leftVbox = new VBox();
 
+        Label fileLabelPlan = new Label("Aucun fichier chargé.");
+        fileLabelPlan.setWrapText(true);
+        leftVbox.getChildren().add(fileLabelPlan);
+
         //Partie Plan du bandeau
         buttonPlan.setOnAction(event -> {
+            fileChooser.setInitialDirectory(new File("fichiersXML/"));
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null) {
+                fileLabelPlan.setText(file.getName());
                 mapPane.getChildren().clear();
                 plan = parser.parsePlan(file.getAbsolutePath());
                 plan.print(mapPane);
@@ -119,12 +130,18 @@ public class MainWindow extends Application
         });
         leftVbox.getChildren().add(buttonPlan);
 
+        Label fileLabelDDL = new Label("Aucun fichier chargé.");
+        fileLabelDDL.setWrapText(true);
+        leftVbox.getChildren().add(fileLabelDDL);
 
         //Partie Demande Livraison du bandeau
+        buttonDDL.setWrapText(true);
         buttonDDL.setOnAction(event -> {
+            fileChooser.setInitialDirectory(new File("fichiersXML/"));
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null) {
                 fileName = file.getAbsolutePath();
+                fileLabelDDL.setText(file.getName());
                 plan.resetTypePoints();
                 tournee = null;
                 ddl = parser.parseDemandeDeLivraison(fileName);
@@ -159,15 +176,24 @@ public class MainWindow extends Application
 
             @Override
             public void handle(ActionEvent event) {
-                tournee = ddl.calculerTournee();
-                mapPane.getChildren().clear();
-                timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
-                plan.print(mapPane);
-                tournee.print(mapPane);
+                if (ddl != null) {
+                    tournee = ddl.calculerTournee();
+                    mapPane.getChildren().clear();
+                    timeLineBuild(rightPane, tournee,mapPane,primaryStage, false);
+                    plan.print(mapPane);
+                    tournee.print(mapPane);
 
-                vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
-                vehicule.setVehicule();
-                vehicule.print(mapPane);
+                    vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
+                    vehicule.setVehicule();
+                    vehicule.print(mapPane);
+                }
+                else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Erreur");
+                    alert.setContentText("Aucune demande de livraison chargée.");
+
+                    alert.showAndWait();
+                }
             }
         });
 
@@ -236,6 +262,7 @@ public class MainWindow extends Application
             public void handle(ActionEvent event) {
                 ExportTournee exportTournee = new ExportTournee(tournee);
                 try {
+                    fileChooser.setInitialDirectory(new File("exportTournee/"));
                     File file = fileChooser.showSaveDialog(primaryStage);
                     if (file != null) {
                         exportTournee.exportFile(file.getAbsolutePath());
@@ -264,13 +291,16 @@ public class MainWindow extends Application
         leftVbox.getChildren().add(buttonDDL);
         leftVbox.getChildren().add(btnCalculerTournee);
         leftVbox.getChildren().add(btnExportTournee);
-        leftVbox.getChildren().add(leftVboxDown);
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
         leftVbox.setAlignment(Pos.CENTER);
 
+
+        globalLeftBox.getChildren().add(leftVbox);
+        globalLeftBox.getChildren().add(leftVboxDown);
+        globalLeftBox.setPrefSize(bandeauWidth, bandeauHeigth);
         //Left Pane
         Pane leftPane = new Pane();
-        leftPane.getChildren().add(leftVbox);
+        leftPane.getChildren().add(globalLeftBox);
 
         BorderPane root = new BorderPane();
         root.setRight(rightPane);
@@ -314,12 +344,12 @@ public class MainWindow extends Application
 
         String popOverButtonStyle = //"-fx-background-radius: 5em; " +
                 "-fx-min-width: " + radiusAffichageTimeline*10 + "px; " +
-                "-fx-min-height: " + radiusAffichageTimeline*6 + "px; " +
-                "-fx-max-width: " + radiusAffichageTimeline*10 + "px; " +
-                "-fx-max-height: " + radiusAffichageTimeline*6 + "px; " +
-                "-fx-background-color: transparent;" +
-                "-fx-background-insets: 0px; " +
-                "-fx-padding: 0px;";
+                        "-fx-min-height: " + radiusAffichageTimeline*6 + "px; " +
+                        "-fx-max-width: " + radiusAffichageTimeline*10 + "px; " +
+                        "-fx-max-height: " + radiusAffichageTimeline*6 + "px; " +
+                        "-fx-background-color: transparent;" +
+                        "-fx-background-insets: 0px; " +
+                        "-fx-padding: 0px;";
 
         //region <Titre>
         //Titre
@@ -425,12 +455,20 @@ public class MainWindow extends Application
             btnPopover.setStyle(popOverButtonStyle);
 
             //region <Point Oblong>
-                //Label arrivée
+            //Label arrivée
             Label lblpointItiHeureDebutLivraison = new Label(heureLivraisonx.format(dtf));
             lblpointItiHeureDebutLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm");
+
+
             Label lblpointItiHeureFinLivraison = new Label(heureDepart.format(dtf));
-            lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
+
+            if (heureDepart.isBefore(heureLivraisonx.plus(Duration.ofMinutes(15)))) {
+                lblpointItiHeureFinLivraison.setLayoutY(yRelocateLivraison - heightLabelTime);
+                lblpointItiHeureFinLivraison.setVisible(false);
+            }
+
 
             //Label Livraison machintruc
             Label lblpointItiLivraison = new Label("Livraison " + compteurLivraison);
@@ -464,16 +502,34 @@ public class MainWindow extends Application
             pointLivraisonUI_oblong.print(pointPane,labelPane,buttonPane);
             //endregion
 
-            //button sur chaque point de livraison pour la suppression
+            //button SUPPRIMER sur chaque point de livraison pour la suppression
             if (modeModifier == true) {
-                //TODO: le faire (méthode printSupressButton ?)
-                Button btnSupress = new Button();
-                btnSupress.relocate(xPoint - radiusAffichageTimeline*2, yRelocateDepart - radiusAffichageTimeline*2);
-                btnSupress.setStyle(popOverButtonStyle);
-                itineraire.getTroncons().get(0).getOrigine().printSuppressButton(mapPane,primaryStage,btnSupress);
+                //boutton supprimer
+
+                Button boutonSuppr = new Button("Supprimer");
+                // boutonSuppr.setFocusTraversable(false);
+                boutonSuppr.setMaxHeight(60);
+                boutonSuppr.setStyle("-fx-background-color: transparent;"
+                );
+
+                itineraire.getTroncons().get(0).getOrigine().printSuppressButton(mapPane,
+                        primaryStage, pointLivraisonUI_oblong.getButton(), boutonSuppr);
+                PopOver supprPopover = itineraire.getTroncons().get(0).getOrigine().getSupprPopover();
+                boutonSuppr.setOnAction(
+                        new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine()));
+                                //tournee.supprimerLivraison(itineraire.getTroncons().get(0).getOrigine());
+                                timeLineBuild(rightPane, tournee, mapPane, primaryStage, false);
+                                mapPane.getChildren().clear();
+                                plan.print(mapPane);
+                                tournee.print(mapPane);
+                                supprPopover.hide();
+                            }
+                        });
             }
             compteurLivraison++;
-
 
             // FlecheDéplacement de Livraison
             /*if(modeModifier == true){
@@ -482,19 +538,15 @@ public class MainWindow extends Application
                 imageViewArrowActu = new ImageviewExtended(pointLivraisonUI_oblong, image);
                 imageViewArrowActu.relocate(centreRightPane - dragAndDropWidth/2 - decalageXIconDragAndDropPoint, yRelocateLivraison + ((yRelocateDepart-yRelocateLivraison)/2)  - image.getHeight()/2 - decalageYIconDragAndDropPoint);
                 mobilePane.getChildren().add(imageViewArrowActu);
-
                 imageViewArrowActu.setOnMousePressed(deplacementLivraisonOnMousePressedEventHandler);
                 imageViewArrowActu.setOnMouseDragged(deplacementLivraisonOnMouseDraggedEventHandler);
             }
-
-
                 if(Point.Type.ENTREPOT == itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getType()){
                   //  imageViewArrowActu.setTronconUISuivant(lastTronconUI);
                 }
                 if (compteurLivraison != 2) {
                    // imageViewArrowPrecedent.setTronconUISuivant(tronconUI);
                 }
-
                /* imageViewArrowActu.setTronconUIPrecedent(tronconUI);
                 imageViewArrowActu.setOnMousePressed(deplacementLivraisonOnMousePressedEventHandler);
                 imageViewArrowActu.setOnMouseDragged(deplacementLivraisonOnMouseDraggedEventHandler);
@@ -504,8 +556,10 @@ public class MainWindow extends Application
             yRelocateFromLastPoint = yRelocateDepart;
 
             //hover sur chaque livraison
-            itineraire.getTroncons().get(0).getOrigine().printHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
-                    lblpointItiLivraison.getText() + " - Heure d'Arrivée : " + itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee().format(dtf));
+            itineraire.getTroncons().get(0).getOrigine().printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
+                    lblpointItiLivraison.getText() + " - Heure d'Arrivée : " +
+                            itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee().format(dtf),
+                    pointLivraisonUI_oblong.getRectangle());
         }
 
         //endregion

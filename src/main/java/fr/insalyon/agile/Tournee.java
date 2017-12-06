@@ -173,7 +173,7 @@ public class Tournee {
                     newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateLivraison(dateLivraison);
                     newItineraire.getTroncons().get(newItineraire.getTroncons().size()-1).getDestination().getLivraison().setDateArrivee(dateArrivee);
                 }
-                 break;
+                break;
             }
         }
         livraisons.remove(livraison);
@@ -182,4 +182,5 @@ public class Tournee {
         return newItineraire;
 
     }
+
 }

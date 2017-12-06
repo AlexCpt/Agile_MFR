@@ -10,7 +10,6 @@ public class CdeSupprime implements  Commande{
     public CdeSupprime(Tournee tournee, Point point) {
         this.tournee = tournee;
         this.point = point;
-
     }
 
     @Override

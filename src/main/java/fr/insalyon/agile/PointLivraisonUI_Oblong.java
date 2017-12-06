@@ -53,6 +53,10 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
 
     public Button getButton(){ return mButton; }
 
+    public Rectangle getRectangle() {
+        return mRectangle;
+    }
+
     public void setTranslateY(double y){
         mCircle.setTranslateY(y);
         mCircle2.setTranslateY(y);

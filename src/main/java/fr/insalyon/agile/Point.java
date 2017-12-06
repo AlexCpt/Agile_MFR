@@ -3,9 +3,11 @@ package fr.insalyon.agile;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import org.controlsfx.control.PopOver;
 import javafx.stage.Stage;
 
@@ -17,6 +19,7 @@ public class Point {
     final double radiusAffichage = 4;
     private double coordX;
     private double coordY;
+    private PopOver suppPopover;
     public String mAdresse;
     private Circle circle;
 
@@ -151,6 +154,31 @@ public class Point {
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
     }
 
+   public void printGlowHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String label, Rectangle rectangle){
+       PopOver popOver = new PopOver();
+       popOver.setAutoHide(true);
+       popOver.setDetachable(false);
+       popOver.setContentNode(new Label(label));
+       popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
+       popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX()- 3);
+       popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 13);
+
+       DropShadow borderGlow = new DropShadow();
+       borderGlow.setColor(Color.BLUE);
+       borderGlow.setWidth(80);
+       borderGlow.setHeight(150);
+
+       rndBtnPopover.setOnMouseEntered(e -> {
+           popOver.show(primaryStage);
+           rectangle.setEffect(borderGlow);
+       });
+       rndBtnPopover.setOnMouseExited(e -> {
+           popOver.hide();
+           rectangle.setEffect(null);
+       });
+
+   }
+
     public void move(Pane mapPane) {
         double radius = mType == Type.VEHICULE ? (radiusAffichage * 2) : radiusAffichage;
 
@@ -159,18 +187,27 @@ public class Point {
         circle.relocate(coordX - radius, coordY - radius);
     }
 
-    public void printSuppressButton(Pane mapPane, Stage primaryStage, Button rndBtnSuppress){
-        PopOver popOver = new PopOver();
-        popOver.setAutoHide(false);
-        popOver.setDetachable(false);
-        popOver.setContentNode(new Button("Supprimer"));
-        popOver.setArrowLocation(PopOver.ArrowLocation.RIGHT_CENTER);
 
-        popOver.setX(coordX + mapPane.getBoundsInParent().getMinX() + primaryStage.getX());
-        popOver.setY(coordY + mapPane.getBoundsInParent().getMinY() + primaryStage.getY() - 10);
-        rndBtnSuppress.setOnMouseClicked(e -> popOver.show(primaryStage));
-        rndBtnSuppress.setOnMouseExited(e -> popOver.hide());
+    public void printSuppressButton(Pane mapPane, Stage primaryStage, Button btnSupprPopover, Button btnSupprValidate) {
+
+        suppPopover = new PopOver();
+
+        suppPopover.setAutoHide(false);
+        suppPopover.setDetachable(false);
+        suppPopover.setContentNode(btnSupprValidate);
+        suppPopover.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
+
+        suppPopover.setX(mapPane.getBoundsInParent().getMaxX() + btnSupprPopover.getBoundsInParent().getMinX() + btnSupprPopover.getLayoutX());
+        suppPopover.setY(mapPane.getBoundsInParent().getMinY() + btnSupprPopover.getBoundsInParent().getMinY() + btnSupprPopover.getMaxHeight() / 2);
+        btnSupprPopover.setOnMouseClicked(e -> {
+            if (suppPopover.isShowing()) suppPopover.hide();
+            else
+                suppPopover.show(primaryStage);
+        });
     }
+
+
+    public PopOver getSupprPopover(){return suppPopover;}
 
     public String getAdresse() {
         return mAdresse;
