@@ -558,10 +558,23 @@ public class MainWindow extends Application
 
             yRelocateFromLastPoint = yRelocateDepart;
 
+            Point origineLivraison = itineraire.getTroncons().get(0).getOrigine();
+
             //hover sur chaque livraison
-            itineraire.getTroncons().get(0).getOrigine().printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
-                    lblpointItiLivraison.getText() + " - Heure d'Arrivée : " +
-                            itineraire.getTroncons().get(0).getOrigine().getLivraison().getDateArrivee().format(dtf),
+            origineLivraison.printGlowHover(mapPane,primaryStage,pointLivraisonUI_oblong.getButton(),
+                    String.format(
+                            lblpointItiLivraison.getText() +
+                                    " - "+
+                                    itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getId()+
+                                    " "+
+                                    itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getNomRue()+
+                                    "\nHeure de début : "+
+                                    origineLivraison.getLivraison().getDateLivraison().format(dtf)+
+                                    "\nHeure d'Arrivée : "+
+                                    origineLivraison.getLivraison().getDateArrivee().format(dtf) +
+                                    "\nDurée livraison : " +
+                                    origineLivraison.getLivraison().getDureeLivraison().toMinutes() +
+                                    " min"),
                     pointLivraisonUI_oblong.getRectangle());
         }
 
