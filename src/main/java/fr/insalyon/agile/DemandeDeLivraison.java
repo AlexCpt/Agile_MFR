@@ -1,5 +1,6 @@
 package fr.insalyon.agile;
 
+import com.sun.tools.javac.util.BasicDiagnosticFormatter;
 import fr.insalyon.agile.*;
 import fr.insalyon.agile.tsp.TSP1;
 import fr.insalyon.agile.tsp.TSP4;
@@ -7,7 +8,9 @@ import javafx.util.Pair;
 
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -113,6 +116,33 @@ public class DemandeDeLivraison {
         listeItineraires.add(itineraireHashMap.get(new Pair<>(sommets[tsp.getMeilleureSolution(nombreSommets - 1)], sommets[tsp.getMeilleureSolution(0)])));
 
         tempsActuel = tempsActuel.plusSeconds(couts[tsp.getMeilleureSolution(nombreSommets - 1)][tsp.getMeilleureSolution(0)] + duree[tsp.getMeilleureSolution(0)]);
+
+        for (Point point : mLivraisons) {
+            Livraison livraison = point.getLivraison();
+            if (livraison.getDebutPlage() != null && livraison.getFinPlage() != null) {
+                Duration marge = Duration.between(livraison.getDebutPlage(), livraison.getFinPlage());
+                LocalTime finLivraison = livraison.getDateLivraison().plus(livraison.getDureeLivraison());
+
+                if(marge.compareTo(Duration.ofHours(2)) > 0) {
+                    if (livraison.getDureeLivraison().compareTo(Duration.ofHours(2)) > 0) {
+                        livraison.setDebutPlage(livraison.getDateLivraison());
+                        livraison.setFinPlage(finLivraison);
+                    }
+                    else {
+                        if (livraison.getDateLivraison().minus(Duration.ofHours(1)).compareTo(livraison.getDebutPlage()) < 0) {
+                            livraison.setFinPlage(livraison.getDebutPlage().plus(Duration.ofHours(2)));
+                        }
+                        else if (finLivraison.plus(Duration.ofHours(1)).compareTo(livraison.getFinPlage()) > 0) {
+                            livraison.setDebutPlage(livraison.getFinPlage().minus(Duration.ofHours(2)));
+                        }
+                        else {
+                            livraison.setDebutPlage(livraison.getDateLivraison().minus(Duration.ofHours(1)));
+                            livraison.setFinPlage(livraison.getDateLivraison().plus(Duration.ofHours(1)));
+                        }
+                    }
+                }
+            }
+        }
 
         return new Tournee(listeItineraires, tempsActuel, this);
     }

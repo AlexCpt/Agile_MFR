@@ -44,4 +44,12 @@ public class Livraison {
     public void setDateArrivee(LocalTime mDateArrivee) {
         this.mDateArrivee = mDateArrivee;
     }
+
+    public void setDebutPlage(LocalTime mDebutPlage) {
+        this.mDebutPlage = mDebutPlage;
+    }
+
+    public void setFinPlage(LocalTime mFinPlage) {
+        this.mFinPlage = mFinPlage;
+    }
 }

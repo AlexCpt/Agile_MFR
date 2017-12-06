@@ -108,6 +108,7 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
+        Pane rightPane = new Pane();
 
 
         // LeftVBox
@@ -118,8 +119,6 @@ public class MainWindow extends Application
         ImageView logoView = new ImageView(logo);
         logoView.setLayoutX(bandeauWidth/2 - 85);
         logoView.setLayoutY(30);
-
-
 
         Label fileLabelPlan = new Label("Aucun fichier chargé.");
         fileLabelPlan.setWrapText(true);
@@ -132,6 +131,9 @@ public class MainWindow extends Application
             if (file != null) {
                 fileLabelPlan.setText(file.getName());
                 mapPane.getChildren().clear();
+                rightPane.getChildren().clear();
+                buildTimelineTitle(rightPane);
+
                 plan = parser.parsePlan(file.getAbsolutePath());
                 plan.print(mapPane);
             }
@@ -160,23 +162,14 @@ public class MainWindow extends Application
                     return;
                 }
 
+                rightPane.getChildren().clear();
+                buildTimelineTitle(rightPane);
                 mapPane.getChildren().clear();
                 plan.print(mapPane);
             }
         });
 
-        //Titre
-        Label lblTimeline = new Label("Timeline");
-        lblTimeline.setPadding(new Insets(10));
-        //Right vBox
-        VBox rightVbox = new VBox();
-        rightVbox.getChildren().add(lblTimeline);
-        rightVbox.setAlignment(Pos.TOP_CENTER);
-        rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
-
-        //Right Pane
-        Pane rightPane = new Pane();
-        rightPane.getChildren().add(rightVbox);
+        buildTimelineTitle(rightPane);
 
         Button btnCalculerTournee = new Button();
         btnCalculerTournee.setText("Calculer tournée");
@@ -207,7 +200,8 @@ public class MainWindow extends Application
         });
 
         Button btnUndo = new Button();
-        btnUndo.setText("Undo");
+        btnUndo.setText("Annuler");
+        btnUndo.setMinWidth(80);
         leftVbox.setSpacing(20);
         btnUndo.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -227,7 +221,8 @@ public class MainWindow extends Application
         });
 
         Button btnRedo = new Button();
-        btnRedo.setText("Redo");
+        btnRedo.setText("Rétablir");
+        btnRedo.setMinWidth(80);
         leftVbox.setSpacing(20);
         btnRedo.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -248,8 +243,8 @@ public class MainWindow extends Application
 
         //Hbox of Ajouter-Valider
         HBox hBoxUndoRedo = new HBox();
-        hBoxUndoRedo.getChildren().add(btnRedo);
         hBoxUndoRedo.getChildren().add(btnUndo);
+        hBoxUndoRedo.getChildren().add(btnRedo);
         hBoxUndoRedo.setAlignment(Pos.BOTTOM_CENTER);
         hBoxUndoRedo.setSpacing(8);
         hBoxUndoRedo.setPrefSize(bandeauWidth, bandeauHeigth);
@@ -305,7 +300,6 @@ public class MainWindow extends Application
         leftVbox.setPrefSize(bandeauWidth, bandeauHeigth);
         leftVbox.setAlignment(Pos.CENTER);
 
-
         globalLeftBox.getChildren().add(leftVbox);
         globalLeftBox.getChildren().add(leftVboxDown);
         globalLeftBox.setPrefSize(bandeauWidth, bandeauHeigth);
@@ -333,7 +327,6 @@ public class MainWindow extends Application
 
     public void timeLineBuild(Pane rightPane, Tournee tournee, Pane mapPane, Stage primaryStage, boolean modeModifier){
         yPoints.clear();
-
 
         rightPane.getChildren().clear();
 
@@ -543,8 +536,7 @@ public class MainWindow extends Application
                         new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
-                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine()));
-                                //tournee.supprimerLivraison(itineraire.getTroncons().get(0).getOrigine());
+                                listeDeCdes.ajoute(new CdeSupprime(tournee, itineraire.getTroncons().get(0).getOrigine(), mapPane));
                                 timeLineBuild(rightPane, tournee, mapPane, primaryStage, false);
                                 mapPane.getChildren().clear();
                                 plan.print(mapPane);
@@ -590,10 +582,10 @@ public class MainWindow extends Application
                                     itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getId()+
                                     " "+
                                     itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getNomRue()+
-                                    "\nHeure de début : "+
-                                    origineLivraison.getLivraison().getDateLivraison().format(dtf)+
                                     "\nHeure d'Arrivée : "+
                                     origineLivraison.getLivraison().getDateArrivee().format(dtf) +
+                                    "\nHeure de début : "+
+                                    origineLivraison.getLivraison().getDateLivraison().format(dtf)+
                                     "\nDurée livraison : " +
                                     origineLivraison.getLivraison().getDureeLivraison().toMinutes() +
                                     " min\n" +
@@ -645,6 +637,9 @@ public class MainWindow extends Application
 
                 @Override
                 public void handle(ActionEvent event) {
+                    Pane panePopOver = new Pane();
+                    PopOver popOver = new PopOver();
+
                     HBox hBoxAjoutInPopover = new HBox();
                     Label lblAjoutInPopover = new Label("Position de la Livraison : ");
                     TextField txtFieldInPopover = new TextField();
@@ -670,13 +665,20 @@ public class MainWindow extends Application
                     vBoxAjoutInPopover.getChildren().add(hBoxDuree);
                     Button buttonAjoutInPopover = new Button("Valider");
 
+                    for (Point p : plan.getPoints()) {
+                        p.setButtonEventHandler(event1 -> {
+                            if (modeModifier) {
+                                txtFieldInPopover.setText(p.getId());
+                            }
+                        });
+                    }
+
                     buttonAjoutInPopover.setOnAction(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent event) {
                             Point pointSelectionne = null;
                             Itineraire itineraireSelectionne = null;
-
 
                             for (Point point : plan.getPoints()) {
                                 if(point.getId().equals(txtFieldInPopover.getText()))
@@ -701,8 +703,16 @@ public class MainWindow extends Application
                                     //timeLineItineraires.get(itineraire).getLine().getStrokeDashArray().addAll(4d);
                                 }*/
                             }
+
+                            long duree;
+                            try {
+                                duree = Long.parseLong(txtFieldDuree.getText());
+                            } catch (NumberFormatException e) {
+                                duree = 0;
+                            }
+
                             if(itineraireSelectionne!=null){
-                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofSeconds(Long.parseLong(txtFieldDuree.getText())), itineraireSelectionne));
+                                listeDeCdes.ajoute(new CdeAjout(tournee, pointSelectionne, Duration.ofMinutes(duree), itineraireSelectionne, mapPane));
                             }
 
                             //Recalcul tournée
@@ -714,17 +724,17 @@ public class MainWindow extends Application
                             vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
                             vehicule.setVehicule();
                             vehicule.print(mapPane);
+
+                            popOver.hide();
                         }});
 
                     vBoxAjoutInPopover.getChildren().add(buttonAjoutInPopover);
                     vBoxAjoutInPopover.setAlignment(Pos.CENTER);
 
-                    Pane panePopOver = new Pane();
                     panePopOver.getChildren().add(vBoxAjoutInPopover);
                     panePopOver.setPadding(new Insets(5));
 
-                    PopOver popOver = new PopOver();
-                    popOver.setAutoHide(true);
+                    popOver.setAutoHide(false);
                     popOver.setContentNode(panePopOver);
                     popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
 
@@ -964,5 +974,19 @@ public class MainWindow extends Application
 
     private double localTimeToSecond(LocalTime time){
         return (time.getHour()*60*60 + time.getMinute()*60 + time.getSecond());
+    }
+
+    private void buildTimelineTitle(Pane rightPane){
+        //Titre
+        Label lblTimeline = new Label("Timeline");
+        lblTimeline.setPadding(new Insets(10));
+        //Right vBox
+        VBox rightVbox = new VBox();
+        rightVbox.getChildren().add(lblTimeline);
+        rightVbox.setAlignment(Pos.TOP_CENTER);
+        rightVbox.setPrefSize(bandeauWidth, bandeauHeigth);
+
+        //Right Pane
+        rightPane.getChildren().add(rightVbox);
     }
 }
