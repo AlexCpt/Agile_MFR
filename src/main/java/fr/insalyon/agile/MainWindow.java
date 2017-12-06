@@ -108,17 +108,18 @@ public class MainWindow extends Application
         mapPane.setLayoutX(sceneWidth - mapWidth);
         mapPane.setLayoutY(0);
 
-        VBox globalLeftBox = new VBox();
+
 
         // LeftVBox
         VBox leftVbox = new VBox();
-
+        VBox globalLeftBox = new VBox();
         final String imageURI = new File("images/logo.png").toURI().toString();
         final Image logo = makeTransparent(new Image(imageURI, 250, 50, true, true));
         ImageView logoView = new ImageView(logo);
+        logoView.setLayoutX(bandeauWidth/2 - 85);
+        logoView.setLayoutY(30);
 
 
-        leftVbox.getChildren().add(logoView);
 
         Label fileLabelPlan = new Label("Aucun fichier chargé.");
         fileLabelPlan.setWrapText(true);
@@ -176,7 +177,6 @@ public class MainWindow extends Application
         //Right Pane
         Pane rightPane = new Pane();
         rightPane.getChildren().add(rightVbox);
-
 
         Button btnCalculerTournee = new Button();
         btnCalculerTournee.setText("Calculer tournée");
@@ -254,12 +254,14 @@ public class MainWindow extends Application
         hBoxUndoRedo.setSpacing(8);
         hBoxUndoRedo.setPrefSize(bandeauWidth, bandeauHeigth);
 
-        //Right vBox
+        VBox leftVboxTop = new VBox();
+
+
         VBox leftVboxDown = new VBox();
         leftVboxDown.getChildren().add(hBoxUndoRedo);
         leftVboxDown.setAlignment(Pos.BOTTOM_CENTER);
         leftVboxDown.setPadding(new Insets(35));
-        leftVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
+        leftVboxDown.setPrefSize(bandeauWidth, 50);
 
 
         Button btnExportTournee = new Button();
@@ -309,6 +311,8 @@ public class MainWindow extends Application
         globalLeftBox.setPrefSize(bandeauWidth, bandeauHeigth);
         //Left Pane
         Pane leftPane = new Pane();
+        leftPane.getChildren().add(logoView);
+
         leftPane.getChildren().add(globalLeftBox);
 
         BorderPane root = new BorderPane();
@@ -683,8 +687,6 @@ public class MainWindow extends Application
 
                             Iterator<Itineraire> iterator = tournee.getItineraires().iterator();
                             while (iterator.hasNext()){
-                                //Todo : si temps, donner le choix où ajouter
-
                                 Itineraire itineraire = iterator.next();
 
                                 if(tournee.getItinerairesModifiable(pointSelectionne, itineraire)){
@@ -748,14 +750,12 @@ public class MainWindow extends Application
         hBoxAjouterValider.setSpacing(8);
         hBoxAjouterValider.setPrefSize(bandeauWidth, bandeauHeigth);
 
-
         //Right vBox
         VBox rightVboxDown = new VBox();
         rightVboxDown.getChildren().add(hBoxAjouterValider);
         rightVboxDown.setAlignment(Pos.BOTTOM_CENTER);
         rightVboxDown.setPadding(new Insets(35));
         rightVboxDown.setPrefSize(bandeauWidth, bandeauHeigth);
-
         //endregion
 
         //region <Affichage>
