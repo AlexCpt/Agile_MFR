@@ -1,5 +1,8 @@
 package fr.insalyon.agile;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,6 +13,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import org.controlsfx.control.PopOver;
 import javafx.stage.Stage;
+
+import java.awt.event.MouseEvent;
 
 
 public class Point {
@@ -22,6 +27,13 @@ public class Point {
     private PopOver suppPopover;
     public String mAdresse;
     private Circle circle;
+
+    private EventHandler<javafx.scene.input.MouseEvent> eventHandler;
+
+    public void setButtonEventHandler(EventHandler<javafx.scene.input.MouseEvent> eventHandler) {
+        this.eventHandler = eventHandler;
+        circle.setOnMouseClicked(eventHandler);
+    }
 
     public enum Type {
         POINT,
@@ -126,16 +138,19 @@ public class Point {
         coordY = ((mY - Plan.mPointYmin) / (double) (Plan.mPointYmax - Plan.mPointYmin) * mapPane.getPrefHeight());
         circle.relocate(coordX - radius, coordY - radius);
 
+        circle.setOnMouseClicked(eventHandler);
+
         if (mType == Type.ENTREPOT) {
             circle.setFill(Color.RED);
-            mapPane.getChildren().add(circle);
         } else if (mType == Type.LIVRAISON) {
             circle.setFill(Color.BLUE);
-            mapPane.getChildren().add(circle);
         } else if (mType == Type.VEHICULE) {
             circle.setFill(Color.GREEN);
-            mapPane.getChildren().add(circle);
+        } else {
+            circle.setFill(Color.TRANSPARENT);
         }
+
+        mapPane.getChildren().add(circle);
 
     }
 

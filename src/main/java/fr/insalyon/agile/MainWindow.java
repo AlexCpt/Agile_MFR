@@ -334,7 +334,6 @@ public class MainWindow extends Application
     public void timeLineBuild(Pane rightPane, Tournee tournee, Pane mapPane, Stage primaryStage, boolean modeModifier){
         yPoints.clear();
 
-
         rightPane.getChildren().clear();
 
         //Todo : externaliser ça
@@ -629,6 +628,9 @@ public class MainWindow extends Application
 
                 @Override
                 public void handle(ActionEvent event) {
+                    Pane panePopOver = new Pane();
+                    PopOver popOver = new PopOver();
+
                     HBox hBoxAjoutInPopover = new HBox();
                     Label lblAjoutInPopover = new Label("Position de la Livraison : ");
                     TextField txtFieldInPopover = new TextField();
@@ -654,13 +656,20 @@ public class MainWindow extends Application
                     vBoxAjoutInPopover.getChildren().add(hBoxDuree);
                     Button buttonAjoutInPopover = new Button("Valider");
 
+                    for (Point p : plan.getPoints()) {
+                        p.setButtonEventHandler(event1 -> {
+                            if (modeModifier) {
+                                txtFieldInPopover.setText(p.getId());
+                            }
+                        });
+                    }
+
                     buttonAjoutInPopover.setOnAction(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent event) {
                             Point pointSelectionne = null;
                             Itineraire itineraireSelectionne = null;
-
 
                             for (Point point : plan.getPoints()) {
                                 if(point.getId().equals(txtFieldInPopover.getText()))
@@ -700,17 +709,17 @@ public class MainWindow extends Application
                             vehicule = new Point("", tournee.getDemandeDeLivraison().getEntrepot().getX(), tournee.getDemandeDeLivraison().getEntrepot().getY());
                             vehicule.setVehicule();
                             vehicule.print(mapPane);
+
+                            popOver.hide();
                         }});
 
                     vBoxAjoutInPopover.getChildren().add(buttonAjoutInPopover);
                     vBoxAjoutInPopover.setAlignment(Pos.CENTER);
 
-                    Pane panePopOver = new Pane();
                     panePopOver.getChildren().add(vBoxAjoutInPopover);
                     panePopOver.setPadding(new Insets(5));
 
-                    PopOver popOver = new PopOver();
-                    popOver.setAutoHide(true);
+                    popOver.setAutoHide(false);
                     popOver.setContentNode(panePopOver);
                     popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
 
