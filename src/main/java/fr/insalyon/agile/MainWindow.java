@@ -114,6 +114,13 @@ public class MainWindow extends Application
         // LeftVBox
         VBox leftVbox = new VBox();
 
+        final String imageURI = new File("images/logo.png").toURI().toString();
+        final Image logo = makeTransparent(new Image(imageURI, 250, 50, true, true));
+        ImageView logoView = new ImageView(logo);
+
+
+        leftVbox.getChildren().add(logoView);
+
         Label fileLabelPlan = new Label("Aucun fichier chargé.");
         fileLabelPlan.setWrapText(true);
         leftVbox.getChildren().add(fileLabelPlan);
