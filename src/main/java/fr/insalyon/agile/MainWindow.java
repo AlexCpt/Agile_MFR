@@ -203,7 +203,8 @@ public class MainWindow extends Application
         });
 
         Button btnUndo = new Button();
-        btnUndo.setText("Undo");
+        btnUndo.setText("Annuler");
+        btnUndo.setMinWidth(80);
         leftVbox.setSpacing(20);
         btnUndo.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -223,7 +224,8 @@ public class MainWindow extends Application
         });
 
         Button btnRedo = new Button();
-        btnRedo.setText("Redo");
+        btnRedo.setText("Rétablir");
+        btnRedo.setMinWidth(80);
         leftVbox.setSpacing(20);
         btnRedo.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -244,8 +246,8 @@ public class MainWindow extends Application
 
         //Hbox of Ajouter-Valider
         HBox hBoxUndoRedo = new HBox();
-        hBoxUndoRedo.getChildren().add(btnRedo);
         hBoxUndoRedo.getChildren().add(btnUndo);
+        hBoxUndoRedo.getChildren().add(btnRedo);
         hBoxUndoRedo.setAlignment(Pos.BOTTOM_CENTER);
         hBoxUndoRedo.setSpacing(8);
         hBoxUndoRedo.setPrefSize(bandeauWidth, bandeauHeigth);
