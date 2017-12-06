@@ -35,6 +35,14 @@ public class Troncon {
 
     public String getNomRue() { return mNomRue; }
 
+    public double angleWith(Troncon other) {
+        double a_x = mDestination.getX() - mOrigine.getX();
+        double a_y = mDestination.getY() - mOrigine.getY();
+        double b_x = other.getDestination().getX() - other.getOrigine().getX();
+        double b_y = other.getDestination().getY() - other.getOrigine().getY();
+        return Math.atan2( a_x*b_y - a_y*b_x, a_x*b_x + a_y*b_y );
+    }
+
     @Override
     public String toString() {
         return "T{" +
