@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * La classe Plan représente un plan sur lequel seront affichées les
+ * demandes de livraison et les tournées chargées par l'utilisateur
+ */
 public class Plan {
     private List<Point> mPoints;
     private  List<Troncon> mTroncons;
@@ -22,6 +26,12 @@ public class Plan {
 
     private HashMap<Point, List<Troncon>> mGraph;
 
+    /**
+     * Crée un plan
+     *
+     * @param points : La liste des points du plan
+     * @param troncons : La liste des tronçons du plan
+     */
     public Plan(List<Point> points, List<Troncon> troncons) {
         mPoints = points;
         mTroncons = troncons;
@@ -51,6 +61,10 @@ public class Plan {
         return mTroncons;
     }
 
+    /**
+     * Calcule l'échelle avec laquelle sera affichée le plan, en fonction
+     * des coordonnées minimales et maximales des points du plan
+     */
     public void calculEchelle()
     {
         //reset of values
@@ -78,6 +92,9 @@ public class Plan {
         //System.out.println("x min : " + mPointXmin + " xmax : " + mPointXmax + " ymin : " + mPointYmin + " ymax : " + mPointYmax);
     }
 
+    /**
+     * Supprime le type Entrepot ou Livraison sur un point
+     */
     public void resetTypePoints(){
         for(Point point: mPoints){
             if(point.getType() != Point.Type.POINT){
@@ -86,6 +103,11 @@ public class Plan {
         }
     }
 
+    /**
+     * Affiche un plan
+     *
+     * @param mapPane : La fenêtre sur laquelle on veut afficher le pla,
+     */
     public void print(Pane mapPane) {
 
         for (Troncon troncon: mTroncons) {

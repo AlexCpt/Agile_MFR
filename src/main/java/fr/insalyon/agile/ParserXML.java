@@ -11,18 +11,27 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import fr.insalyon.agile.DemandeDeLivraison;
-import fr.insalyon.agile.Entrepot;
-import fr.insalyon.agile.Parser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * La classe ParserXML permet de récupérer
+ * les informations contenues dans un fichier XML
+ */
 public class ParserXML implements Parser {
+
     private Map<String, Point> idMapToPoint;
     private Plan plan;
+
+    /**
+     * Construit un plan à partir d'un fichier XML formmaté correctement
+     * @param fichier : Le nom du fichier à charger
+     * @return Une instance de Plan, construite à partir des
+     * informations contenues dans le fichier passé en paramètre
+     */
     @Override
     public Plan parsePlan(String fichier) {
         if (idMapToPoint != null) {
@@ -59,9 +68,6 @@ public class ParserXML implements Parser {
                         id = noeud.getAttribute("id");
                         x = Integer.valueOf(noeud.getAttribute("x"));
                         y = Integer.valueOf(noeud.getAttribute("y"));
-                        /*System.out.println(id);
-                        System.out.println(x);
-                        System.out.println(y);*/
                         Point unPoint = new Point(id,y,-x);
                         listePoints.add(unPoint);
                         idMapToPoint.put(id,unPoint);
@@ -73,11 +79,6 @@ public class ParserXML implements Parser {
                         nomRue =  noeud.getAttribute("nomRue");
                         origine = noeud.getAttribute("origine");
 
-                       /* System.out.println("destination: " + noeud.getAttribute("destination") +
-                                "\nlongueur : " + noeud.getAttribute("longueur") +
-                                "\nnom Rue: " + noeud.getAttribute("nomRue") +
-                                "\norigine: " + noeud.getAttribute("origine"));*/
-
                         Point destinationPoint = idMapToPoint.get(destination);
                         Point originePoint = idMapToPoint.get(origine);
                         Troncon unTroncon = new Troncon(originePoint,destinationPoint,longueur,nomRue);
@@ -85,7 +86,6 @@ public class ParserXML implements Parser {
                     }
                 }
             }
-            //System.out.println("longueur liste finale:"+listeTroncons.get(0).getOrigine().getX());
             plan = new Plan(listePoints,listeTroncons);
             return plan;
         }
@@ -105,6 +105,12 @@ public class ParserXML implements Parser {
 
     }
 
+    /**
+     * Construit une demande de livraison à partir d'un fichier XML formmaté correctement
+     * @param fichier : Le nom du fichier à charger
+     * @return Une instance de DemandeDeLivraison, construite à partir des
+     * informations contenues dans le fichier passé en paramètre
+     */
     public DemandeDeLivraison parseDemandeDeLivraison(String fichier) {
 
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -138,7 +144,6 @@ public class ParserXML implements Parser {
                         depart = LocalTime.parse(departString, formatter);
 
                         entrepot=idMapToPoint.get(idEntrepot);
-                        //  System.out.println("point : "+entrepot.getX());
                         entrepot.setEntrepot(new Entrepot());
                     }
                     if (noeud.getTagName() == "livraison") {

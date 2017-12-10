@@ -9,7 +9,6 @@ import java.time.LocalTime;
 
 import java.util.*;
 
-
 public class Tournee {
 
     private LocalTime mDateArrivee;
@@ -23,6 +22,13 @@ public class Tournee {
 
     }
 
+    /**
+     * Construit une tournée
+     *
+     * @param itineraires : La liste des itinéraires composant la tournée
+     * @param dateArrivee : La date d'arrivée de la tournée
+     * @param demandeDeLivraison : La demande de livraison associée à la tournée
+     */
     public Tournee(List<Itineraire> itineraires, LocalTime dateArrivee, DemandeDeLivraison demandeDeLivraison) {
         mItineraires = itineraires;
         mDateArrivee = dateArrivee;
@@ -67,12 +73,21 @@ public class Tournee {
         return mItineraires != null ? mItineraires.equals(tournee.mItineraires) : tournee.mItineraires == null;
     }
 
+    /**
+     * Affiche une tournée sur le plan
+     * @param mapPane : Le plan sur lequel on veut afficher la tournée
+     */
     public void print(Pane mapPane){
         for (Itineraire itineraire: mItineraires) {
             itineraire.print(mapPane);
         }
     }
 
+    /**
+     * Calcule pour chaque livraison, la marge disponible entre l'heure
+     * d'arrivée du livreur à son point de livraison, et l'heure à laquelle
+     * il commence sa livraison
+     */
     public void calculMargesPointsLivraison(){
         margesLivraison.clear();
         for(Point point : livraisons)
@@ -86,7 +101,15 @@ public class Tournee {
         margesLivraison.put(mDemandeDeLivraison.getEntrepot(), marge);
     }
 
-
+    /**
+     * Vérifie si une livraison peut être ajoutée sur un itinéraire,
+     * sans décaler les heures des livraisons suivantes
+     *
+     * @param livraison : La livraison que l'on cherche à ajouter
+     * @param duree : La durée de la livraison que l'on veut ajouter
+     * @param itineraire : L'itinéraire sur lequel on veut ajouter la livraison
+     * @return Un booléen qui indique si la livraison peut être ajouté ou pas sur l'itinéraire
+     */
     public Boolean getItinerairesModifiable (Point livraison, Duration duree, Itineraire itineraire)
     {
         this.calculMargesPointsLivraison();
@@ -102,6 +125,13 @@ public class Tournee {
 
     }
 
+    /**
+     * Ajoute une livraison dans la tournée actuellement affichée sur le plan
+     *
+     * @param livraison : La livraison que l'on veut ajouter
+     * @param dureeLivraison : La durée de la livraison à ajouter
+     * @param itineraire : L'itinéraire sur lequel on veut ajouter la livraison
+     */
     public void ajouterLivraison(Point livraison, Duration dureeLivraison, Itineraire itineraire){
         if(!livraison.getType().equals(Point.Type.LIVRAISON)){
             livraison.setLivraison(new Livraison(null, null, dureeLivraison));
@@ -127,6 +157,14 @@ public class Tournee {
         calculMargesPointsLivraison();
     }
 
+    /**
+     * Supprime une livraison de la tournée actuellement affichée sur le plan
+     *
+     * @param livraison : La livraison à supprimer
+     * @param mapPane : Le plan sur lequel est affichée la livraison
+     * @return Une instance d'Itineraire, représentant le nouvel itinéraire
+     * qui remplace celui de la livraison supprimée
+     */
     public Itineraire supprimerLivraison(Point livraison, Pane mapPane){
         Itineraire newItineraire = null;
 
