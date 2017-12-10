@@ -1,8 +1,6 @@
 package fr.insalyon.agile;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,9 +11,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import org.controlsfx.control.PopOver;
 import javafx.stage.Stage;
-
-import java.awt.event.MouseEvent;
-
 
 public class Point {
     private String mId;
@@ -40,7 +35,7 @@ public class Point {
         LIVRAISON,
         ENTREPOT,
         VEHICULE
-    };
+    }
 
     private Type mType;
     private Livraison mLivraison;
@@ -82,7 +77,8 @@ public class Point {
         mAdresse = adresse;
     }
 
-    public Point(){};
+    public Point(){}
+
     public Point(String id, int x, int y) {
         mType = Type.POINT;
         mId = id;
@@ -225,10 +221,6 @@ public class Point {
 
 
     public PopOver getSupprPopover(){return suppPopover;}
-
-    public String getAdresse() {
-        return mAdresse;
-    }
 
     public String getId() {
         return mId;

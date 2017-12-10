@@ -14,7 +14,6 @@ public class TronconUI {
         line = new Line();
         line.setStroke(lineColor);
         line.setStrokeWidth(2);
-        //line.getStrokeDashArray().addAll(4d); //pointillés
         line.setStartX(x);
         line.setStartY(startY);
         line.setEndX(x);

@@ -55,10 +55,6 @@ public class Tournee {
         return margesLivraison;
     }
 
-    public void setDateArrivee(LocalTime dateArrivee) {
-        this.mDateArrivee = dateArrivee;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,12 +98,8 @@ public class Tournee {
         Itineraire dijkstraRetour = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), livraison, new Point[]{arriveeItineraire}).get(0);
         Duration dureeRetour = dijkstraRetour.getDuree();
         Duration nouvTemps = dureeAllee.plus(dureeRetour).plus(duree);
-        if(nouvTemps.compareTo(tempsActuel) < 0)
-        {
-            return true;
-        }
+        return nouvTemps.compareTo(tempsActuel) < 0;
 
-        return false;
     }
 
     public void ajouterLivraison(Point livraison, Duration dureeLivraison, Itineraire itineraire){

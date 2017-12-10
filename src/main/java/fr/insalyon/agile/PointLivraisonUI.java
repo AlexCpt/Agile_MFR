@@ -25,7 +25,7 @@ public class PointLivraisonUI {
         ENTREPOT_ARRIVEE,
         LIVRAISON,
         ENTREPOT_DEPART
-    };
+    }
 
     protected final int radiusAffichageTimeline = 6;
     protected final Color mColorEntrepot = Color.RED;

@@ -1,10 +1,6 @@
 package fr.insalyon.agile;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,8 +11,6 @@ import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -25,7 +19,6 @@ import org.controlsfx.control.PopOver;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import java.io.File;
 import java.time.LocalTime;
@@ -58,11 +51,6 @@ public class MainWindow extends Application
 
     double orgSceneY;
     double orgTranslateY;
-    double orgSceneYLivraison;
-    double orgTranslateYLivraison;
-
-    double haut;
-    double bas;
 
     final Button buttonPlan = new Button("Charger Plan...");
     final Button buttonDDL = new Button("Charger Demande de Livraison...");
@@ -86,7 +74,7 @@ public class MainWindow extends Application
     }
 
     public static void main(String[] args) {
-        MainWindow window = new MainWindow();
+        new MainWindow();
 
         launch(args);
     }
@@ -262,9 +250,6 @@ public class MainWindow extends Application
         hBoxUndoRedo.setSpacing(8);
         hBoxUndoRedo.setPrefSize(bandeauWidth, bandeauHeigth);
 
-        VBox leftVboxTop = new VBox();
-
-
         VBox leftVboxDown = new VBox();
         leftVboxDown.getChildren().add(hBoxUndoRedo);
         leftVboxDown.setAlignment(Pos.BOTTOM_CENTER);
@@ -338,6 +323,15 @@ public class MainWindow extends Application
                 + yFirstPoint;
     }
 
+    /**
+     * Construit la timeline pour la tournée qui vient d'être calculée
+     *
+     * @param rightPane : La fenêtre où l'on veut placer la timeline
+     * @param tournee : La tournée à afficher sur la timeline
+     * @param mapPane : Le plan sur lequel est affichée la tournée actuelle
+     * @param primaryStage : Le primary stage pour cette application
+     * @param modeModifier : Spécifie si l'on peut modifier ou non la tournée
+     */
     public void timeLineBuild(Pane rightPane, Tournee tournee, Pane mapPane, Stage primaryStage, boolean modeModifier){
         yPoints.clear();
 
@@ -351,11 +345,6 @@ public class MainWindow extends Application
                         .plus(tournee.getItineraires().get(tournee.getItineraires().size()-1).getTroncons().get(0).getOrigine().getLivraison().getDureeLivraison())
                         .plus(tournee.getItineraires().get(tournee.getItineraires().size()-1).getDuree());
 
-        final double dragAndDropWidth = 20;
-        final double dragAndDropHeight = 20;
-
-        final int decalageXIconDragAndDropPoint = 20;
-        final int decalageYIconDragAndDropPoint = 0;
         final int decalage_x_PopoverAjouterLivraison = -25;
         final int decalage_y_PopoverAjouterLivraison = -7;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
@@ -422,12 +411,10 @@ public class MainWindow extends Application
         Pane labelPane = new Pane();
         Pane buttonPane = new Pane();
         Pane mobilePane = new Pane();
-        ImageviewExtended imageViewArrowActu = null;
-        ImageviewExtended imageViewArrowPrecedent = null;
 
         for (Itineraire itineraire: tournee.getItineraires()) {
             TronconUI tronconUI;
-            TronconUI lastTronconUI=null;
+            TronconUI lastTronconUI;
 
             if(itineraire.getTroncons().get(0).getOrigine().getType() == Point.Type.ENTREPOT){
                 LocalTime heureDepart = tournee.getDemandeDeLivraison().getDepart();
@@ -559,28 +546,6 @@ public class MainWindow extends Application
                         });
             }
             compteurLivraison++;
-
-            // FlecheDéplacement de Livraison
-            /*if(modeModifier == true){
-                final String imageURI = new File("images/drag2.jpg").toURI().toString();
-                final Image image = makeTransparent(new Image(imageURI, dragAndDropWidth, dragAndDropHeight, false, true));
-                imageViewArrowActu = new ImageviewExtended(pointLivraisonUI_oblong, image);
-                imageViewArrowActu.relocate(centreRightPane - dragAndDropWidth/2 - decalageXIconDragAndDropPoint, yRelocateLivraison + ((yRelocateDepart-yRelocateLivraison)/2)  - image.getHeight()/2 - decalageYIconDragAndDropPoint);
-                mobilePane.getChildren().add(imageViewArrowActu);
-                imageViewArrowActu.setOnMousePressed(deplacementLivraisonOnMousePressedEventHandler);
-                imageViewArrowActu.setOnMouseDragged(deplacementLivraisonOnMouseDraggedEventHandler);
-            }
-                if(Point.Type.ENTREPOT == itineraire.getTroncons().get(itineraire.getTroncons().size() - 1).getDestination().getType()){
-                  //  imageViewArrowActu.setTronconUISuivant(lastTronconUI);
-                }
-                if (compteurLivraison != 2) {
-                   // imageViewArrowPrecedent.setTronconUISuivant(tronconUI);
-                }
-               /* imageViewArrowActu.setTronconUIPrecedent(tronconUI);
-                imageViewArrowActu.setOnMousePressed(deplacementLivraisonOnMousePressedEventHandler);
-                imageViewArrowActu.setOnMouseDragged(deplacementLivraisonOnMouseDraggedEventHandler);
-                imageViewArrowPrecedent = imageViewArrowActu;*/
-
 
             yRelocateFromLastPoint = yRelocateDepart;
 
@@ -798,6 +763,11 @@ public class MainWindow extends Application
 
     }
 
+    /**
+     * Supprime les zones blanches d'une image, pour les rendre transparentes
+     * @param inputImage : L'image à modifier
+     * @return Une instance d'Image, dont les zones blanches ont été rendues transparentes
+     */
     public Image makeTransparent(Image inputImage) {
         int W = (int) inputImage.getWidth();
         int H = (int) inputImage.getHeight();
@@ -837,6 +807,9 @@ public class MainWindow extends Application
                 }
             };
 
+    /**
+     * Déplace le camion sur la timeline, ainsi que sur le plan
+     */
     EventHandler<MouseEvent> deliveryOnMouseDraggedEventHandler =
             new EventHandler<MouseEvent>() {
 
@@ -936,51 +909,6 @@ public class MainWindow extends Application
                     } else if (troncon != null) {
                         troncon.setLongueurParcourue(mapPane, troncon.getLongueur());
                     }
-                }
-            };
-
-    EventHandler<MouseEvent> deplacementLivraisonOnMousePressedEventHandler =
-            new EventHandler<MouseEvent>() {
-
-                @Override
-                public void handle(MouseEvent t) {
-                    orgSceneYLivraison = t.getSceneY();
-                    orgTranslateYLivraison = ((ImageView)(t.getSource())).getTranslateY();
-
-                    ImageviewExtended imageView = ((ImageviewExtended)(t.getSource()));
-                    haut = imageView.getTronconUIPrecedent().getLine().getStartY();
-                    bas = imageView.getTronconUISuivant().getLine().getEndY();
-
-                    System.out.println("haut " + haut +" bas " + bas);
-                }
-            };
-
-    EventHandler<MouseEvent> deplacementLivraisonOnMouseDraggedEventHandler =
-            new EventHandler<MouseEvent>() {
-
-                @Override
-                public void handle(MouseEvent t) {
-                    double offsetY = t.getSceneY() - orgSceneYLivraison;
-                    double newTranslateY = ((ImageView)(t.getSource())).getTranslateY();
-                    if (t.getSceneY() >= yFirstPoint - deliveryHeight/2 && t.getSceneY() <= yLastPoint + deliveryHeight/2) {
-                        newTranslateY = orgTranslateYLivraison + offsetY;
-                    }
-
-                    ((ImageView)(t.getSource())).setTranslateY(newTranslateY);
-                    ImageviewExtended imageView = ((ImageviewExtended)(t.getSource()));
-                    imageView.getPointLivraisonUI_oblong().setTranslateY(newTranslateY);
-
-                    //imageView.getTronconUIPrecedent().getLine().setTranslateY(newTranslateY);
-                    //imageView.getTronconUIPrecedent().getLine().setStartY(haut);
-
-                    //imageView.getTronconUISuivant().getLine().setTranslateY(newTranslateY);
-                    //imageView.getTronconUISuivant().getLine().setEndY(bas);
-
-
-                    //imageView.getTronconUIPrecedent().getLine().setEndY(imageView.getTronconUIPrecedent().getLine().getEndY() + newTranslateY);
-                    //imageView.getTronconUISuivant().getLine().setStartY(imageView.getTronconUISuivant().getLine().getStartY() + newTranslateY);
-
-                    imageView.getTronconUIPrecedent().getLine().setEndY(newTranslateY);
                 }
             };
 

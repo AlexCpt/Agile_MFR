@@ -6,13 +6,25 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * La classe ExportTournee permet de créer un fichier
+ * contenant les informations relatives à une tournée
+ */
 public class ExportTournee {
     private Tournee mTournee;
 
+    /**
+     * Construit un ExportTournee à partir d'une tournée
+     * @param tournee : La tournée que l'on veut exporter
+     */
     public ExportTournee (Tournee tournee) {
         mTournee = tournee;
     }
 
+    /**
+     * Crée le texte d'un fichier d'export de tournée
+     * @return Un String, qui représente le texte écrit dans le fichier exporté
+     */
     public String createFileText() {
         String text = "Liste des livraisons\n\n\n";
 
@@ -101,6 +113,11 @@ public class ExportTournee {
         return text;
     }
 
+    /**
+     * Exporte un fichier qui contient les informations relatives à une tournée
+     * @param fileName : Le nom du fichier que l'on veut exporter
+     * @throws Exception : Propage une exception si le fichier n'arrive pas à être créé
+     */
     public void exportFile (String fileName) throws Exception {
         try {
             if (fileName == null) {
