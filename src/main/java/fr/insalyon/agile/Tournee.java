@@ -1,13 +1,15 @@
 package fr.insalyon.agile;
 
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.util.Pair;
 
 import java.time.Duration;
 import java.time.LocalTime;
 
 import java.util.*;
+
+/**
+ * Cette classe représente une tournée qui correspond à une liste ordonnée d'itinéraires
+ */
 
 public class Tournee {
 
@@ -18,9 +20,6 @@ public class Tournee {
     private List<Point> livraisons;
     private Map<Point, Duration> margesLivraison;
 
-    public Tournee(){
-
-    }
 
     /**
      * Construit une tournée
@@ -37,22 +36,42 @@ public class Tournee {
         margesLivraison = new HashMap<>();
     }
 
+    /**
+     * Permet de récupérer la demande de livraison associée à la tournée
+     * @return demande de livraison de la tournée
+     */
     public DemandeDeLivraison getDemandeDeLivraison() {
         return mDemandeDeLivraison;
     }
 
+    /**
+     * Permet de récupérer la liste d'itinéraires associée à la tournée
+     * @return liste d'itinéraires associée à la tournée
+     */
     public List<Itineraire> getItineraires() {
         return mItineraires;
     }
 
+    /**
+     * Permet de récupérer la date d'arrivée d'un tournée
+     * @return date arrivée tournée (LocalTime)
+     */
     public LocalTime getDateArrivee() {
         return mDateArrivee;
     }
 
+    /**
+     * Permet de récupérer les livraisons associées à la tournée
+     * @return livraisons associées à la tournée
+     */
     public List<Point> getLivraisons() {
         return livraisons;
     }
 
+    /**
+     * Permet de récupérer les marges (temps d'attente du livreur) pour chaque livraison de la tournée
+     * @return marges pour chaque livraison de la tournée
+     */
     public Map<Point, Duration> getMargesLivraison() {
         if(margesLivraison.isEmpty())
         {
@@ -61,6 +80,11 @@ public class Tournee {
         return margesLivraison;
     }
 
+    /**
+     * Permet de comparer deux tournée afin de savoir si elles sont égales
+     * @param o deuxieme tournée
+     * @return boolean true si égales false sinon
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

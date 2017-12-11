@@ -17,6 +17,10 @@ public class Itineraire {
     private int mLongueur = 0;
     private Duration mDuree;
 
+    /**
+     * Constructeur d'un Itinéraire
+     * @param troncons liste de troncons qui correspond à l'itineraire
+     */
     public Itineraire(List<Troncon> troncons) {
         mTroncons =  troncons;
         for (Troncon t : mTroncons) {
@@ -27,19 +31,35 @@ public class Itineraire {
 
     }
 
+    /**
+     * Permet de récupérer l'ensemble des troncons associes à l'itineraire
+     * @return liste de troncons
+     */
     public List<Troncon> getTroncons() {
         return mTroncons;
     }
 
+    /**
+     * Permet de récupérer la duree associee a un itineraire
+     * @return duree
+     */
     public Duration getDuree() {
         return mDuree;
     }
 
+    /**
+     * Permet de récupérer la longueur associee a un itineraire
+     * @return longueur en m
+     */
     public int getLongueur() {
         return mLongueur;
     }
 
 
+    /**
+     * Permet d'afficher les caractéristiques d'un itineraire
+     * @return string representant un itineraire
+     */
     @Override
     public String toString() {
         return "I{" +
@@ -47,6 +67,11 @@ public class Itineraire {
                 '}';
     }
 
+    /**
+     * Permet de comparer deux itineraires afin de savoir s'ils sont egaux
+     * @param o deuxieme itineraire
+     * @return boolean true si egaux false sinon
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

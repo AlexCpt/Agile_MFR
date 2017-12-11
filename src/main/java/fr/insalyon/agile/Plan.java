@@ -53,10 +53,18 @@ public class Plan {
         calculEchelle();
     }
 
+    /**
+     * Permet de récupérer l'ensemble des points du plan
+     * @return liste des points associés au plan
+     */
     public List<Point> getPoints() {
         return mPoints;
     }
 
+    /**
+     * Permet de récupérer l'ensemble des troncons du plan
+     * @return liste de troncons associés au plan
+     */
     public List<Troncon> getTroncons() {
         return mTroncons;
     }
