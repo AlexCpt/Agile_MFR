@@ -11,6 +11,9 @@ import org.controlsfx.control.PopOver;
 import static fr.insalyon.agile.MainWindow.centreRightPane;
 import static fr.insalyon.agile.MainWindow.widthLabelTime;
 
+/**
+ * Classe qui implemente l'affichage des points sur la timeline
+ */
 public class PointLivraisonUI {
 
     protected Circle mCircle;
@@ -43,6 +46,14 @@ public class PointLivraisonUI {
     public PointLivraisonUI(){
     }
 
+    /**
+     * Constructeur d'un PointLivraisonUI
+     * @param xAffichage coordonnee x du point
+     * @param yAffichage coordonnee y du point
+     * @param type type du point
+     * @param labelHeure label heure
+     * @param LabelNomLivraison label nom de la livraison
+     */
     public PointLivraisonUI(double xAffichage, double yAffichage, Type type, Label labelHeure, Label LabelNomLivraison){
 
         m_xAffichage = xAffichage;
@@ -74,11 +85,20 @@ public class PointLivraisonUI {
         mLabelNomLivraison.setLayoutX(centreRightPane + decalageLabelLivraison);
     }
 
+    /**
+     * Permet de recuperer le bouton du Point de livraison
+     * @return bouton correspondant au Point sur la timeline
+     */
     public Button getButton(){ return mButton; }
 
+    /**
+     * Affichage des points sur la Timeline
+     * @param pointPane pane dans lequel sont contenus les Points
+     * @param labelPane pane dans lequel sont contenus les labels
+     * @param ButtonPane pane dans lequel sont contenus les boutons
+     */
     public void print (Pane pointPane, Pane labelPane, Pane ButtonPane){
         pointPane.getChildren().add(mCircle);
-
         labelPane.getChildren().add(mLabelHeure);
         labelPane.getChildren().add(mLabelNomLivraison);
         pointPane.getChildren().add(mButton);

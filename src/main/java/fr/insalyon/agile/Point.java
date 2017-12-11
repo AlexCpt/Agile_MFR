@@ -213,6 +213,13 @@ public class Point {
 
     }
 
+    /**
+     * Permet d'afficher un popOver basique au dessus d'un point lorsqu'on passe la souris par dessus
+     * @param mapPane pane dans laquelle on veut dessiner le popOver
+     * @param primaryStage stage ou on desssine le popOver
+     * @param rndBtnPopover bouton hover sur lequel va s'afficher le popOver
+     * @param stringLabel texte dans le popOver
+     */
     public void printHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String stringLabel){
         PopOver popOver = new PopOver();
         popOver.setAutoHide(true);
@@ -228,6 +235,14 @@ public class Point {
         rndBtnPopover.setOnMouseExited(e -> popOver.hide());
     }
 
+    /**
+     * Permet d'afficher un popOver au dessus d'un Point et d'illuminer le point avec un glow
+     * @param mapPane pane dans laquelle on veut dessiner le popOver
+     * @param primaryStage stage ou on desssine le popOver
+     * @param rndBtnPopover bouton hover sur lequel va s'afficher le popOver
+     * @param stringLabel texte dans le popOver
+     * @param rectangle rectangle du glow
+     */
    public void printGlowHover(Pane mapPane, Stage primaryStage, Button rndBtnPopover, String stringLabel, Rectangle rectangle){
        PopOver popOver = new PopOver();
        popOver.setAutoHide(true);
@@ -263,7 +278,13 @@ public class Point {
         circle.relocate(coordX - radius, coordY - radius);
     }
 
-
+    /**
+     * Permet d'afficher le bouton supprimer au dessus d'un point
+     * @param mapPane pane dans laquelle on veut dessiner le popOver
+     * @param primaryStage stage ou on desssine le popOver
+     * @param btnSupprPopover bouton hover sur lequel va s'afficher le popOver
+     * @param btnSupprValidate bouton "supprimer" a l'interieur du popOver
+     */
     public void printSuppressButton(Pane mapPane, Stage primaryStage, Button btnSupprPopover, Button btnSupprValidate) {
 
         suppPopover = new PopOver();

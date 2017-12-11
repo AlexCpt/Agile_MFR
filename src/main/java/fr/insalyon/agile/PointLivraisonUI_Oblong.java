@@ -10,6 +10,9 @@ import javafx.scene.shape.Rectangle;
 import static fr.insalyon.agile.MainWindow.centreRightPane;
 import static fr.insalyon.agile.MainWindow.widthLabelTime;
 
+/**
+ * Classe heritant de PointLivraisonUI permettant d'afficher un Point Oblong d'une livraison sur la timeline
+ */
 public class PointLivraisonUI_Oblong extends PointLivraisonUI {
 
     private Circle mCircle2;
@@ -18,7 +21,7 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
     private Label mLabelFin;
 
     protected String transparentButtonStyle = "-fx-background-color: transparent;";
-
+    
     public PointLivraisonUI_Oblong (double xAffichage, double yAffichage_RelocateLivraison, double yAffichage_Relocate, PointLivraisonUI.Type type, Label labelHeureDebut, Label labelHeureFin,Label LabelNomLivraison){
 
         super(xAffichage,yAffichage_RelocateLivraison, type,labelHeureDebut,LabelNomLivraison);
