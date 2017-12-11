@@ -4,7 +4,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;import javafx.scene.layout.Pane;
 
-
+/**
+ * Classe représentant une commande permettant de supprimer une livraison dans un itineraire
+ */
 public class CdeSupprime implements  Commande{
 
     private Tournee tournee;
@@ -16,6 +18,12 @@ public class CdeSupprime implements  Commande{
     private Pane mapPane;
 
 
+    /**
+     * Constructeur d'une CdeSupprime
+     * @param tournee tournee que l'on veut modifier
+     * @param point livraison que l'on veut supprimer
+     * @param mapPane pane associe a la tournee
+     */
     public CdeSupprime(Tournee tournee, Point point, Pane mapPane) {
         this.tournee = tournee;
         this.point = point;
@@ -26,11 +34,17 @@ public class CdeSupprime implements  Commande{
 
     }
 
+    /**
+     * Permet de supprimer une livraison
+     */
     @Override
     public void doCde() {
         this.itineraire=tournee.supprimerLivraison(point, mapPane);
     }
 
+    /**
+     * Permet d'annuler la dernière suppression
+     */
     @Override
     public void undoCde() {
         point.setLivraison(new Livraison(debPlage, finPlage, dureeLivraison));
