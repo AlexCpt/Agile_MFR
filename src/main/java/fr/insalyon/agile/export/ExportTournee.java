@@ -1,6 +1,6 @@
 package fr.insalyon.agile.export;
 
-import fr.insalyon.agile.metier.*;
+import fr.insalyon.agile.modele.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

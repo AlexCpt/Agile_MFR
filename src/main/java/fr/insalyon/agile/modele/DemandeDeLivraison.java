@@ -1,7 +1,7 @@
-package fr.insalyon.agile.metier;
+package fr.insalyon.agile.modele;
 
-import fr.insalyon.agile.dijkstra.Dijkstra;
-import fr.insalyon.agile.tsp.TSP4;
+import fr.insalyon.agile.algoparcoursgraph.dijkstra.Dijkstra;
+import fr.insalyon.agile.algoparcoursgraph.tsp.TSP4;
 import javafx.util.Pair;
 
 

@@ -1,12 +1,12 @@
-package fr.insalyon.agile.commandePattern;
+package fr.insalyon.agile.designpattern.command;
 
 import java.time.Duration;
 import java.time.LocalTime;
 
-import fr.insalyon.agile.metier.Itineraire;
-import fr.insalyon.agile.metier.Livraison;
-import fr.insalyon.agile.metier.Point;
-import fr.insalyon.agile.metier.Tournee;
+import fr.insalyon.agile.modele.Itineraire;
+import fr.insalyon.agile.modele.Livraison;
+import fr.insalyon.agile.modele.Point;
+import fr.insalyon.agile.modele.Tournee;
 import javafx.scene.layout.Pane;
 
 /**

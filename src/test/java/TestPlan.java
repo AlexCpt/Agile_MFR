@@ -1,6 +1,6 @@
-import fr.insalyon.agile.metier.Plan;
-import fr.insalyon.agile.metier.Point;
-import fr.insalyon.agile.metier.Troncon;
+import fr.insalyon.agile.modele.Plan;
+import fr.insalyon.agile.modele.Point;
+import fr.insalyon.agile.modele.Troncon;
 import org.junit.Test;
 
 import java.util.*;

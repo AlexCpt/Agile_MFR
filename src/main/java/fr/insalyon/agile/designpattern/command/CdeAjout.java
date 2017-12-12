@@ -1,8 +1,8 @@
-package fr.insalyon.agile.commandePattern;
+package fr.insalyon.agile.designpattern.command;
 
-import fr.insalyon.agile.metier.Itineraire;
-import fr.insalyon.agile.metier.Point;
-import fr.insalyon.agile.metier.Tournee;
+import fr.insalyon.agile.modele.Itineraire;
+import fr.insalyon.agile.modele.Point;
+import fr.insalyon.agile.modele.Tournee;
 import javafx.scene.layout.Pane;
 
 import java.time.Duration;

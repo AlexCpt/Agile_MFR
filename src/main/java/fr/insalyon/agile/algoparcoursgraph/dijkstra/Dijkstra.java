@@ -1,9 +1,9 @@
-package fr.insalyon.agile.dijkstra;
+package fr.insalyon.agile.algoparcoursgraph.dijkstra;
 
-import fr.insalyon.agile.metier.Itineraire;
-import fr.insalyon.agile.metier.Plan;
-import fr.insalyon.agile.metier.Point;
-import fr.insalyon.agile.metier.Troncon;
+import fr.insalyon.agile.modele.Itineraire;
+import fr.insalyon.agile.modele.Plan;
+import fr.insalyon.agile.modele.Point;
+import fr.insalyon.agile.modele.Troncon;
 import javafx.util.Pair;
 
 import java.util.*;

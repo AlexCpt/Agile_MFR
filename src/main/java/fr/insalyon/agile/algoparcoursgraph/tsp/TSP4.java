@@ -1,4 +1,4 @@
-package fr.insalyon.agile.tsp;
+package fr.insalyon.agile.algoparcoursgraph.tsp;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import fr.insalyon.agile.metier.Point;
+import fr.insalyon.agile.modele.Point;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 

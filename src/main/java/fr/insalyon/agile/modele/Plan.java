@@ -1,4 +1,4 @@
-package fr.insalyon.agile.metier;
+package fr.insalyon.agile.modele;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;

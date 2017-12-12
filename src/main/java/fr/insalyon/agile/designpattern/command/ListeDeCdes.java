@@ -1,6 +1,4 @@
-package fr.insalyon.agile.commandePattern;
-
-import fr.insalyon.agile.commandePattern.Commande;
+package fr.insalyon.agile.designpattern.command;
 
 import java.util.LinkedList;
 

@@ -1,4 +1,4 @@
-package fr.insalyon.agile.tsp;
+package fr.insalyon.agile.algoparcoursgraph.tsp;
 
 import java.util.ArrayList;
 import java.util.Iterator;

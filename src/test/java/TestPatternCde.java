@@ -1,7 +1,7 @@
-import fr.insalyon.agile.commandePattern.CdeAjout;
-import fr.insalyon.agile.commandePattern.CdeSupprime;
-import fr.insalyon.agile.commandePattern.ListeDeCdes;
-import fr.insalyon.agile.metier.*;
+import fr.insalyon.agile.designpattern.command.CdeAjout;
+import fr.insalyon.agile.designpattern.command.CdeSupprime;
+import fr.insalyon.agile.designpattern.command.ListeDeCdes;
+import fr.insalyon.agile.modele.*;
 import org.junit.Before;
 import org.junit.Test;
 
