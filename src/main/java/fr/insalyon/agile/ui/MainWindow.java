@@ -1,5 +1,11 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.ui;
 
+import fr.insalyon.agile.commandePattern.CdeAjout;
+import fr.insalyon.agile.commandePattern.CdeSupprime;
+import fr.insalyon.agile.commandePattern.ListeDeCdes;
+import fr.insalyon.agile.export.ExportTournee;
+import fr.insalyon.agile.metier.*;
+import fr.insalyon.agile.parser.ParserXML;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

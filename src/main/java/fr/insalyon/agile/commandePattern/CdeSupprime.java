@@ -1,13 +1,18 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.commandePattern;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.LocalTime;import javafx.scene.layout.Pane;
+import java.time.LocalTime;
+
+import fr.insalyon.agile.metier.Itineraire;
+import fr.insalyon.agile.metier.Livraison;
+import fr.insalyon.agile.metier.Point;
+import fr.insalyon.agile.metier.Tournee;
+import javafx.scene.layout.Pane;
 
 /**
  * Classe représentant une commande permettant de supprimer une livraison dans un itineraire
  */
-public class CdeSupprime implements  Commande{
+public class CdeSupprime implements Commande {
 
     private Tournee tournee;
     private Point point;

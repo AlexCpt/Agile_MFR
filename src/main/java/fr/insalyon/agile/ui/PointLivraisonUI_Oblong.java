@@ -1,5 +1,6 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.ui;
 
+import fr.insalyon.agile.ui.PointLivraisonUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -7,8 +8,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-import static fr.insalyon.agile.MainWindow.centreRightPane;
-import static fr.insalyon.agile.MainWindow.widthLabelTime;
+import static fr.insalyon.agile.ui.MainWindow.centreRightPane;
+import static fr.insalyon.agile.ui.MainWindow.widthLabelTime;
 
 public class PointLivraisonUI_Oblong extends PointLivraisonUI {
 

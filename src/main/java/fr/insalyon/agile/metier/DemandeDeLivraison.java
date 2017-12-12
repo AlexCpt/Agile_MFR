@@ -1,16 +1,12 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.metier;
 
-import com.sun.tools.javac.util.BasicDiagnosticFormatter;
-import fr.insalyon.agile.*;
-import fr.insalyon.agile.tsp.TSP1;
+import fr.insalyon.agile.dijkstra.Dijkstra;
 import fr.insalyon.agile.tsp.TSP4;
 import javafx.util.Pair;
 
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

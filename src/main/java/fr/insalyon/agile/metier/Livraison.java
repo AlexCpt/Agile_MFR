@@ -1,4 +1,4 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.metier;
 
 import java.time.Duration;
 import java.time.LocalTime;

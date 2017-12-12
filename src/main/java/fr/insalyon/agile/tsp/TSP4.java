@@ -1,17 +1,14 @@
 package fr.insalyon.agile.tsp;
 
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import fr.insalyon.agile.Point;
+import fr.insalyon.agile.metier.Point;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
-import static java.time.temporal.ChronoUnit.MINUTES;
-import static java.time.temporal.ChronoUnit.HOURS;
 
 
 public class TSP4 extends TemplateTSP {

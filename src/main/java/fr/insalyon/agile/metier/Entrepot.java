@@ -1,4 +1,4 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.metier;
 
 public class Entrepot {
     public Entrepot() {

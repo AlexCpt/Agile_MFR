@@ -1,6 +1,8 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.ui;
 
 
+import fr.insalyon.agile.ui.PointLivraisonUI_Oblong;
+import fr.insalyon.agile.ui.TronconUI;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 

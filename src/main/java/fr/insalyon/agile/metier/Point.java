@@ -1,4 +1,4 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.metier;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

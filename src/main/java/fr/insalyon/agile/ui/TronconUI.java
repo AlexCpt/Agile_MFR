@@ -1,4 +1,4 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.ui;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;

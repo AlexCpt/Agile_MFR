@@ -1,5 +1,6 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.metier;
 
+import fr.insalyon.agile.dijkstra.Dijkstra;
 import javafx.scene.layout.Pane;
 
 import java.time.Duration;

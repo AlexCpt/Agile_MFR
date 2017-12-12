@@ -1,11 +1,9 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.metier;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.List;
 
 /**

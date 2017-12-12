@@ -1,5 +1,8 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.commandePattern;
 
+import fr.insalyon.agile.metier.Itineraire;
+import fr.insalyon.agile.metier.Point;
+import fr.insalyon.agile.metier.Tournee;
 import javafx.scene.layout.Pane;
 
 import java.time.Duration;
@@ -7,7 +10,7 @@ import java.time.Duration;
 /**
  * Classe représentant une commande permettant d'ajouter une livraison dans un itineraire
  */
-public class CdeAjout implements  Commande{
+public class CdeAjout implements Commande {
 
     private Tournee tournee;
     private Point point;

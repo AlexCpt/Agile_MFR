@@ -1,8 +1,7 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.metier;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.LinkedList;

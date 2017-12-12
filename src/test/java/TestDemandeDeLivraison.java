@@ -1,4 +1,4 @@
-import fr.insalyon.agile.*;
+import fr.insalyon.agile.metier.*;
 import org.junit.Test;
 
 import java.time.Duration;

@@ -1,9 +1,7 @@
-package fr.insalyon.agile;
+package fr.insalyon.agile.metier;
 
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
-import org.controlsfx.control.PopOver;
 
 /**
  * Classe représentant un troncon, soit un segment (route) rejoignant deux points
