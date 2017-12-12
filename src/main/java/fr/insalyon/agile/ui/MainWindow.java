@@ -90,7 +90,7 @@ public class MainWindow extends Application
     }
 
     /**
-     * Crée et gère l'ensemble de l'interface.
+     * Controlleur principal qui crée et gère l'ensemble de l'interface.
      * @param primaryStage primary stage javaFX de notre fenêtre
      */
     @Override
