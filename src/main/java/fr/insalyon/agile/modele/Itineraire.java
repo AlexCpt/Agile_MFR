@@ -7,7 +7,7 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- * La classe Itineraire représente le chemin entre deux points
+ * La classe Itineraire représente le chemin entre deux points, soit la liste des tronçons successivement parcourus
  */
 public class Itineraire {
 

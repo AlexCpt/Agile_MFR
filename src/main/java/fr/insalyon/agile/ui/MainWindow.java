@@ -79,12 +79,20 @@ public class MainWindow extends Application
         plan = parser.parsePlan("fichiersXML/planLyonPetit.xml");
     }
 
+    /**
+     * Fonction main lançant la fenêtre principale
+     * @param args pas utilisé
+     */
     public static void main(String[] args) {
         new MainWindow();
 
         launch(args);
     }
 
+    /**
+     * Crée et gère l'ensemble de l'interface.
+     * @param primaryStage primary stage javaFX de notre fenêtre
+     */
     @Override
     public void start(Stage primaryStage){
         primaryStage.setTitle("HexaMaps 1.0");
@@ -168,8 +176,6 @@ public class MainWindow extends Application
 
                 rightPane.getChildren().clear();
                 buildTimelineTitle(rightPane);
-
-
 
                 mapPane.getChildren().clear();
                 plan.print(mapPane);
@@ -332,9 +338,9 @@ public class MainWindow extends Application
     /**
      * Construit la timeline pour la tournée qui vient d'être calculée
      *
-     * @param rightPane : La fenêtre où l'on veut placer la timeline
+     * @param rightPane : Le pane où l'on veut placer la timeline
      * @param tournee : La tournée à afficher sur la timeline
-     * @param mapPane : Le plan sur lequel est affichée la tournée actuelle
+     * @param mapPane : Le pane du plan sur lequel est affichée la tournée actuelle
      * @param primaryStage : Le primary stage pour cette application
      * @param modeModifier : Spécifie si l'on peut modifier ou non la tournée
      */
@@ -343,7 +349,6 @@ public class MainWindow extends Application
 
         rightPane.getChildren().clear();
 
-        //Todo : externaliser ça
         LocalTime heureDebutTournee = LocalTime.of(8,0);
 
         LocalTime heureFinTournee =
@@ -802,6 +807,9 @@ public class MainWindow extends Application
         return outputImage;
     }
 
+    /**
+     * Déplace le camion sur la timeline, ainsi que sur le plan
+     */
     EventHandler<MouseEvent> deliveryOnMousePressedEventHandler =
             new EventHandler<MouseEvent>() {
 
@@ -809,7 +817,6 @@ public class MainWindow extends Application
                 public void handle(MouseEvent t) {
                     orgSceneY = t.getSceneY();
                     orgTranslateY = ((ImageView)(t.getSource())).getTranslateY();
-
                 }
             };
 
@@ -919,10 +926,19 @@ public class MainWindow extends Application
             };
 
 
+    /**
+     * Transforme un LocalTime en secondes
+     * @param time le LocalTime à passer en secondes
+     * @return la valeur correspondante en secondes
+     */
     private double localTimeToSecond(LocalTime time){
         return (time.getHour()*60*60 + time.getMinute()*60 + time.getSecond());
     }
 
+    /**
+     * Construit le titre de la timeline
+     * @param rightPane Le pane sur lequel doit s'afficher la timeline
+     */
     private void buildTimelineTitle(Pane rightPane){
         //Titre
         Label lblTimeline = new Label("Timeline");

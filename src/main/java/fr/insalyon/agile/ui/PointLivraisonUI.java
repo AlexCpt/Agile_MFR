@@ -10,7 +10,9 @@ import static fr.insalyon.agile.ui.MainWindow.centreRightPane;
 import static fr.insalyon.agile.ui.MainWindow.widthLabelTime;
 
 /**
- * Classe qui implemente l'affichage des points sur la timeline
+ * La classe PointLivraisonUI implémente l'affichage temporel des livraisons ou des entrepots sur la timeline
+ * Un PointLivraisonUI prend la forme d'un rond dont la couleur dépend du type. Si c'est un entrepôt : rouge.
+ * Livraison : bleu.
  */
 public class PointLivraisonUI {
 
@@ -41,16 +43,14 @@ public class PointLivraisonUI {
             "-fx-background-insets: 0px; " +
             "-fx-padding: 0px;";
 
-    public PointLivraisonUI(){
-    }
 
     /**
      * Constructeur d'un PointLivraisonUI
      * @param xAffichage coordonnee x du point
      * @param yAffichage coordonnee y du point
      * @param type type du point
-     * @param labelHeure label heure
-     * @param LabelNomLivraison label nom de la livraison
+     * @param labelHeure label renseignant l'heure
+     * @param LabelNomLivraison label renseignant le nom de la livraison
      */
     public PointLivraisonUI(double xAffichage, double yAffichage, Type type, Label labelHeure, Label LabelNomLivraison){
 
@@ -90,12 +90,12 @@ public class PointLivraisonUI {
     public Button getButton(){ return mButton; }
 
     /**
-     * Affichage des points sur la Timeline
+     * Affichage des PointLivraisonUI sur la Timeline
      * @param pointPane pane dans lequel sont contenus les Points
      * @param labelPane pane dans lequel sont contenus les labels
-     * @param ButtonPane pane dans lequel sont contenus les boutons
+     * @param buttonPane pane dans lequel sont contenus les boutons
      */
-    public void print (Pane pointPane, Pane labelPane, Pane ButtonPane){
+    public void print (Pane pointPane, Pane labelPane, Pane buttonPane){
         pointPane.getChildren().add(mCircle);
         labelPane.getChildren().add(mLabelHeure);
         labelPane.getChildren().add(mLabelNomLivraison);
