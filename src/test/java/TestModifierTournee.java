@@ -1,4 +1,5 @@
 import fr.insalyon.agile.modele.*;
+import javafx.scene.layout.Pane;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -84,7 +85,7 @@ public class TestModifierTournee {
         Livraison livraison = new Livraison(null, null,  Duration.ofMinutes(20));
 
         points.get(4).setLivraison(livraison);
-        tournee.getItinerairesModifiable(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
+        tournee.getItinerairesModifiable(points.get(4), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1));
 
         assertEquals(1, 1);
 
@@ -105,8 +106,8 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
-        if(tournee.getItinerairesModifiable(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1))){
-            tournee.ajouterLivraison(points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1));
+        if(tournee.getItinerairesModifiable(points.get(4), Duration.ofMinutes(20),  tournee.getItineraires().get(tournee.getItineraires().size()-1))){
+            tournee.ajouterLivraison(points.get(4), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1));
         }
 
         List<Itineraire> itineraires= new ArrayList<>();
@@ -137,8 +138,8 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
-        if(tournee.getItinerairesModifiable(points.get(4), tournee.getItineraires().get(0))){
-            tournee.ajouterLivraison(points.get(4), tournee.getItineraires().get(0));
+        if(tournee.getItinerairesModifiable(points.get(4),Duration.ofMinutes(20), tournee.getItineraires().get(0))){
+            tournee.ajouterLivraison(points.get(4), Duration.ofMinutes(20), tournee.getItineraires().get(0));
         }
 
         List<Itineraire> itineraires= new ArrayList<>();
@@ -170,7 +171,7 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
-        tournee.supprimerLivraison(points.get(1));
+        tournee.supprimerLivraison(points.get(1), new Pane());
 
         List<Itineraire> itineraires= new ArrayList<>();
         itineraires.add(new Itineraire(Arrays.asList(troncons.get(1))));

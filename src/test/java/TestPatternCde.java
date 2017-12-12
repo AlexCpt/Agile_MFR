@@ -2,6 +2,7 @@ import fr.insalyon.agile.designpattern.command.CdeAjout;
 import fr.insalyon.agile.designpattern.command.CdeSupprime;
 import fr.insalyon.agile.designpattern.command.ListeDeCdes;
 import fr.insalyon.agile.modele.*;
+import javafx.scene.layout.Pane;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,9 +64,9 @@ public class TestPatternCde {
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
         ListeDeCdes listeDeCdes=new ListeDeCdes();
-        if(tournee.getItinerairesModifiable(points.get(4),tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
+        if(tournee.getItinerairesModifiable(points.get(4),Duration.ofMinutes(20),tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
 
-            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1)));
+            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(4),Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), new Pane()));
 
         }
 
@@ -79,7 +80,7 @@ public class TestPatternCde {
         assertEquals(itineraires, tournee.getItineraires());
 
 
-        listeDeCdes.ajoute(new CdeSupprime(tournee, points.get(1)));
+        listeDeCdes.ajoute(new CdeSupprime(tournee, points.get(1), new Pane()));
 
         List<Itineraire> itineraires2= new ArrayList<>();
         itineraires2.add(new Itineraire(Collections.singletonList(troncons.get(1))));
@@ -110,30 +111,30 @@ public class TestPatternCde {
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
         ListeDeCdes listeDeCdes=new ListeDeCdes();
-        if(tournee.getItinerairesModifiable(points.get(2),tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
+        if(tournee.getItinerairesModifiable(points.get(2),Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
 
-            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(2), tournee.getItineraires().get(tournee.getItineraires().size()-1)));
-
-        }
-
-        if(tournee.getItinerairesModifiable(points.get(5),tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
-
-            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(5), tournee.getItineraires().get(tournee.getItineraires().size()-1)));
+            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(2), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), new Pane()));
 
         }
 
-        if(tournee.getItinerairesModifiable(points.get(4),tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
+        if(tournee.getItinerairesModifiable(points.get(5),Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
 
-            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(4), tournee.getItineraires().get(tournee.getItineraires().size()-1)));
+            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(5), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), new Pane()));
+
+        }
+
+        if(tournee.getItinerairesModifiable(points.get(4), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
+
+            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(4), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), new Pane()));
 
         }
 
         listeDeCdes.undo();
         listeDeCdes.undo();
 
-        if(tournee.getItinerairesModifiable(points.get(3),tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
+        if(tournee.getItinerairesModifiable(points.get(3), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
 
-            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(3), tournee.getItineraires().get(tournee.getItineraires().size()-1)));
+            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(3), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), new Pane()));
 
         }
 
