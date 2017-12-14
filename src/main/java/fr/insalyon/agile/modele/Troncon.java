@@ -89,9 +89,9 @@ public class Troncon {
     }
 
     /**
-     *
-     * @param mapPane
-     * @param longueurParcourue
+     * Définie la longueur parcourue par le véhicule sur le tronçon (et change le rendu visuel)
+     * @param mapPane pane sur lequel dessiner le tronçon
+     * @param longueurParcourue longueur parcourue
      */
     public void setLongueurParcourue(Pane mapPane, double longueurParcourue) {
         this.mLongueurParcourue = longueurParcourue;
@@ -135,11 +135,11 @@ public class Troncon {
     }
 
     /**
-     *
-     * @param mapPane
-     * @param color
-     * @param color2
-     * @param epaisseur
+     * Affiche le tronçon
+     * @param mapPane pane sur lequel afficher
+     * @param color couleur standard
+     * @param color2 couleur parcourue
+     * @param epaisseur epaisseur du trait
      */
 
     public void print(Pane mapPane, javafx.scene.paint.Color color, javafx.scene.paint.Color color2, int epaisseur){
