@@ -1,6 +1,5 @@
 package fr.insalyon.agile.ui;
 
-import fr.insalyon.agile.ui.PointLivraisonUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -12,7 +11,8 @@ import static fr.insalyon.agile.ui.MainWindow.centreRightPane;
 import static fr.insalyon.agile.ui.MainWindow.widthLabelTime;
 
 /**
- * Classe heritant de PointLivraisonUI permettant d'afficher un Point Oblong d'une livraison sur la timeline
+ * Classe heritant de PointLivraisonUI permettant d'afficher sur la timeline une livraison possedant un temps de décharge.
+ * Elle est donc représentée sur la timeline par un point oblong dont la longueur dépend de la durée de cette livraison.
  */
 public class PointLivraisonUI_Oblong extends PointLivraisonUI {
 
@@ -22,7 +22,18 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
     private Label mLabelFin;
 
     protected String transparentButtonStyle = "-fx-background-color: transparent;";
-    
+
+
+    /**
+     * Constructeur d'un PointLivraisonUI
+     * @param xAffichage coordonnée x du point
+     * @param yAffichage_RelocateLivraison coordonnée d'affichage y du point de début de livraison
+     * @param yAffichage_Relocate coordonnée d'affichage y du point de fin de livraison
+     * @param type type du point
+     * @param labelHeureDebut label renseignant l'heure de début de la livraison
+     * @param labelHeureFin label renseignant l'heure de fin de la livraison
+     * @param LabelNomLivraison label renseignant le nom de la livraison
+     */
     public PointLivraisonUI_Oblong (double xAffichage, double yAffichage_RelocateLivraison, double yAffichage_Relocate, PointLivraisonUI.Type type, Label labelHeureDebut, Label labelHeureFin,Label LabelNomLivraison){
 
         super(xAffichage,yAffichage_RelocateLivraison, type,labelHeureDebut,LabelNomLivraison);
@@ -55,21 +66,26 @@ public class PointLivraisonUI_Oblong extends PointLivraisonUI {
         mButton.setPrefSize(radiusAffichageTimeline*4,m_yAffichage - m_yAffichage_Relocate);
     }
 
+    /**
+     * Permet de recuperer le bouton du Point de livraison
+     * @return bouton correspondant au Point sur la timeline
+     */
     public Button getButton(){ return mButton; }
 
+    /**
+     * Permet de recuperer le rectangle du Point de livraison
+     * @return rectangle correspondant au Point sur la timeline
+     */
     public Rectangle getRectangle() {
         return mRectangle;
     }
 
-    public void setTranslateY(double y){
-        mCircle.setTranslateY(y);
-        mCircle2.setTranslateY(y);
-        mRectangle.setTranslateY(y);
-        mLabelFin.setTranslateY(y);
-        mLabelHeure.setTranslateY(y);
-        mLabelNomLivraison.setTranslateY(y);
-    }
-
+    /**
+     * Affichage des PointLivraisonUI_Oblong sur la Timeline
+     * @param pointPane pane dans lequel sont contenus les Points
+     * @param labelPane pane dans lequel sont contenus les labels
+     * @param buttonPane pane dans lequel sont contenus les boutons
+     */
     public void print (Pane pointPane, Pane labelPane, Pane buttonPane){
         super.print(pointPane, labelPane, buttonPane);
         pointPane.getChildren().add(mCircle2);
