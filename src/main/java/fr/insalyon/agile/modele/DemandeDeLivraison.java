@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Cette classe représente une demande de Livraison (ensemble de Livraisons, entrepot, date de depart et de fin)
+ */
 public class DemandeDeLivraison {
 
     private List<Point> mLivraisons;
@@ -19,6 +22,13 @@ public class DemandeDeLivraison {
     private LocalTime mFin = LocalTime.of(18,0);
     private Plan mPlan;
 
+    /**
+     * Constructeur d'une demande de livraison
+     * @param plan plan de la ville dans laquelle on veut livrer
+     * @param livraisons liste de livraisons a livrer
+     * @param entrepot entrepot
+     * @param depart date de depart de la demande de livraison
+     */
     public DemandeDeLivraison(Plan plan, List<Point> livraisons, Point entrepot, LocalTime depart) {
         this.mPlan = plan;
         this.mLivraisons = livraisons;
@@ -26,26 +36,51 @@ public class DemandeDeLivraison {
         this.mDepart = depart;
     }
 
+    /**
+     * Permet de récupérer le plan associe a la demande de livraison
+     * @return plan
+     */
     public Plan getPlan() {
         return mPlan;
     }
 
+    /**
+     * Permet de récupérer l'entrepot associe a la demande de livraison
+     * @return entrepot
+     */
     public Point getEntrepot() {
         return mEntrepot;
     }
 
+    /**
+     * Permet de récupérer la date de depart de la demande de livraison
+     * @return depart date
+     */
     public LocalTime getDepart() {
         return mDepart;
     }
 
+    /**
+     * Permet de récupérer la date de fin de la demande de livraison
+     * @return fin date
+     */
     public LocalTime getFin() {
         return mFin;
     }
 
+    /**
+     * Permet de récupérer l'ensemble des livraisons de la demande de livraison
+     * @return liste de livraisons
+     */
     public List<Point> getLivraisons() {
         return mLivraisons;
     }
 
+    /**
+     * Permet a partir du plan, des points de livraison et de l'entrepot de calculer une tournee
+     * en respectant les plages horraires precise dans chaque livraison
+     * @return tournee calculee
+     */
     public Tournee calculerTournee(){
 
         HashMap<Pair<Point, Point>, Itineraire> itineraireHashMap = new HashMap<>();
