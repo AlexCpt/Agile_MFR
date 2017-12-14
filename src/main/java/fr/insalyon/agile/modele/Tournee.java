@@ -201,12 +201,15 @@ public class Tournee {
                 itiRetour = mItineraires.get(mItineraires.indexOf(itineraire)+1);
                 int index = mItineraires.indexOf(itiAlle);
 
-                for (Troncon troncon:itiAlle.getTroncons()) { //Retirer point verts restant quand suppr
-                    troncon.setLongueurParcourue(mapPane, 0);
-                }
+                if(mapPane != null)
+                {
+                    for (Troncon troncon:itiAlle.getTroncons()) { //Retirer point verts restant quand suppr
+                        troncon.setLongueurParcourue(mapPane, 0);
+                    }
 
-                for (Troncon troncon:itiRetour.getTroncons()) { //Retirer point verts restant quand suppr
-                    troncon.setLongueurParcourue(mapPane, 0);
+                    for (Troncon troncon:itiRetour.getTroncons()) { //Retirer point verts restant quand suppr
+                        troncon.setLongueurParcourue(mapPane, 0);
+                    }
                 }
 
                 newItineraire = Dijkstra.dijkstra(mDemandeDeLivraison.getPlan(), itiAlle.getTroncons().get(0).getOrigine(), new Point[]{itiRetour.getTroncons().get(itiRetour.getTroncons().size()-1).getDestination()}).get(0);

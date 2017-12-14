@@ -80,7 +80,7 @@ public class TestPatternCde {
         assertEquals(itineraires, tournee.getItineraires());
 
 
-        listeDeCdes.ajoute(new CdeSupprime(tournee, points.get(1), new Pane()));
+        listeDeCdes.ajoute(new CdeSupprime(tournee, points.get(1), null));
 
         List<Itineraire> itineraires2= new ArrayList<>();
         itineraires2.add(new Itineraire(Collections.singletonList(troncons.get(1))));
@@ -119,13 +119,13 @@ public class TestPatternCde {
 
         if(tournee.getItinerairesModifiable(points.get(5),Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
 
-            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(5), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), new Pane()));
+            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(5), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), null));
 
         }
 
         if(tournee.getItinerairesModifiable(points.get(4), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
 
-            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(4), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), new Pane()));
+            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(4), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), null));
 
         }
 
@@ -134,7 +134,7 @@ public class TestPatternCde {
 
         if(tournee.getItinerairesModifiable(points.get(3), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1))) {
 
-            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(3), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), new Pane()));
+            listeDeCdes.ajoute(new CdeAjout(tournee, points.get(3), Duration.ofMinutes(20), tournee.getItineraires().get(tournee.getItineraires().size()-1), null));
 
         }
 

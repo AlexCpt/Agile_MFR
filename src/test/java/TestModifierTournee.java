@@ -171,7 +171,7 @@ public class TestModifierTournee {
 
         Tournee tournee = demandeDeLivraison.calculerTournee();
 
-        tournee.supprimerLivraison(points.get(1), new Pane());
+        tournee.supprimerLivraison(points.get(1), null);
 
         List<Itineraire> itineraires= new ArrayList<>();
         itineraires.add(new Itineraire(Arrays.asList(troncons.get(1))));
