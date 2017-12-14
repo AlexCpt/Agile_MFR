@@ -10,6 +10,13 @@ import java.util.*;
 
 public class Dijkstra {
 
+    /**
+     * Calcule les itinéraires entre le point de départ et les points d'arrivé demandés.
+     * @param plan plan contenant les points et les troncons
+     * @param depart Point de depart du Dijkstra
+     * @param arrives Point d'arrivé pour lesquels on veut récupérer les itinéraires
+     * @return
+     */
     public static List<Itineraire> dijkstra(Plan plan, Point depart, Point[] arrives) {
         Map<Point, Double> parcourus = new HashMap<>();
         HashMap<Point, List<Troncon>> graph = plan.getGraph();
