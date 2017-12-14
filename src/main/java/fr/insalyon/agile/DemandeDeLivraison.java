@@ -81,7 +81,7 @@ public class DemandeDeLivraison {
         }
 
         TSP4 tsp = new TSP4(mLivraisons, mDepart);
-        tsp.chercheSolution(240000, nombreSommets, couts, duree);
+        tsp.chercheSolution(960000, nombreSommets, couts, duree);
 
         if (tsp.getTempsLimiteAtteint()) {
             System.out.println("TSP : Temps limite atteint");
